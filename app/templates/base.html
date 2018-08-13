@@ -27,8 +27,8 @@
                   {% if current_user.is_admin %}
                     <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url_for('admin.list_teams') }}">Teams</a></li>
-                    <li><a href="{{ url_for('admin.list_events') }}">Events</a></li>
-                    <li><a href="{{ url_for('admin.list_details') }}">Details</a></li>
+                    <li><a href="{{ url_for('admin.list_events') }}">Game Results</a></li>
+                    <li><a href="{{ url_for('admin.list_leagues') }}">Leagues</a></li>
                     <li><a href="{{ url_for('admin.list_employees') }}">Employees</a></li>
                   {% else %}
                     <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>

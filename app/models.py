@@ -85,12 +85,12 @@ class Event(db.Model):
     def __repr__(self):
         return '<Event: {}>'.format(self.name)
 
-class Detail(db.Model):
+class League(db.Model):
     """
-    Create an details table
+    Create an leagues table
     """
 
-    __tablename__ = 'details'
+    __tablename__ = 'leagues'
 
     id = db.Column(db.Integer, primary_key=True)
     number_of_conferences = db.Column(db.Integer)
@@ -101,4 +101,4 @@ class Detail(db.Model):
 
 
     def __repr__(self):
-        return '<Detail: {}>'.format(self.name)
+        return '<League: {}>'.format(self.name)

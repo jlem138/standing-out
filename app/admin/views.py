@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, DetailForm, EmployeeForm
-from ..models import Team, Event, Detail, Employee
+from forms import TeamForm, EventForm, LeagueForm, EmployeeForm
+from ..models import Team, Event, League, Employee
 
 def check_admin():
     """
@@ -212,19 +212,19 @@ def delete_event(id):
 
     return render_template(title="Delete Event")
 
-@admin.route('/details/add', methods=['GET', 'POST'])
+@admin.route('/leagues/add', methods=['GET', 'POST'])
 @login_required
-def add_detail():
+def add_league():
     """
     Add a team to the database
     """
     check_admin()
 
-    add_detail = True
+    add_league = True
 
-    form = DetailForm()
+    form = LeagueForm()
     if form.validate_on_submit():
-        detail = Detail(id=form.id.data,
+        league = League(id=form.id.data,
                     number_of_conferences=form.number_of_conferences.data,
                     number_of_total_teams = form.number_of_total_teams.data,
                     number_of_rounds = form.number_of_rounds.data,
@@ -234,89 +234,89 @@ def add_detail():
 
         try:
             # add team to the database
-            db.session.add(detail)
+            db.session.add(league)
             db.session.commit()
-            flash('You have successfully added a new detail.')
+            flash('You have successfully added a new league.')
         except:
             # in case team name already exists
-            flash('Error: detail already exists.')
+            flash('Error: league already exists.')
 
         # redirect to teams page
-        return redirect(url_for('admin.list_details'))
+        return redirect(url_for('admin.list_leagues'))
 
     # load team template
-    return render_template('admin/details/detail.html', action="Add",
-                           add_detail=add_detail, form=form,
-                           title="Addx Detail")
+    return render_template('admin/leagues/league.html', action="Add",
+                           add_league=add_league, form=form,
+                           title="Addx League")
 
 
-@admin.route('/details', methods=['GET', 'POST'])
+@admin.route('/leagues', methods=['GET', 'POST'])
 @login_required
-def list_details():
+def list_leagues():
     """
-    List all details
+    List all leagues
     """
     check_admin()
 
-    details = Detail.query.all()
+    leagues = League.query.all()
 
-    return render_template('admin/details/details.html',
-                           details=details, title="details")
+    return render_template('admin/leagues/leagues.html',
+                           leagues=leagues, title="leagues")
 
-@admin.route('/details/delete/<int:id>', methods=['GET', 'POST'])
+@admin.route('/leagues/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_detail(id):
+def delete_league(id):
     """
-    Delete a detail from the database
+    Delete a league from the database
     """
     check_admin()
 
-    detail = Detail.query.get_or_404(id)
-    db.session.delete(detail)
+    league = League.query.get_or_404(id)
+    db.session.delete(league)
     db.session.commit()
-    flash('You have successfully deleted the detail.')
+    flash('You have successfully deleted the league.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_details'))
+    return redirect(url_for('admin.list_leagues'))
 
-    return render_template(title="Delete Details")
+    return render_template(title="Delete Leagues")
 
 
-@admin.route('/details/edit/<int:id>', methods=['GET', 'POST'])
+@admin.route('/leagues/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_detail(id):
+def edit_league(id):
     """
-    Edit a detail
+    Edit a league
     """
     check_admin()
 
-    add_detail = False
+    add_league = False
 
-    detail = Detail.query.get_or_404(id)
-    form = DetailForm(obj=detail)
+    league = League.query.get_or_404(id)
+    form = LeagueForm(obj=league)
     if form.validate_on_submit():
-        detail.id = form.id.data
-        detail.number_of_conferences = form.number_of_conferences.data
-        detail.number_of_total_teams = form.number_of_total_teams.data
-        detail.number_of_rounds = form.number_of_rounds.data
-        detail.number_of_qualifiers = form.number_of_qualifiers.data
-        detail.is_byes = form.is_byes.data
+        league.id = form.id.data
+        league.number_of_conferences = form.number_of_conferences.data
+        league.number_of_total_teams = form.number_of_total_teams.data
+        league.number_of_rounds = form.number_of_rounds.data
+        league.number_of_qualifiers = form.number_of_qualifiers.data
+        league.is_byes = form.is_byes.data
         db.session.commit()
-        flash('You have successfully edited the detail.')
+        flash('You have successfully edited the league.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_details'))
+        return redirect(url_for('admin.list_leagues'))
 
-    form.id.data = detail.id
-    form.number_of_conferences.data = detail.number_of_conferences
-    form.number_of_total_teams.data = detail.number_of_total_teams
-    form.number_of_rounds.data = detail.number_of_rounds
-    form.number_of_qualifiers.data = detail.number_of_qualifiers
-    form.is_byes.data = detail.is_byes
+    form.id.data = league.id
+    form.number_of_conferences.data = league.number_of_conferences
+    form.number_of_total_teams.data = league.number_of_total_teams
+    form.number_of_rounds.data = league.number_of_rounds
+    form.number_of_qualifiers.data = league.number_of_qualifiers
+    form.is_byes.data = league.is_byes
 
-    return render_template('admin/details/detail.html', action="Edit",
-                           add_detail=add_detail, form=form,
-                           detail=detail, title="Edit Detail")
+    return render_template('admin/leagues/league.html', action="Edit",
+                           add_league=add_league, form=form,
+                           league=league, title="Edit League")
 
 
 @admin.route('/employees')

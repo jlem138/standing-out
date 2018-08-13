@@ -28,7 +28,7 @@ class EventForm(FlaskForm):
     losing_score = StringField('Losing Score', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-class DetailForm(FlaskForm):
+class LeagueForm(FlaskForm):
     """
     Form for admin to select postseason details
     """

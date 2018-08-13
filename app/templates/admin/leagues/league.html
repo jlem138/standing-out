@@ -1,12 +1,12 @@
-<!-- app/templates/admin/details/detail.html -->
+<!-- app/templates/admin/leagues/league.html -->
 
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}
-    {% if add_detail %}
-        Add detail
+    {% if add_league %}
+        Add League
     {% else %}
-        Edit detail
+        Edit League
     {% endif %}
 {% endblock %}
 {% block body %}
@@ -15,10 +15,10 @@
     <div class="middle">
       <div class="inner">
         <div class="center">
-            {% if add_detail %}
-                <h1>Add Detail</h1>
+            {% if add_league %}
+                <h1>Add League</h1>
             {% else %}
-                <h1>Edit Detail</h1>
+                <h1>Edit League</h1>
             {% endif %}
             <br/>
             {{ wtf.quick_form(form) }}
