@@ -225,6 +225,7 @@ def add_league():
     form = LeagueForm()
     if form.validate_on_submit():
         league = League(id=form.id.data,
+                    name = form.name.data,
                     number_of_conferences=form.number_of_conferences.data,
                     number_of_total_teams = form.number_of_total_teams.data,
                     number_of_rounds = form.number_of_rounds.data,
@@ -296,6 +297,7 @@ def edit_league(id):
     form = LeagueForm(obj=league)
     if form.validate_on_submit():
         league.id = form.id.data
+        league.name = form.name.data
         league.number_of_conferences = form.number_of_conferences.data
         league.number_of_total_teams = form.number_of_total_teams.data
         league.number_of_rounds = form.number_of_rounds.data
@@ -308,6 +310,7 @@ def edit_league(id):
         return redirect(url_for('admin.list_leagues'))
 
     form.id.data = league.id
+    league.name.data = league.name
     form.number_of_conferences.data = league.number_of_conferences
     form.number_of_total_teams.data = league.number_of_total_teams
     form.number_of_rounds.data = league.number_of_rounds

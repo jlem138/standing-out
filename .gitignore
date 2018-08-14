@@ -1,0 +1,5 @@
+# Ignore settings file
+settings.py
+
+# Ignore instance folder
+instance/

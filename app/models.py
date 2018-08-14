@@ -93,6 +93,7 @@ class League(db.Model):
     __tablename__ = 'leagues'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
     number_of_conferences = db.Column(db.Integer)
     number_of_total_teams = db.Column(db.Integer)
     number_of_rounds = db.Column(db.Integer)

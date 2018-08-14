@@ -33,6 +33,7 @@ class LeagueForm(FlaskForm):
     Form for admin to select postseason details
     """
     id = StringField('id', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
     number_of_conferences = StringField('Number of Conferences', validators=[DataRequired()])
     number_of_total_teams = StringField('Total Teams', validators=[DataRequired()])
     number_of_rounds = StringField('Number of Rounds', validators=[DataRequired()])
