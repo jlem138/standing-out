@@ -32,7 +32,6 @@ class LeagueForm(FlaskForm):
     """
     Form for admin to select postseason details
     """
-    id = StringField('id', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     number_of_conferences = StringField('Number of Conferences', validators=[DataRequired()])
     number_of_total_teams = StringField('Total Teams', validators=[DataRequired()])
@@ -47,6 +46,7 @@ class EmployeeForm(FlaskForm):
     Form for admin to add employee details
     """
     id = StringField('id', validators=[DataRequired()])
+    league_name = StringField('League Name', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     first_name = StringField('First name', validators=[DataRequired()])

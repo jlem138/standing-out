@@ -224,7 +224,7 @@ def add_league():
 
     form = LeagueForm()
     if form.validate_on_submit():
-        league = League(id=form.id.data,
+        league = League(
                     name = form.name.data,
                     number_of_conferences=form.number_of_conferences.data,
                     number_of_total_teams = form.number_of_total_teams.data,
@@ -264,15 +264,15 @@ def list_leagues():
     return render_template('admin/leagues/leagues.html',
                            leagues=leagues, title="leagues")
 
-@admin.route('/leagues/delete/<int:id>', methods=['GET', 'POST'])
+@admin.route('/leagues/delete/<name>', methods=['GET', 'POST'])
 @login_required
-def delete_league(id):
+def delete_league(name):
     """
     Delete a league from the database
     """
     check_admin()
 
-    league = League.query.get_or_404(id)
+    league = League.query.get_or_404(name)
     db.session.delete(league)
     db.session.commit()
     flash('You have successfully deleted the league.')
@@ -283,9 +283,9 @@ def delete_league(id):
     return render_template(title="Delete Leagues")
 
 
-@admin.route('/leagues/edit/<int:id>', methods=['GET', 'POST'])
+@admin.route('/leagues/edit/<name>', methods=['GET', 'POST'])
 @login_required
-def edit_league(id):
+def edit_league(name):
     """
     Edit a league
     """
@@ -293,10 +293,9 @@ def edit_league(id):
 
     add_league = False
 
-    league = League.query.get_or_404(id)
+    league = League.query.get_or_404(name)
     form = LeagueForm(obj=league)
     if form.validate_on_submit():
-        league.id = form.id.data
         league.name = form.name.data
         league.number_of_conferences = form.number_of_conferences.data
         league.number_of_total_teams = form.number_of_total_teams.data
@@ -309,8 +308,7 @@ def edit_league(id):
         # redirect to the events page
         return redirect(url_for('admin.list_leagues'))
 
-    form.id.data = league.id
-    league.name.data = league.name
+    form.name.data = league.name
     form.number_of_conferences.data = league.number_of_conferences
     form.number_of_total_teams.data = league.number_of_total_teams
     form.number_of_rounds.data = league.number_of_rounds
@@ -369,6 +367,7 @@ def edit_employee(id):
     form = EmployeeForm(obj=employee)
     if form.validate_on_submit():
         employee.id = form.id.data
+        employee.league_name = form.league_name.data
     #     employee.email = form.email.data
     #     employee.username = form.username.data
     #     employee.first_name = form.first_name.data
@@ -385,6 +384,7 @@ def edit_employee(id):
         return redirect(url_for('admin.list_employees'))
     #
     form.id.data = employee.id
+    form.league_name.data = employee.league_name
     # form.email.data = employee.email
     # form.username.data = employee.username
     # form.first_name.data = employee.first_name

@@ -31,20 +31,20 @@
               <tbody>
               {% for league in leagues %}
                 <tr>
-                  <td> {{ league.id }} </td>
+                  <td> {{ league.name }} </td>
                   <td> {{ league.number_of_conferences }} </td>
                   <td> {{ league.number_of_total_teams }} </td>
                   <td> {{ league.number_of_rounds }} </td>
                   <td> {{ league.number_of_qualifiers }} </td>
                   <td> {{ league.is_byes }} </td>
                   <td>
-                    <a href="{{ url_for('admin.edit_league', id=league.id) }}">
+                    <a href="{{ url_for('admin.edit_league', name=league.name) }}">
                       <i class="fa fa-pencil"></i> Edit
                     </a>
                   </td>
                   </td>
                   <td>
-                    <a href="{{ url_for('admin.delete_league', id=league.id) }}">
+                    <a href="{{ url_for('admin.delete_league', name=league.name) }}">
                       <i class="fa fa-trash"></i> Delete
                     </a>
                   </td>

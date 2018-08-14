@@ -20,6 +20,8 @@ class Employee(UserMixin, db.Model):
     username = db.Column(db.String(60), index=True, unique=True)
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    league_constraint = relationship("League", foreign_keys=[league_name])
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
 
@@ -61,7 +63,8 @@ class Team(db.Model):
     name = db.Column(db.String(60), primary_key=True)
     division_name = db.Column(db.String(60))
     conference_name = db.Column(db.String(60))
-    league_name = db.Column(db.String(60))
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    league_constraint = relationship("League", foreign_keys=[league_name])
 
     def __repr__(self):
         return '<Team: {}>'.format(self.name)
@@ -92,8 +95,7 @@ class League(db.Model):
 
     __tablename__ = 'leagues'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
+    name = db.Column(db.String(200), primary_key=True)
     number_of_conferences = db.Column(db.Integer)
     number_of_total_teams = db.Column(db.Integer)
     number_of_rounds = db.Column(db.Integer)
