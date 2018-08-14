@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, EmployeeForm
-from ..models import Team, Event, League, Employee
+from forms import TeamForm, EventForm, LeagueForm, UserForm
+from ..models import Team, Event, League, User
 
 def check_admin():
     """
@@ -320,78 +320,78 @@ def edit_league(name):
                            league=league, title="Edit League")
 
 
-@admin.route('/employees')
+@admin.route('/users')
 @login_required
-def list_employees():
+def list_users():
     """
-    List all employees
+    List all users
     """
     check_admin()
 
-    employees = Employee.query.all()
-    return render_template('admin/employees/employees.html',
-                           employees=employees, title='Employees')
+    users = User.query.all()
+    return render_template('admin/users/users.html',
+                           users=users, title='Users')
 
 
 
-@admin.route('/employees/delete/<int:id>', methods=['GET', 'POST'])
+@admin.route('/users/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_employee(id):
+def delete_user(id):
     """
-    Delete a employee from the database
+    Delete a user from the database
     """
     check_admin()
 
-    employee = Employee.query.get_or_404(id)
-    db.session.delete(employee)
+    user = User.query.get_or_404(id)
+    db.session.delete(user)
     db.session.commit()
-    flash('You have successfully deleted the employee.')
+    flash('You have successfully deleted the user.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_employees'))
+    return redirect(url_for('admin.list_users'))
 
-    return render_template(title="Delete employees")
+    return render_template(title="Delete users")
 
 
-@admin.route('/employees/edit/<int:id>', methods=['GET', 'POST'])
+@admin.route('/users/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_employee(id):
+def edit_user(id):
     """
-    Edit a employee
+    Edit a user
     """
     check_admin()
 
-    add_employee = False
+    add_user = False
 
-    employee = Employee.query.get_or_404(id)
-    form = EmployeeForm(obj=employee)
+    user = User.query.get_or_404(id)
+    form = UserForm(obj=user)
     if form.validate_on_submit():
-        employee.id = form.id.data
-        employee.league_name = form.league_name.data
-    #     employee.email = form.email.data
-    #     employee.username = form.username.data
-    #     employee.first_name = form.first_name.data
-    #     employee.last_name = form.last_name.data
+        user.id = form.id.data
+        user.league_name = form.league_name.data
+    #     user.email = form.email.data
+    #     user.username = form.username.data
+    #     user.first_name = form.first_name.data
+    #     user.last_name = form.last_name.data
     #     #mployee.password_hash = form.password_hash.data
         if form.is_admin.data == "True":
-            employee.is_admin = True;
+            user.is_admin = True;
         elif form.is_admin.data == "False":
-            employee.is_admin = False;
+            user.is_admin = False;
         db.session.commit()
-        flash('You have successfully edited the employee.')
+        flash('You have successfully edited the user.')
     #
     #     # redirect to the events page
-        return redirect(url_for('admin.list_employees'))
+        return redirect(url_for('admin.list_users'))
     #
-    form.id.data = employee.id
-    form.league_name.data = employee.league_name
-    # form.email.data = employee.email
-    # form.username.data = employee.username
-    # form.first_name.data = employee.first_name
-    # form.last_name.data = employee.last_name
-    # #form.password_hash.data = employee.password_hash
-    form.is_admin.data = employee.is_admin
+    form.id.data = user.id
+    form.league_name.data = user.league_name
+    # form.email.data = user.email
+    # form.username.data = user.username
+    # form.first_name.data = user.first_name
+    # form.last_name.data = user.last_name
+    # #form.password_hash.data = user.password_hash
+    form.is_admin.data = user.is_admin
 
-    return render_template('admin/employees/employee.html', action="Edit",
-                           add_employee=add_employee, form=form,
-                           employee=employee, title="Edit employee")
+    return render_template('admin/users/user.html', action="Edit",
+                           add_user=add_user, form=form,
+                           user=user, title="Edit user")

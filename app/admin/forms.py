@@ -41,9 +41,9 @@ class LeagueForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class EmployeeForm(FlaskForm):
+class UserForm(FlaskForm):
     """
-    Form for admin to add employee details
+    Form for admin to add user details
     """
     id = StringField('id', validators=[DataRequired()])
     league_name = StringField('League Name', validators=[DataRequired()])

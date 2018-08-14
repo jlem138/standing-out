@@ -6,14 +6,14 @@ from sqlalchemy.orm import relationship
 
 from app import db, login_manager
 
-class Employee(UserMixin, db.Model):
+class User(UserMixin, db.Model):
     """
-    Create an Employee table
+    Create an User table
     """
 
     # Ensures table will be named in plural and not in singular
     # as is the name of the model
-    __tablename__ = 'employees'
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60), index=True, unique=True)
@@ -46,12 +46,12 @@ class Employee(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<Employee: {}>'.format(self.username)
+        return '<User: {}>'.format(self.username)
 
 # Set up user_loader
 @login_manager.user_loader
 def load_user(user_id):
-    return Employee.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
 class Team(db.Model):
     """

@@ -41,7 +41,7 @@ p.copyright {
 }
 
 .btn-default:hover {
-    background-color: #aec251;
+    background-color: blue;
 }
 
 .center {
@@ -70,7 +70,7 @@ p.copyright {
     padding-top: 50px;
     padding-bottom: 50px;
     text-align: center;
-    color: #f8f8f8;
+    color: orange;
     background: url(../img/intro-bg.jpg) no-repeat center center;
     background-size: cover;
     height: 100%;
