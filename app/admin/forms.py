@@ -15,13 +15,24 @@ class TeamForm(FlaskForm):
     league_name = StringField('League Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class RankingForm(FlaskForm):
+    """
+    Form for admin to add or edit a team
+    """
+
+    team = StringField('Name', validators=[DataRequired()])
+    wins = StringField('ws', validators=[DataRequired()])
+    losses = StringField('Ls', validators=[DataRequired()])
+    gb = StringField('gb', validators=[DataRequired()])
+    mnumber = StringField('mnumber', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 class EventForm(FlaskForm):
     """
     Form for admin to add or edit an event
     """
-    id = StringField('id', validators=[DataRequired()])
-    date = StringField('Date', validators=[DataRequired()])
+    #id = StringField('id', validators=[DataRequired()])
+    day = StringField('Date', validators=[DataRequired()])
     winner = StringField('Winner', validators=[DataRequired()])
     loser = StringField('Loser', validators=[DataRequired()])
     winning_score = StringField('Winning Score', validators=[DataRequired()])
@@ -33,6 +44,7 @@ class LeagueForm(FlaskForm):
     Form for admin to select postseason details
     """
     name = StringField('Name', validators=[DataRequired()])
+    number_of_games = StringField('Number of games in season', validators=[DataRequired()])
     number_of_conferences = StringField('Number of Conferences', validators=[DataRequired()])
     number_of_total_teams = StringField('Total Teams', validators=[DataRequired()])
     number_of_rounds = StringField('Number of Rounds', validators=[DataRequired()])

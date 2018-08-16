@@ -28,6 +28,7 @@
               </thead>
               <tbody>
               {% for team in teams %}
+                {% if team.league_name == league %}
                 <tr>
                   <td> {{ team.name }} </td>
                   <td> {{ team.division_name }} </td>
@@ -44,6 +45,7 @@
                     </a>
                   </td>
                 </tr>
+                {% endif %}
               {% endfor %}
               </tbody>
             </table>

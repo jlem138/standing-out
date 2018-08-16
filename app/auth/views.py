@@ -49,7 +49,7 @@ def login():
 
             # redirect to the appropriate dashboard page
             if user.is_admin:
-                return redirect(url_for('home.admin_dashboard'))
+                return redirect(url_for('admin.list_leagues'))
             else:
                 return redirect(url_for('home.dashboard'))
 

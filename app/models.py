@@ -76,8 +76,8 @@ class Event(db.Model):
 
     __tablename__ = 'events'
 
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date())
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    day = db.Column(db.Date())
     winner = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
     loser = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
     winner_constraint = relationship("Team", foreign_keys=[winner])
@@ -86,7 +86,7 @@ class Event(db.Model):
     losing_score = db.Column(db.Integer)
 
     def __repr__(self):
-        return '<Event: {}>'.format(self.name)
+        return '<Event: {}>'.format(self.id)
 
 class League(db.Model):
     """
@@ -96,6 +96,7 @@ class League(db.Model):
     __tablename__ = 'leagues'
 
     name = db.Column(db.String(200), primary_key=True)
+    number_of_games = db.Column(db.Integer)
     number_of_conferences = db.Column(db.Integer)
     number_of_total_teams = db.Column(db.Integer)
     number_of_rounds = db.Column(db.Integer)
@@ -105,3 +106,19 @@ class League(db.Model):
 
     def __repr__(self):
         return '<League: {}>'.format(self.name)
+
+class Ranking(db.Model):
+    """
+    Create a Ranking table
+    """
+
+    __tablename__ = 'rankings'
+
+    team = db.Column(db.String(200), primary_key=True)
+    wins = db.Column(db.Integer)
+    losses = db.Column(db.Integer)
+    gb = db.Column(db.Integer)
+    mnumber = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Ranking: {}>'.format(self.name)

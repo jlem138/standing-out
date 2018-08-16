@@ -25,13 +25,19 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                   {% if current_user.is_admin %}
-                    <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('admin.list_teams') }}">Teams</a></li>
-                    <li><a href="{{ url_for('admin.list_events') }}">Game Results</a></li>
+                    {% if (title!="leagues") %}
+                      <li><a href="{{ url_for('admin.list_leagues') }}">{{title}}</a></li>
+                    {% endif %}
+
+                    <li><a href="{{ url_for('admin.list_rankings', leaguename=title)  }}">Rankings</a></li>
                     <li><a href="{{ url_for('admin.list_leagues') }}">Leagues</a></li>
+                    <li><a href="{{ url_for('admin.list_teams', league=title) }}">Teams</a></li>
+                    <li><a href="{{ url_for('admin.list_events') }}">Game Results</a></li>
                     <li><a href="{{ url_for('admin.list_users') }}">Users</a></li>
                   {% else %}
                     <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('admin.list_events') }}">Game Results</a></li>
+
                   {% endif %}
                   <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                   <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.username }}!</a></li>
