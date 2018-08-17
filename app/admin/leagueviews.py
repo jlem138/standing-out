@@ -1,0 +1,133 @@
+
+# League views
+
+from flask import abort, flash, redirect, render_template, url_for, session
+from flask_login import current_user, login_required
+
+from . import admin
+from .. import db
+from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from ..models import Team, Event, League, User, Ranking, Current
+from sqlalchemy import func, distinct
+
+def check_admin():
+    """
+    Prevent non-admins from accessing the page
+    """
+    if not current_user.is_admin:
+        abort(403)
+
+# League Views
+
+@admin.route('/leagues/add', methods=['GET', 'POST'])
+@login_required
+def add_league():
+    """
+    Add a league to the database
+    """
+    check_admin()
+
+    add_league = True
+
+    form = LeagueForm()
+    if form.validate_on_submit():
+        league = League(
+                    name = form.name.data,
+                    number_of_conferences=form.number_of_conferences.data,
+                    number_of_total_teams = form.number_of_total_teams.data,
+                    number_of_rounds = form.number_of_rounds.data,
+                    number_of_qualifiers = form.number_of_qualifiers.data,
+                    is_byes = form.is_byes.data
+                    )
+
+        try:
+            # add team to the database
+            db.session.add(league)
+            db.session.commit()
+            flash('You have successfully added a new league.')
+        except:
+            # in case team name already exists
+            flash('Error: league already exists.')
+
+        # redirect to teams page
+        return redirect(url_for('admin.list_leagues'))
+
+    # load team template
+    return render_template('admin/leagues/league.html', action="Add",
+                           add_league=add_league, form=form,
+                           title="Addx League")
+
+
+@admin.route('/leagues', methods=['GET', 'POST'])
+@login_required
+def list_leagues():
+    """
+    List all leagues
+    """
+    check_admin()
+
+    leagues = League.query.all()
+    
+
+    return render_template('admin/leagues/leagues.html',
+                           leagues=leagues, title="leagues")
+
+
+
+
+@admin.route('/leagues/delete/<name>', methods=['GET', 'POST'])
+@login_required
+def delete_league(name):
+    """
+    Delete a league from the database
+    """
+    check_admin()
+
+    league = League.query.get_or_404(name)
+    db.session.delete(league)
+    db.session.commit()
+    flash('You have successfully deleted the league.')
+
+    # redirect to the events page
+    return redirect(url_for('admin.list_leagues'))
+
+    return render_template(title="Delete Leagues")
+
+
+@admin.route('/leagues/edit/<name>', methods=['GET', 'POST'])
+@login_required
+def edit_league(name):
+    """
+    Edit a league
+    """
+    check_admin()
+
+    add_league = False
+
+    league = League.query.get_or_404(name)
+    form = LeagueForm(obj=league)
+    if form.validate_on_submit():
+        league.name = form.name.data
+        league.number_of_conferences = form.number_of_conferences.data
+        league.number_of_games = form.number_of_games.data
+        league.number_of_total_teams = form.number_of_total_teams.data
+        league.number_of_rounds = form.number_of_rounds.data
+        league.number_of_qualifiers = form.number_of_qualifiers.data
+        league.is_byes = form.is_byes.data
+        db.session.commit()
+        flash('You have successfully edited the league.')
+
+        # redirect to the events page
+        return redirect(url_for('admin.list_leagues'))
+
+    form.name.data = league.name
+    form.number_of_conferences.data = league.number_of_conferences
+    form.number_of_games.data = league.number_of_games
+    form.number_of_total_teams.data = league.number_of_total_teams
+    form.number_of_rounds.data = league.number_of_rounds
+    form.number_of_qualifiers.data = league.number_of_qualifiers
+    form.is_byes.data = league.is_byes
+
+    return render_template('admin/leagues/league.html', action="Edit",
+                           add_league=add_league, form=form,
+                           league=league, title="Edit League")

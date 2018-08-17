@@ -29,7 +29,7 @@
                       <li><a href="{{ url_for('admin.list_leagues') }}">{{title}}</a></li>
                     {% endif %}
 
-                    <li><a href="{{ url_for('admin.list_rankings', leaguename=title)  }}">Rankings</a></li>
+                    <li><a href="{{ url_for('admin.list_rankings', leaguename="MLB")  }}">Rankings</a></li>
                     <li><a href="{{ url_for('admin.list_leagues') }}">Leagues</a></li>
                     <li><a href="{{ url_for('admin.list_teams', league=title) }}">Teams</a></li>
                     <li><a href="{{ url_for('admin.list_events') }}">Game Results</a></li>

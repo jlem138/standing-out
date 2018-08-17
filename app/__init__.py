@@ -28,7 +28,6 @@ def create_app(config_name):
 
     migrate = Migrate(app, db)
 
-
     Bootstrap(app)
 
     from app import models
