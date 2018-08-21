@@ -1,11 +1,15 @@
 # app/__init__.py
-
+import sys
+print("path ",sys.path)
 # third-party imports
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+
+#def SQLAlchemy():
+#    return({})
 
 
 # local imports
@@ -16,6 +20,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 def create_app(config_name):
+    print("CN: ", config_name)
     app = Flask(__name__, instance_relative_config=True)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(app_config[config_name])

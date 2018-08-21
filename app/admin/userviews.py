@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking, Current
 from sqlalchemy import func, distinct
 
@@ -16,16 +16,16 @@ def check_admin():
 
 
 
-@admin.route('/users')
+@admin.route('/users/<league>')
 @login_required
-def list_users():
+def list_users(league):
     """
     List all users
     """
     check_admin()
 
     users = User.query.all()
-    return render_template('admin/users/users.html',
+    return render_template('admin/users/users.html', current_league = league,
                            users=users, title='Users')
 
 

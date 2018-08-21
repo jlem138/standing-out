@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking, Current
 from sqlalchemy import func, distinct
 
@@ -67,12 +67,10 @@ def list_leagues():
     check_admin()
 
     leagues = League.query.all()
-    
+
 
     return render_template('admin/leagues/leagues.html',
                            leagues=leagues, title="leagues")
-
-
 
 
 @admin.route('/leagues/delete/<name>', methods=['GET', 'POST'])

@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking
 from sqlalchemy import func, distinct
 

@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking
 from sqlalchemy import func, distinct
 
@@ -16,20 +16,31 @@ def check_admin():
     if not current_user.is_admin:
         abort(403)
 
-@admin.route('/events')
+@admin.route('/events/<league>')
 @login_required
-def list_events():
+def list_events(league):
     check_admin()
     """
     List all events
     """
-    events = Event.query.all()
-    return render_template('admin/events/events.html',
+
+    list_of_teams2 = Team.query.filter_by(league_name=league).all()
+    #events_test = Event.query.filter(Event.winner.in_(list_of_teams2.name)).all()
+    teamlist = []
+    for item in list_of_teams2:
+        teamlist.append(item.name)
+
+    print("TEAM LIST", list_of_teams2)
+    print("TEAM LIST2", teamlist)
+    list_of_teams_in_league = Team.query.filter_by(league_name=league)
+    events = Event.query.filter(Event.winner.in_(teamlist)).all()
+    #[next(s for s in events if s.winner == team) for team in list_of_teams_in_league]
+    return render_template('admin/events/events.html', current_league = league,
                            events=events, title='Events')
 
-@admin.route('/events/add', methods=['GET', 'POST'])
+@admin.route('events/add/<league>', methods=['GET', 'POST'])
 @login_required
-def add_event():
+def add_event(league):
     """
     Add a event to the database
     """
@@ -57,10 +68,10 @@ def add_event():
             flash('Error: event name already exists.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_events'))
+        return redirect(url_for('admin.list_events', league=league))
 
     # load event template
-    return render_template('admin/events/event.html', add_event=add_event, form=form, title='Add Event')
+    return render_template('admin/events/event.html', add_event=add_event, form=form, title='Add Event', current_league=league)
 
 @admin.route('/events/edit/<int:id>', methods=['GET', 'POST'])
 @login_required

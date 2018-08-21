@@ -3,6 +3,7 @@ settings.py
 data.py
 database.py
 *.pyc
+venv
 
 # Ignore instance folder
 instance/

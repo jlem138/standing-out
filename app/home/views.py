@@ -20,11 +20,11 @@ def dashboard():
     """
     return render_template('home/dashboard.html', title="Dashboard")
 
-@home.route('/admin/<name>')
+@home.route('/admin/<league>')
 @login_required
-def admin_dashboard(name):
+def admin_dashboard(league):
     # prevent non-admins from accessing the page
     if not current_user.is_admin:
         abort(403)
 
-    return render_template('home/admin_dashboard.html', title=name)
+    return render_template('home/admin_dashboard.html', title=league, current_league=league)

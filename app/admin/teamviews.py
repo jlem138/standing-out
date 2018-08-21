@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking, Current
 from sqlalchemy import func, distinct
 
@@ -25,13 +25,13 @@ def list_teams(league):
     check_admin()
     teams = Team.query.all()
 
-    return render_template('admin/teams/teams.html',
+    return render_template('admin/teams/teams.html', current_league=league,
                            teams=teams, league=league, title="teams")
 
 
-@admin.route('/teams/add', methods=['GET', 'POST'])
+@admin.route('/teams/<league>/add', methods=['GET', 'POST'])
 @login_required
-def add_team():
+def add_team(league):
     """
     Add a team to the database
     """
@@ -55,11 +55,11 @@ def add_team():
             flash('Error: team name already exists.')
 
         # redirect to teams page
-        return redirect(url_for('admin.list_teams'))
+        return redirect(url_for('admin.list_teams', league=league))
 
     # load team template
     return render_template('admin/teams/team.html', action="Add",
-                           add_team=add_team, form=form,
+                           add_team=add_team, form=form, current_league=league,
                            title="Add Team")
 
 @admin.route('/teams/edit/<name>', methods=['GET', 'POST'])

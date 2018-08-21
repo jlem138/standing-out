@@ -33,7 +33,7 @@
               {% for league in leagues %}
                 <tr>
                   <td>
-                    <a href="{{ url_for('home.admin_dashboard', name=league.name) }}">
+                    <a href="{{ url_for('home.admin_dashboard', league=league.name) }}">
                       <i class="fa fa-pencil"></i> {{ league.name }}
                     </a>
                   </td>

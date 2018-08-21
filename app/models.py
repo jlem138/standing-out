@@ -133,8 +133,9 @@ class Current(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    league_constraint = relationship("User", foreign_keys=[user_id])
+    user_id = db.Column(db.Integer)
+    #user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    #league_constraint = relationship("User", foreign_keys=[user_id])
 
     def __repr__(self):
         return '<Current: {}>'.format(self.name)

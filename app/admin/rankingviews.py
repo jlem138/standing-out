@@ -5,10 +5,10 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking, Current
 from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
-from database import database_engine
+from .database import database_engine
 
 def check_admin():
     """
@@ -18,29 +18,42 @@ def check_admin():
         abort(403)
 
 
-@admin.route('/rankings/<leaguename>', methods=['GET', 'POST'])
+@admin.route('/rankings/<league>', methods=['GET', 'POST'])
 @login_required
-def list_rankings(leaguename):
+def list_rankings(league):
     """
     List all teams
     """
     check_admin()
 
-    leaguename="WNBA"
-
     engine = database_engine
     conn = engine.connect()
-    meta = MetaData(engine, reflect=True)
-    table = meta.tables['leagues']
-    select_st = select([table]).where(table.c.name == "WNBA")
-    res = conn.execute(select_st)
+    #current_information = Current(league_name="MLB", user_id = 4)
+    #db.session.add(current_information)
+    #db.session.commit()
+    # Enter "current league" in Current table
+    #res = conn.execute("insert into currents (league_name, user_id) values ('MLB', 2)");
+    # ins = currents.insert()
+    # conn.execute(ins, league_name="MLB", user_id = 4);
+    # res = conn.execute("select * from currents")
+    # for row in res:
+    #     print("ROW", row)
 
+    #meta = MetaData(engine, reflect=True)
+    #table = meta.tables['leagues']
+    #select_st = select([table]).where(table.c.name == "WNBA")
+    #res = conn.execute("select * from events where winner = 'Seattle Storm'")
+    #for row in res:
+    #    print(row)
 
-    games = League.query.filter_by(name=leaguename).first().number_of_games
-    number_of_teams = League.query.filter_by(name=leaguename).first().number_of_total_teams
-    qualifiers = League.query.filter_by(name=leaguename).first().number_of_qualifiers
+    #wnbaleague = "WNBA"
+    #league = wnbaleague
 
-    teams = Team.query.filter_by(league_name=leaguename)
+    games = League.query.filter_by(name=league).first().number_of_games
+    number_of_teams = League.query.filter_by(name=league).first().number_of_total_teams
+    qualifiers = League.query.filter_by(name=league).first().number_of_qualifiers
+
+    teams = Team.query.filter_by(league_name=league)
     results = Event.query.all()
 
     def get_count(q):
@@ -65,7 +78,6 @@ def list_rankings(leaguename):
         differentials.append(wonloss)
         winsall.append(wins)
         lossesall.append(losses)
-        team_data['percentage'] = wins / (wins + losses)
         ranking_data[team.name] = team_data
 
     differentials.sort(reverse=True)
@@ -92,19 +104,25 @@ def list_rankings(leaguename):
     first_out_least_possible_losses = lossesall[number_of_teams - qualifiers - 1]
     last_in_least_possible_wins = winsall[qualifiers]
 
+    def zero_out(entry):
+        if (type(entry) != int):
+            return 0;
+        else:
+            return entry;
 
+    # If including win percentage, account for a team that hasn't played yet (division by 0)
     final_data = {}
     for rank in range(number_of_teams):
         final_team = {}
         name = differentials[rank]
-        team_wins = ranking_data[name]['wins']
-        team_losses = ranking_data[name]['losses']
+        team_wins = (ranking_data[name]['wins'])
+        team_losses = (ranking_data[name]['losses'])
         final_team['place'] = rank + 1
         final_team['name'] = name
         final_team['wins'] = team_wins
         final_team['losses'] = team_losses
         final_team['GB'] = (leader_differential - (team_wins - team_losses)) / 2.0
-        magic_number = (games + 1) - (last_in_losses + team_wins)
+        magic_number = (games + 1) - (last_in_losses + team_wins) + 1
         final_team['magic'] = magic_number
         if (games - team_wins < first_out_least_possible_losses):
             playoff_marker = 'IN'
@@ -115,5 +133,5 @@ def list_rankings(leaguename):
         final_team['eligible'] = playoff_marker
         final_data[rank] = final_team;
 
-    return render_template('admin/rankings/rankings.html', ranking=ranking,
-                           teams=teams,data=final_data, diffs=differentials,title=leaguename)
+    return render_template('admin/rankings/rankings.html', ranking=ranking, current_league=league,
+                           teams=teams,data=final_data, diffs=differentials,title=league)
