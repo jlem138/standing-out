@@ -30,7 +30,7 @@
               <tbody>
               {% for rank in data %}
                 <tr>
-                  <td> {{ rank+1 }} </td>
+                  <td> {{ data[rank]['place'] }} </td>
                   <td> {{ data[rank]['name'] }} </td>
                   <td> {{ data[rank]['wins'] }}</td>
                   <td> {{ data[rank]['losses'] }}</td>
