@@ -123,19 +123,21 @@ class Ranking(db.Model):
     def __repr__(self):
         return '<Ranking: {}>'.format(self.name)
 
-class Current(db.Model):
+class Update(db.Model):
     """
-    Create a table with the current information
+    Create a table for users who have multiple leagues
     """
 
-    __tablename__ = 'currents'
+    __tablename__ = 'updates'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(60), db.ForeignKey('users.username'), nullable=False)
+    first_name = db.Column(db.String(60), index=True)
+    last_name = db.Column(db.String(60), index=True)
+    #username_constraint = relationship("User", foreign_keys=[username])
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
-    league_constraint = relationship("League", foreign_keys=[league_name])
-    user_id = db.Column(db.Integer)
-    #user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    #league_constraint = relationship("User", foreign_keys=[user_id])
+    #league_constraint = relationship("League", foreign_keys=[league_name])
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return '<Current: {}>'.format(self.name)
+        return '<Update: {}>'.format(self.username)

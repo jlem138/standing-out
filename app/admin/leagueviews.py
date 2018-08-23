@@ -6,8 +6,8 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
-from ..models import Team, Event, League, User, Ranking, Current
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
+from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
 
 def check_admin():
@@ -33,6 +33,7 @@ def add_league():
     if form.validate_on_submit():
         league = League(
                     name = form.name.data,
+                    number_of_games = form.number_of_games.data,
                     number_of_conferences=form.number_of_conferences.data,
                     number_of_total_teams = form.number_of_total_teams.data,
                     number_of_rounds = form.number_of_rounds.data,
@@ -53,9 +54,7 @@ def add_league():
         return redirect(url_for('admin.list_leagues'))
 
     # load team template
-    return render_template('admin/leagues/league.html', action="Add",
-                           add_league=add_league, form=form,
-                           title="Addx League")
+    return render_template('admin/leagues/league.html', action="Add",add_league=add_league, form=form, title="Addx League")
 
 
 @admin.route('/leagues', methods=['GET', 'POST'])
@@ -64,24 +63,24 @@ def list_leagues():
     """
     List all leagues
     """
-    check_admin()
+    #check_admin()
 
+    # changed
     leagues = League.query.all()
+    print(leagues)
+
+    return render_template('admin/leagues/leagues.html', title="leagues", leagues=leagues)
 
 
-    return render_template('admin/leagues/leagues.html',
-                           leagues=leagues, title="leagues")
-
-
-@admin.route('/leagues/delete/<name>', methods=['GET', 'POST'])
+@admin.route('/leagues/delete/<leaguename>', methods=['GET', 'POST'])
 @login_required
-def delete_league(name):
+def delete_league(leaguename):
     """
     Delete a league from the database
     """
     check_admin()
 
-    league = League.query.get_or_404(name)
+    league = League.query.get_or_404(leaguename)
     db.session.delete(league)
     db.session.commit()
     flash('You have successfully deleted the league.')
@@ -92,9 +91,9 @@ def delete_league(name):
     return render_template(title="Delete Leagues")
 
 
-@admin.route('/leagues/edit/<name>', methods=['GET', 'POST'])
+@admin.route('/leagues/edit/<leaguename>', methods=['GET', 'POST'])
 @login_required
-def edit_league(name):
+def edit_league(leaguename):
     """
     Edit a league
     """
@@ -102,7 +101,7 @@ def edit_league(name):
 
     add_league = False
 
-    league = League.query.get_or_404(name)
+    league = League.query.get_or_404(leaguename)
     form = LeagueForm(obj=league)
     if form.validate_on_submit():
         league.name = form.name.data
@@ -126,6 +125,5 @@ def edit_league(name):
     form.number_of_qualifiers.data = league.number_of_qualifiers
     form.is_byes.data = league.is_byes
 
-    return render_template('admin/leagues/league.html', action="Edit",
-                           add_league=add_league, form=form,
-                           league=league, title="Edit League")
+    return render_template('admin/leagues/league.html', action="Edit", add_league=add_league, form=form,
+    leaguename=leaguename, title="Edit League")

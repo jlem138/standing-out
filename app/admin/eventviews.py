@@ -16,15 +16,15 @@ def check_admin():
     if not current_user.is_admin:
         abort(403)
 
-@admin.route('/events/<league>')
+@admin.route('/events/<leaguename>')
 @login_required
-def list_events(league):
-    check_admin()
+def list_events(leaguename):
+    #check_admin()
     """
     List all events
     """
 
-    list_of_teams2 = Team.query.filter_by(league_name=league).all()
+    list_of_teams2 = Team.query.filter_by(league_name=leaguename).all()
     #events_test = Event.query.filter(Event.winner.in_(list_of_teams2.name)).all()
     teamlist = []
     for item in list_of_teams2:
@@ -32,19 +32,19 @@ def list_events(league):
 
     print("TEAM LIST", list_of_teams2)
     print("TEAM LIST2", teamlist)
-    list_of_teams_in_league = Team.query.filter_by(league_name=league)
+    list_of_teams_in_league = Team.query.filter_by(league_name=leaguename)
     events = Event.query.filter(Event.winner.in_(teamlist)).all()
     #[next(s for s in events if s.winner == team) for team in list_of_teams_in_league]
-    return render_template('admin/events/events.html', current_league = league,
+    return render_template('admin/events/events.html', leaguename = leaguename,
                            events=events, title='Events')
 
-@admin.route('events/add/<league>', methods=['GET', 'POST'])
+@admin.route('events/add/<leaguename>', methods=['GET', 'POST'])
 @login_required
-def add_event(league):
+def add_event(leaguename):
     """
     Add a event to the database
     """
-    check_admin()
+    #check_admin()
 
     add_event = True
 
@@ -68,18 +68,18 @@ def add_event(league):
             flash('Error: event name already exists.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_events', league=league))
+        return redirect(url_for('admin.list_events', leaguename=leaguename))
 
     # load event template
-    return render_template('admin/events/event.html', add_event=add_event, form=form, title='Add Event', current_league=league)
+    return render_template('admin/events/event.html', add_event=add_event, form=form, title='Add Event', leaguename=leaguename)
 
-@admin.route('/events/edit/<int:id>', methods=['GET', 'POST'])
+@admin.route('/events/edit/<leaguename>/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_event(id):
+def edit_event(leaguename, id):
     """
     Edit a event
     """
-    check_admin()
+    #check_admin()
 
     add_event = False
 
@@ -96,7 +96,7 @@ def edit_event(id):
         flash('You have successfully edited the event.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_events'))
+        return redirect(url_for('admin.list_events', leaguename=leaguename))
 
     #form.id.data = event.id
     form.day.data = event.day
@@ -106,13 +106,13 @@ def edit_event(id):
     form.losing_score.data = event.losing_score
 
     return render_template('admin/events/event.html', action="Edit",
-                           add_event=add_event, form=form,
+                           add_event=add_event, form=form, leaguename=leaguename,
                            event=event, title="Edit EventX")
 
 
-@admin.route('/events/delete/<int:id>', methods=['GET', 'POST'])
+@admin.route('/events/delete/<leaguename>/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_event(id):
+def delete_event(leaguename, id):
     """
     Delete a event from the database
     """
@@ -124,6 +124,6 @@ def delete_event(id):
     flash('You have successfully deleted the event.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_events'))
+    return redirect(url_for('admin.list_events', leaguename=leaguename))
 
     return render_template(title="Delete Event")

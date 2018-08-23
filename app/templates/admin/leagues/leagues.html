@@ -25,15 +25,18 @@
                   <th width="10%"> Number of Playoff Rounds </th>
                   <th width="10%"> Playoff Qualifiers  </th>
                   <th width="10%"> Byes </th>
-                  <th width="8%"> </th>
-                  <th width="8%"> </th>
+                  {% if current_user.is_admin %}
+                    <th width="8%"> </th>
+                    <th width="8%"> </th>
+                  {% endif %}
                 </tr>
               </thead>
               <tbody>
               {% for league in leagues %}
+                {% if league.name == "WNBA" or league.name == "MLB" %}
                 <tr>
                   <td>
-                    <a href="{{ url_for('home.admin_dashboard', league=league.name) }}">
+                    <a href="{{ url_for('home.admin_dashboard', leaguename=league.name) }}">
                       <i class="fa fa-pencil"></i> {{ league.name }}
                     </a>
                   </td>
@@ -43,17 +46,20 @@
                   <td> {{ league.number_of_rounds }} </td>
                   <td> {{ league.number_of_qualifiers }} </td>
                   <td> {{ league.is_byes }} </td>
-                  <td>
-                    <a href="{{ url_for('admin.edit_league', name=league.name) }}">
-                      <i class="fa fa-pencil"></i> Edit
-                    </a>
-                  </td>
-                  </td>
-                  <td>
-                    <a href="{{ url_for('admin.delete_league', name=league.name) }}">
-                      <i class="fa fa-trash"></i> Delete
-                    </a>
-                  </td>
+                  {% if current_user.is_admin %}
+                    <td>
+                      <a href="{{ url_for('admin.edit_league', leaguename=league.name) }}">
+                        <i class="fa fa-pencil"></i> Edit
+                      </a>
+                    </td>
+                    </td>
+                    <td>
+                      <a href="{{ url_for('admin.delete_league', leaguename=leaguename) }}">
+                        <i class="fa fa-trash"></i> Delete
+                      </a>
+                    </td>
+                    {% endif %}
+                  {% endif %}
                 </tr>
               {% endfor %}
               </tbody>
@@ -62,13 +68,15 @@
           <div style="text-align: center">
         {% else %}
           <div style="text-align: center">
-            <h3> No leagues have been added. </h3>
+            <h3> No leagues X have been added. </h3>
             <hr class="intro-divider">
-        {% endif %}
-          <a href="{{ url_for('admin.add_league') }}" class="btn btn-default btn-lg">
-            <i class="fa fa-plus"></i>
+      {% endif %}
+      {% if current_user.is_admin %}
+            <a href="{{ url_for('admin.add_league') }}" class="btn btn-default btn-lg">
+              <i class="fa fa-plus"></i>
             Add league
-          </a>
+            </a>
+        {% endif %}
         </div>
       </div>
     </div>

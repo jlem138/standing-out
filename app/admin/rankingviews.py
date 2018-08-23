@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
-from ..models import Team, Event, League, User, Ranking, Current
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
+from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
 from .database import database_engine
 
@@ -18,13 +18,13 @@ def check_admin():
         abort(403)
 
 
-@admin.route('/rankings/<league>', methods=['GET', 'POST'])
+@admin.route('/rankings/<leaguename>', methods=['GET', 'POST'])
 @login_required
-def list_rankings(league):
+def list_rankings(leaguename):
     """
     List all teams
     """
-    check_admin()
+    #check_admin()
 
     engine = database_engine
     conn = engine.connect()
@@ -49,11 +49,11 @@ def list_rankings(league):
     #wnbaleague = "WNBA"
     #league = wnbaleague
 
-    games = League.query.filter_by(name=league).first().number_of_games
-    number_of_teams = League.query.filter_by(name=league).first().number_of_total_teams
-    qualifiers = League.query.filter_by(name=league).first().number_of_qualifiers
+    games = League.query.filter_by(name=leaguename).first().number_of_games
+    number_of_teams = League.query.filter_by(name=leaguename).first().number_of_total_teams
+    qualifiers = League.query.filter_by(name=leaguename).first().number_of_qualifiers
 
-    teams = Team.query.filter_by(league_name=league)
+    teams = Team.query.filter_by(league_name=leaguename)
     results = Event.query.all()
 
     def get_count(q):
@@ -133,5 +133,8 @@ def list_rankings(league):
         final_team['eligible'] = playoff_marker
         final_data[rank] = final_team;
 
-    return render_template('admin/rankings/rankings.html', ranking=ranking, current_league=league,
-                           teams=teams,data=final_data, diffs=differentials,title=league)
+    print("FD",final_data)
+    print("ranking", ranking)
+
+    return render_template('admin/rankings/rankings.html', ranking=ranking, leaguename=leaguename,
+                           teams=teams,data=final_data, diffs=differentials,title=leaguename)

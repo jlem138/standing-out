@@ -14,32 +14,24 @@
           <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                   <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar">a</span>
-                  <span class="icon-bar">b</span>
-                  <span class="icon-bar">c</span>
-                  <span class="icon-bar">d</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand topnav" href="{{ url_for('home.homepage') }}">How Far Out</a>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
-                  {% if current_user.is_admin %}
-                    {% if current_league %}
-                      <li><a href="{{ url_for('admin.list_leagues') }}">{{current_league}}</a></li>
-                      <li><a href="{{ url_for('admin.list_rankings', league=current_league)  }}">Rankings</a></li>
-                      <li><a href="{{ url_for('admin.list_teams', league=current_league) }}">Teams</a></li>
-                      <li><a href="{{ url_for('admin.list_events', league=current_league) }}">Game Results</a></li>
-                      <li><a href="{{ url_for('admin.list_users', league=current_league) }}">Users</a></li>
-
-                    {% endif %}
-                    <li><a href="{{ url_for('admin.list_leagues') }}">Leagues</a></li>
-
-                  {% else %}
-                    <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('admin.list_events') }}">Game Results</a></li>
-
+                  {% if leaguename %}
+                    <li><a href="{{ url_for('admin.list_leagues') }}">{{leaguename}}</a></li>
+                    <li><a href="{{ url_for('admin.list_rankings', leaguename=leaguename)  }}">Rankings</a></li>
+                    <li><a href="{{ url_for('admin.list_teams', leaguename=leaguename) }}">Teams</a></li>
+                    <li><a href="{{ url_for('admin.list_events', leaguename=leaguename) }}">Game Results</a></li>
+                    <li><a href="{{ url_for('admin.list_users', leaguename=leaguename) }}">Users</a></li>
                   {% endif %}
+                  <li><a href="{{ url_for('admin.list_leagues') }}">Leagues</a></li>
                   <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                   <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.username }}!</a></li>
                 {% else %}
@@ -67,7 +59,7 @@
                       <li class="footer-menu-divider">⋅</li>
                       <li><a href="{{ url_for('auth.login') }}">Login</a></li>
                   </ul>
-                    <p class="copyright text-muted small">Copyright © 2016. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright © 2018. All Rights Reserved</p>
                 </div>
             </div>
         </div>

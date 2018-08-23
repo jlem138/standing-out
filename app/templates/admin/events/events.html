@@ -2,7 +2,7 @@
 
 {% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
-{% block title %}Events{% endblock %}
+{% block title %}Game Results{% endblock %}
 {% block body %}
 <div class="content-section">
   <div class="outer">
@@ -11,7 +11,7 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">Events</h1>
+        <h1 style="text-align:center;">Game Results</h1>
         {% if events %}
           <hr class="intro-divider">
           <div class="center">
@@ -19,10 +19,10 @@
               <thead>
                 <tr>
                   <th width="15%"> Date </th>
-                  <th width="20%"> Winner </th>
-                  <th width="20%"> Loser </th>
-                  <th width="15%"> Winning Score </th>
-                  <th width="15%"> Losing Score </th>
+                  <th width="25%"> Winner </th>
+                  <th width="25%"> Loser </th>
+                  <th width="10%"> Winning Score </th>
+                  <th width="10%"> Losing Score </th>
                   {% if current_user.is_admin %}
                     <th width="10%"></th>
                     <th width="10%"></th>
@@ -39,12 +39,12 @@
                   <td> {{ event.losing_score }} </td>
                   {% if current_user.is_admin %}
                   <td>
-                    <a href="{{ url_for('admin.edit_event', id=event.id) }}">
+                    <a href="{{ url_for('admin.edit_event', leaguename=leaguename, id=event.id) }}">
                       <i class="fa fa-pencil"></i> Edit
                     </a>
                   </td>
                   <td>
-                    <a href="{{ url_for('admin.delete_event', id=event.id) }}">
+                    <a href="{{ url_for('admin.delete_event', leaguename=leaguename, id=event.id) }}">
                       <i class="fa fa-trash"></i> Delete
                     </a>
                   </td>
@@ -57,14 +57,15 @@
           <div style="text-align: center">
         {% else %}
           <div style="text-align: center">
-            <h3> No events have been added. </h3>
+            <h3> No game results have been added. </h3>
             <hr class="intro-divider">
         {% endif %}
-
-          <a href="{{ url_for('admin.add_event', league=current_league) }}" class="btn btn-default btn-lg">
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin.add_event', leaguename=leaguename) }}" class="btn btn-default btn-lg">
             <i class="fa fa-plus"></i>
-            Add Event
+            Add Game Result
           </a>
+        {% endif %}
         </div>
       </div>
     </div>

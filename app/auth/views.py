@@ -6,7 +6,7 @@ from flask_login import login_required, login_user, logout_user
 from . import auth
 from .forms import LoginForm, RegistrationForm
 from .. import db
-from ..models import User
+from ..models import User, Update
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -17,14 +17,23 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data,
-                            username=form.username.data,
-                            first_name=form.first_name.data,
-                            last_name=form.last_name.data,
-                            password=form.password.data,
-                            league_name=form.league_name.data)
+                        username=form.username.data,
+                        first_name=form.first_name.data,
+                        last_name=form.last_name.data,
+                        password=form.password.data,
+                        league_name=form.league_name.data)
+
+        update = Update(
+                        username=form.username.data,
+                        league_name=form.league_name.data,
+                        first_name=form.first_name.data,
+                        last_name=form.last_name.data,
+                        is_admin=False)
 
         # add user to the database
         db.session.add(user)
+        db.session.commit()
+        db.session.add(update)
         db.session.commit()
         flash('You have successfully registered! You may now login.')
 

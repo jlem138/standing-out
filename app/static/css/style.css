@@ -13,7 +13,8 @@ body, h1, h2, h3 {
 /* texts in the navbar, links in tables
 */
 a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
-  color: purple;
+/* Color of section titles at top of navigation bar*/
+  color: #009ACD;
 }
 
 a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
@@ -40,14 +41,14 @@ p.copyright {
 /* "add" button for each page
 */
 .btn-default {
-    border-color: red;
-    color: green;
+    border-color: black;
+    color: #104E8B;
 }
 
 /* "add" button for each page when hovered over
 */
 .btn-default:hover {
-    background-color: orange;
+    background-color: #00BFFF;
 }
 
 .center {
@@ -67,8 +68,9 @@ p.copyright {
 }
 
 .intro-divider {
+  /* border-top color = line underneath title */
     width: 400px;
-    border-top: 1px solid #f8f8f8;
+    border-top: 1px solid #009ACD;
     border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
@@ -76,7 +78,8 @@ p.copyright {
     padding-top: 50px;
     padding-bottom: 50px;
     text-align: center;
-    color: orange;
+    /* color of text on dashboard */
+    color: #ADFF2F;
     background: url(../img/intro-bg.jpg) no-repeat center center;
     background-size: cover;
     height: 100%;
@@ -151,13 +154,14 @@ p.copyright {
 }
 
 .navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus {
-    background-color: red;
+    /* Deep Skye Blue */
+    background-color: orange;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: black;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;

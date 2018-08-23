@@ -5,9 +5,26 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
-from ..models import Team, Event, League, User, Ranking, Current
+from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
+from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
+
+
+def check_admin_user(leaguename):
+    current_username = current_user.username
+    status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
+    status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
+    for row in status_users:
+        print("STATUS USERS", row)
+    for row in status_updates:
+        print("STATUS UPDATES", row)
+    for status in status_users:
+        if status.username == current_username and status.is_admin == True:
+            return True
+    for status in status_updates:
+        if status.username == current_username and status.is_admin == True:
+            return True
+    return False
 
 def check_admin():
     """
@@ -16,29 +33,30 @@ def check_admin():
     if not current_user.is_admin:
         abort(403)
 
-@admin.route('/teams/<league>', methods=['GET', 'POST'])
+@admin.route('/teams/<leaguename>', methods=['GET', 'POST'])
 @login_required
-def list_teams(league):
+def list_teams(leaguename):
     """
     List all teams
     """
-    check_admin()
+
+    admin_status = check_admin_user(leaguename)
+    print("ADMIN STAY", admin_status)
+    #check_admin()
     teams = Team.query.all()
 
-    return render_template('admin/teams/teams.html', current_league=league,
-                           teams=teams, league=league, title="teams")
+    return render_template('admin/teams/teams.html', leaguename=leaguename, teams=teams, league=leaguename, title="teams", admin_status=admin_status)
 
 
-@admin.route('/teams/<league>/add', methods=['GET', 'POST'])
+@admin.route('/teams/<leaguename>/add', methods=['GET', 'POST'])
 @login_required
-def add_team(league):
+def add_team(leaguename):
     """
     Add a team to the database
     """
     check_admin()
 
     add_team = True
-
     form = TeamForm()
     if form.validate_on_submit():
         team = Team(name=form.name.data,
@@ -55,24 +73,26 @@ def add_team(league):
             flash('Error: team name already exists.')
 
         # redirect to teams page
-        return redirect(url_for('admin.list_teams', league=league))
+        return redirect(url_for('admin.list_teams', leaguename=leaguename))
 
     # load team template
     return render_template('admin/teams/team.html', action="Add",
-                           add_team=add_team, form=form, current_league=league,
+                           add_team=add_team, form=form, leaguename=leaguename,
                            title="Add Team")
 
-@admin.route('/teams/edit/<name>', methods=['GET', 'POST'])
+@admin.route('/teams/<leaguename>/edit/<teamname>', methods=['GET', 'POST'])
 @login_required
-def edit_team(name):
+def edit_team(teamname, leaguename):
     """
     Edit a team
     """
     check_admin()
 
+    admin_status = check_admin_user(leaguename)
+
     add_team = False
 
-    team = Team.query.get_or_404(name)
+    team = Team.query.get_or_404(teamname)
     form = TeamForm(obj=team)
     if form.validate_on_submit():
         team.name = form.name.data
@@ -83,31 +103,29 @@ def edit_team(name):
         flash('You have successfully edited the team.')
 
         # redirect to the teams page
-        return redirect(url_for('admin.list_teams'))
+        return redirect(url_for('admin.list_teams', leaguename=leaguename))
 
     form.name.data = team.name
     form.division_name.data = team.division_name
     form.conference_name.data = team.conference_name
     form.league_name.data = team.league_name
-    return render_template('admin/teams/team.html', action="Edit",
-                           add_team=add_team, form=form,
-                           team=team, title="Edit Team")
+    return render_template('admin/teams/team.html', action="Edit", leaguename=leaguename, add_team=add_team, admin_status=admin_status, form=form,teamname=teamname, title="Edit Team")
 
 
-@admin.route('/teams/delete/<name>', methods=['GET', 'POST'])
+@admin.route('/teams/<leaguename>/delete/<teamname>', methods=['GET', 'POST'])
 @login_required
-def delete_team(name):
+def delete_team(teamname, leaguename):
     """
     Delete a team from the database
     """
     check_admin()
 
-    team = Team.query.get_or_404(name)
+    team = Team.query.get_or_404(teamname)
     db.session.delete(team)
     db.session.commit()
     flash('You have successfully deleted the team.')
 
     # redirect to the teams page
-    return redirect(url_for('admin.list_teams'))
+    return redirect(url_for('admin.list_teams', leaguename=leaguename))
 
     return render_template(title="Delete Team")

@@ -65,3 +65,13 @@ class UserForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     is_admin = RadioField('Admin?', choices = [("True","True"),("False", "False")])
     submit = SubmitField('Submit')
+
+class UpdateForm(FlaskForm):
+    """
+    Form for admin to add user details
+    """
+    #id = StringField('id', validators=[DataRequired()])
+    league_name = StringField('League Name', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+    is_admin = RadioField('Admin?', choices = [("True","True"),("False", "False")])
+    submit = SubmitField('Submit')
