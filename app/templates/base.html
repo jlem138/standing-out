@@ -26,7 +26,9 @@
                 {% if current_user.is_authenticated %}
                   {% if leaguename %}
                     <li><a href="{{ url_for('admin.list_leagues') }}">{{leaguename}}</a></li>
-                    <li><a href="{{ url_for('admin.list_rankings', leaguename=leaguename)  }}">Rankings</a></li>
+                    {% if session['ranking_criteria'] %}
+                      <li><a href="{{ url_for('admin.list_rankings', leaguename=leaguename)  }}">Rankings</a></li>
+                    {% endif %}
                     <li><a href="{{ url_for('admin.list_teams', leaguename=leaguename) }}">Teams</a></li>
                     <li><a href="{{ url_for('admin.list_events', leaguename=leaguename) }}">Game Results</a></li>
                     <li><a href="{{ url_for('admin.list_users', leaguename=leaguename) }}">Users</a></li>

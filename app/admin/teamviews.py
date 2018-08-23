@@ -10,6 +10,26 @@ from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
 
 
+def enough_teams(leaguename):
+
+    def get_count(q):
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count_x = q.session.execute(count_q).scalar()
+        return (count_x)
+
+    teamcount = get_count(Team.query.filter_by(league_name=leaguename))
+    team_requirement = League.query.filter_by(name=leaguename).first().number_of_total_teams
+
+    if (teamcount == team_requirement):
+        ranking_criteria = True
+    else:
+        ranking_criteria = False
+
+    print("TEAMCOUNT", teamcount)
+    print("team requirement", team_requirement)
+    return(ranking_criteria)
+
+
 def check_admin_user(leaguename):
     current_username = current_user.username
     status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
@@ -72,8 +92,10 @@ def add_team(leaguename):
             # in case team name already exists
             flash('Error: team name already exists.')
 
+        ranking_criteria = enough_teams(leaguename)
+        session['ranking_criteria'] = ranking_criteria
         # redirect to teams page
-        return redirect(url_for('admin.list_teams', leaguename=leaguename))
+        return redirect(url_for('admin.list_teams', leaguename=leaguename, ranking_criteria=ranking_criteria))
 
     # load team template
     return render_template('admin/teams/team.html', action="Add",
@@ -125,7 +147,11 @@ def delete_team(teamname, leaguename):
     db.session.commit()
     flash('You have successfully deleted the team.')
 
+    ranking_criteria = enough_teams(leaguename)
+    print("Rancriteria", ranking_criteria)
+    session['ranking_criteria'] = ranking_criteria
+
     # redirect to the teams page
-    return redirect(url_for('admin.list_teams', leaguename=leaguename))
+    return redirect(url_for('admin.list_teams', leaguename=leaguename, ranking_criteria=ranking_criteria))
 
     return render_template(title="Delete Team")
