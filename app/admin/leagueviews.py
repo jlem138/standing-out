@@ -9,13 +9,7 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
-
-def check_admin():
-    """
-    Prevent non-admins from accessing the page
-    """
-    if not current_user.is_admin:
-        abort(403)
+from .helper import check_admin
 
 # League Views
 
@@ -63,11 +57,8 @@ def list_leagues():
     """
     List all leagues
     """
-    #check_admin()
-
     # changed
     leagues = League.query.all()
-    print(leagues)
 
     return render_template('admin/leagues/leagues.html', title="leagues", leagues=leagues)
 

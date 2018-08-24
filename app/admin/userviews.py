@@ -6,29 +6,7 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
-
-def check_admin():
-    """
-    Prevent non-admins from accessing the page
-    """
-    if not current_user.is_admin:
-        abort(403)
-
-def check_admin_user(leaguename):
-    current_username = current_user.username
-    status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
-    status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
-    #for row in status_users:
-    #    print("STATUS USERS", row.username, row.league_name, row.is_admin)
-    #for status in status_users:
-    #    if status.username == current_username and status.is_admin == True:
-        #    print("one")
-        #    return True
-    for status in status_updates:
-        if ((status.username == current_username) and (status.is_admin == True)):
-            print("two", status.is_admin)
-            return True
-    return False
+from .helper import check_admin_user, check_admin
 
 
 @admin.route('/users/<leaguename>')
@@ -37,7 +15,6 @@ def list_users(leaguename):
     """
     List all users
     """
-    #check_admin()
     updates = Update.query.filter_by(league_name=leaguename).all()
     updateList = []
     for update in updates:
@@ -49,24 +26,18 @@ def list_users(leaguename):
     return render_template('admin/users/users.html', leaguename = leaguename, admin_status=admin_status, updates=updates, users_updated=updated_entries, title='Users')
 
 
-
 @admin.route('/users/delete/<leaguename>/<username>', methods=['GET', 'POST'])
 @login_required
 def delete_user(username, leaguename):
     """
     Delete an entry from the update table
     """
-    def get_count(q):
-        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
-        count_x = q.session.execute(count_q).scalar()
-        return count_x
 
     #check_admin()
     updateEntry = Update.query.filter_by(league_name=leaguename, username=username).first()
     userEntry = User.query.filter_by(username=username)
     # Get number of entries that have the same username
     entries_count = get_count(Update.query.filter_by(league_name=leaguename))
-
 
     # if there is only 1 entry, then this is the only information the user has, so delete the user, first delete the update
     db.session.delete(updateEntry)
@@ -120,13 +91,9 @@ def edit_user(username, leaguename):
     """
     Edit a user
     """
-    #check_admin()
-
     add_user = False
 
     updateEntry = Update.query.filter_by(league_name=leaguename, username=username).first()
-    #for entry in updateEntry:
-    #    print("ENTRY", entry)
     form = UpdateForm(obj=updateEntry)
     if form.validate_on_submit():
         updateEntry.league_name = form.league_name.data
@@ -148,8 +115,6 @@ def edit_user(username, leaguename):
     # form.last_name.data = user.last_name
     # #form.password_hash.data = user.password_hash
     form.is_admin.data = updateEntry.is_admin
-
-    print("USERS UPDATES", updateEntry.is_admin)
 
     return render_template('admin/users/user.html', action="Edit",
                            add_user=add_user, form=form,leaguename=leaguename,

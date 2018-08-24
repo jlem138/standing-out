@@ -8,50 +8,8 @@ from .. import db
 from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
+from .helper import get_count, enough_teams, check_admin_user
 
-
-def enough_teams(leaguename):
-
-    def get_count(q):
-        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
-        count_x = q.session.execute(count_q).scalar()
-        return (count_x)
-
-    teamcount = get_count(Team.query.filter_by(league_name=leaguename))
-    team_requirement = League.query.filter_by(name=leaguename).first().number_of_total_teams
-
-    if (teamcount == team_requirement):
-        ranking_criteria = True
-    else:
-        ranking_criteria = False
-
-    print("TEAMCOUNT", teamcount)
-    print("team requirement", team_requirement)
-    return(ranking_criteria)
-
-
-def check_admin_user(leaguename):
-    current_username = current_user.username
-    status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
-    status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
-    for row in status_users:
-        print("STATUS USERS", row)
-    for row in status_updates:
-        print("STATUS UPDATES", row)
-    for status in status_users:
-        if status.username == current_username and status.is_admin == True:
-            return True
-    for status in status_updates:
-        if status.username == current_username and status.is_admin == True:
-            return True
-    return False
-
-def check_admin():
-    """
-    Prevent non-admins from accessing the page
-    """
-    if not current_user.is_admin:
-        abort(403)
 
 @admin.route('/teams/<leaguename>', methods=['GET', 'POST'])
 @login_required
@@ -61,8 +19,6 @@ def list_teams(leaguename):
     """
 
     admin_status = check_admin_user(leaguename)
-    print("ADMIN STAY", admin_status)
-    #check_admin()
     teams = Team.query.all()
 
     return render_template('admin/teams/teams.html', leaguename=leaguename, teams=teams, league=leaguename, title="teams", admin_status=admin_status)
@@ -148,7 +104,6 @@ def delete_team(teamname, leaguename):
     flash('You have successfully deleted the team.')
 
     ranking_criteria = enough_teams(leaguename)
-    print("Rancriteria", ranking_criteria)
     session['ranking_criteria'] = ranking_criteria
 
     # redirect to the teams page

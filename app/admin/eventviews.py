@@ -8,33 +8,24 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking
 from sqlalchemy import func, distinct
-
-def check_admin():
-    """
-    Prevent non-admins from accessing the page
-    """
-    if not current_user.is_admin:
-        abort(403)
+from .helper import check_admin
 
 @admin.route('/events/<leaguename>')
 @login_required
 def list_events(leaguename):
-    #check_admin()
     """
     List all events
     """
 
-    list_of_teams2 = Team.query.filter_by(league_name=leaguename).all()
-    #events_test = Event.query.filter(Event.winner.in_(list_of_teams2.name)).all()
-    teamlist = []
-    for item in list_of_teams2:
-        teamlist.append(item.name)
-
-    print("TEAM LIST", list_of_teams2)
-    print("TEAM LIST2", teamlist)
-    list_of_teams_in_league = Team.query.filter_by(league_name=leaguename)
-    events = Event.query.filter(Event.winner.in_(teamlist)).all()
-    #[next(s for s in events if s.winner == team) for team in list_of_teams_in_league]
+    # list_of_teams2 = Team.query.filter_by(league_name=leaguename).all()
+    # #events_test = Event.query.filter(Event.winner.in_(list_of_teams2.name)).all()
+    # teamlist = []
+    # for item in list_of_teams2:
+    #     teamlist.append(item.name)
+    #
+    # list_of_teams_in_league = Team.query.filter_by(league_name=leaguename)
+    # events = Event.query.filter(Event.winner.in_(teamlist)).all()
+    events = Event.query.filter_by(league_name=leaguename)
     return render_template('admin/events/events.html', leaguename = leaguename,
                            events=events, title='Events')
 
@@ -44,7 +35,6 @@ def add_event(leaguename):
     """
     Add a event to the database
     """
-    #check_admin()
 
     add_event = True
 
@@ -55,6 +45,7 @@ def add_event(leaguename):
             day = form.day.data,
             winner = form.winner.data,
             loser = form.loser.data,
+            league_name=leaguename,
             winning_score = form.winning_score.data,
             losing_score = form.losing_score.data)
 
@@ -79,7 +70,6 @@ def edit_event(leaguename, id):
     """
     Edit a event
     """
-    #check_admin()
 
     add_event = False
 

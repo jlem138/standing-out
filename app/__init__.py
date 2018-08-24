@@ -8,10 +8,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 
-#def SQLAlchemy():
-#    return({})
-
-
 # local imports
 from config import app_config
 
@@ -20,7 +16,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 def create_app(config_name):
-    print("CN: ", config_name)
     app = Flask(__name__, instance_relative_config=True)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(app_config[config_name])
@@ -36,7 +31,6 @@ def create_app(config_name):
     Bootstrap(app)
 
     from app import models
-
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
