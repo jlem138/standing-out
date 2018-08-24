@@ -16,15 +16,10 @@ def check_admin():
 
 def check_admin_user(leaguename):
     current_username = current_user.username
-    print("CUNAME", current_username)
     status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
     status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
     #for row in status_users:
     #    print("STATUS USERS", row.username, row.league_name, row.is_admin)
-    for row in status_updates:
-        print("usern", row.username)
-        print("adm", row.is_admin)
-        print("lea", User.query.filter)
     #for status in status_users:
     #    if status.username == current_username and status.is_admin == True:
         #    print("one")

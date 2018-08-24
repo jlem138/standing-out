@@ -1,6 +1,6 @@
 # app/__init__.py
 import sys
-print("path ",sys.path)
+#print("path ",sys.path)
 # third-party imports
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy

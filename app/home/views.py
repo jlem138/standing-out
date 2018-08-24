@@ -46,8 +46,5 @@ def admin_dashboard(leaguename):
         return(ranking_criteria)
 
     session['ranking_criteria'] = enough_teams(leaguename)
-    # prevent non-admins from accessing the page
-    #if not current_user.is_admin:
-    #    abort(403)
 
     return render_template('home/admin_dashboard.html', title=leaguename, leaguename=leaguename)

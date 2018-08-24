@@ -80,6 +80,8 @@ class Event(db.Model):
     day = db.Column(db.Date())
     winner = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
     loser = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    league_constraint = relationship("League", foreign_keys=[league_name])
     winner_constraint = relationship("Team", foreign_keys=[winner])
     loser_constraint = relationship("Team", foreign_keys=[loser])
     winning_score = db.Column(db.Integer)
@@ -134,9 +136,9 @@ class Update(db.Model):
     username = db.Column(db.String(60), db.ForeignKey('users.username'), nullable=False)
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
-    #username_constraint = relationship("User", foreign_keys=[username])
+    username_constraint = relationship("User", foreign_keys=[username])
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
-    #league_constraint = relationship("League", foreign_keys=[league_name])
+    league_constraint = relationship("League", foreign_keys=[league_name])
     is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
