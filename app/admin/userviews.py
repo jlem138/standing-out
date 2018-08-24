@@ -16,14 +16,11 @@ def list_users(leaguename):
     List all users
     """
     updates = Update.query.filter_by(league_name=leaguename).all()
-    updateList = []
-    for update in updates:
-        updateList.append(update.username)
 
     # finding usernames of all updated
     updated_entries = Update.query.filter_by(league_name=leaguename).all()
     admin_status = check_admin_user(leaguename)
-    return render_template('admin/users/users.html', leaguename = leaguename, admin_status=admin_status, updates=updates, users_updated=updated_entries, title='Users')
+    return render_template('admin/users/users.html', leaguename=leaguename, admin_status=admin_status, updates=updates, users_updated=updated_entries, title='Users')
 
 
 @admin.route('/users/delete/<leaguename>/<username>', methods=['GET', 'POST'])
@@ -32,8 +29,6 @@ def delete_user(username, leaguename):
     """
     Delete an entry from the update table
     """
-
-    #check_admin()
     updateEntry = Update.query.filter_by(league_name=leaguename, username=username).first()
     userEntry = User.query.filter_by(username=username)
     # Get number of entries that have the same username
@@ -59,7 +54,6 @@ def add_user(leaguename):
     """
     Add a user to the updated list of leagues
     """
-    #check_admin()
 
     add_user = False
 
