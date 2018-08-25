@@ -8,7 +8,7 @@ from .. import db
 from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
-from .helper import get_count, enough_teams, check_admin_user
+from .helper import get_count, enough_teams, check_admin_user, check_admin
 
 
 @admin.route('/teams/<leaguename>', methods=['GET', 'POST'])
