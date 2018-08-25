@@ -9,7 +9,13 @@ from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, Updat
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
 from .database import database_engine
-from .helper import check_admin, get_count
+
+def check_admin():
+    """
+    Prevent non-admins from accessing the page
+    """
+    if not current_user.is_admin:
+        abort(403)
 
 
 @admin.route('/rankings/<leaguename>', methods=['GET', 'POST'])
@@ -18,6 +24,8 @@ def list_rankings(leaguename):
     """
     List all teams
     """
+    #check_admin()
+
     engine = database_engine
     conn = engine.connect()
 
@@ -27,6 +35,12 @@ def list_rankings(leaguename):
     qualifiers = League.query.filter_by(name=leaguename).first().number_of_qualifiers
 
     teams = Team.query.filter_by(league_name=leaguename)
+    results = Event.query.all()
+
+    def get_count(q):
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count_x = q.session.execute(count_q).scalar()
+        return count_x
 
     ranking_data = {}
     differentials = []
@@ -55,6 +69,7 @@ def list_rankings(leaguename):
     winsall.sort(reverse=True)
     lossesall.sort(reverse=True)
 
+
     not_stored = True
     for team in teams:
         # For the team in question, gets the W-L differential
@@ -68,6 +83,7 @@ def list_rankings(leaguename):
                 differentials[j] = team.name
                 # Creates list of rankings
                 ranking[j] = j
+                #print("CP", current_place)
                 not_stored = False
                 print(j, team.name, current_diff, team_diff)
 
@@ -95,15 +111,19 @@ def list_rankings(leaguename):
         name = differentials[rank]
         team_wins = (ranking_data[name]['wins'])
         team_losses = (ranking_data[name]['losses'])
+        #final_team['place'] = ranking[rank]
         final_team['name'] = name
         final_team['wins'] = team_wins
         final_team['losses'] = team_losses
         final_team['GB'] = (leader_differential - (team_wins - team_losses)) / 2.0
         if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
             final_team['place'] = current_ranking
+            print("tied")
         else:
             current_ranking = ranking[rank]+1
             final_team['place'] = current_ranking
+            print("regular")
+        print("DATA", final_team['name'], final_team['place'])
         magic_number = (games + 1) - (last_in_losses + team_wins) + 1
         final_team['magic'] = magic_number
         if (games - team_wins < first_out_least_possible_losses):
@@ -114,6 +134,8 @@ def list_rankings(leaguename):
             playoff_marker = 'ALIVE'
         final_team['eligible'] = playoff_marker
         final_data[rank] = final_team;
+
+    print(final_data)
 
     return render_template('admin/rankings/rankings.html', ranking=ranking, leaguename=leaguename,
                            teams=teams,data=final_data, diffs=differentials,title=leaguename)

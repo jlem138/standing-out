@@ -1,14 +1,13 @@
 # Team Views
 
-from flask import abort, flash, redirect, render_template, url_for, session
-from flask_login import current_user, login_required
+from flask import flash, redirect, render_template, url_for, session
+from flask_login import login_required
 
 from . import admin
 from .. import db
-from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
-from ..models import Team, Event, League, User, Ranking, Update
-from sqlalchemy import func, distinct
-from .helper import get_count, enough_teams, check_admin_user
+from . forms import TeamForm
+from ..models import Team
+from .helper import enough_teams, check_admin_user
 
 
 @admin.route('/teams/<leaguename>', methods=['GET', 'POST'])
@@ -21,7 +20,9 @@ def list_teams(leaguename):
     admin_status = check_admin_user(leaguename)
     teams = Team.query.all()
 
-    return render_template('admin/teams/teams.html', leaguename=leaguename, teams=teams, league=leaguename, title="teams", admin_status=admin_status)
+    return render_template('admin/teams/teams.html', leaguename=leaguename,
+                           teams=teams, league=leaguename, title="teams",
+                           admin_status=admin_status)
 
 
 @admin.route('/teams/<leaguename>/add', methods=['GET', 'POST'])
@@ -30,15 +31,15 @@ def add_team(leaguename):
     """
     Add a team to the database
     """
-    check_admin()
+    #check_admin()
 
     add_team = True
     form = TeamForm()
     if form.validate_on_submit():
         team = Team(name=form.name.data,
-                    division_name = form.division_name.data,
-                    conference_name = form.conference_name.data,
-                    league_name = form.league_name.data)
+                    division_name=form.division_name.data,
+                    conference_name=form.conference_name.data,
+                    league_name=form.league_name.data)
         try:
             # add team to the database
             db.session.add(team)
@@ -51,7 +52,8 @@ def add_team(leaguename):
         ranking_criteria = enough_teams(leaguename)
         session['ranking_criteria'] = ranking_criteria
         # redirect to teams page
-        return redirect(url_for('admin.list_teams', leaguename=leaguename, ranking_criteria=ranking_criteria))
+        return redirect(url_for('admin.list_teams', leaguename=leaguename,
+                                ranking_criteria=ranking_criteria))
 
     # load team template
     return render_template('admin/teams/team.html', action="Add",
@@ -64,8 +66,6 @@ def edit_team(teamname, leaguename):
     """
     Edit a team
     """
-    check_admin()
-
     admin_status = check_admin_user(leaguename)
 
     add_team = False
@@ -87,7 +87,10 @@ def edit_team(teamname, leaguename):
     form.division_name.data = team.division_name
     form.conference_name.data = team.conference_name
     form.league_name.data = team.league_name
-    return render_template('admin/teams/team.html', action="Edit", leaguename=leaguename, add_team=add_team, admin_status=admin_status, form=form,teamname=teamname, title="Edit Team")
+    return render_template('admin/teams/team.html', action="Edit",
+                           leaguename=leaguename, add_team=add_team,
+                           admin_status=admin_status, form=form,
+                           teamname=teamname, title="Edit Team")
 
 
 @admin.route('/teams/<leaguename>/delete/<teamname>', methods=['GET', 'POST'])
@@ -107,6 +110,7 @@ def delete_team(teamname, leaguename):
     session['ranking_criteria'] = ranking_criteria
 
     # redirect to the teams page
-    return redirect(url_for('admin.list_teams', leaguename=leaguename, ranking_criteria=ranking_criteria))
+    return redirect(url_for('admin.list_teams', leaguename=leaguename,
+                            ranking_criteria=ranking_criteria))
 
     return render_template(title="Delete Team")
