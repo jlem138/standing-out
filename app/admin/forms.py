@@ -49,7 +49,7 @@ class LeagueForm(FlaskForm):
     number_of_total_teams = StringField('Total Teams', validators=[DataRequired()])
     number_of_rounds = StringField('Number of Rounds', validators=[DataRequired()])
     number_of_qualifiers = StringField('Number of Qualifiers', validators=[DataRequired()])
-    is_byes = RadioField('Gender', choices = [("Y",'Yes'),("N", 'No')])
+    is_byes = RadioField('Playoff Byes', choices = [("Y",'Yes'),("N", 'No')])
     submit = SubmitField('Submit')
 
 
@@ -71,7 +71,7 @@ class UpdateForm(FlaskForm):
     Form for admin to add user details
     """
     #id = StringField('id', validators=[DataRequired()])
-    league_name = StringField('League Name', validators=[DataRequired()])
+    #league_name = StringField('League Name', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
-    is_admin = RadioField('Admin?', choices = [("True","True"),("False", "False")])
+    is_admin = RadioField('Does this user have Admin status?', choices = [("True","Yes"),("False", "No")])
     submit = SubmitField('Submit')

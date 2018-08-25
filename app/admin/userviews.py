@@ -90,7 +90,7 @@ def edit_user(username, leaguename):
     updateEntry = Update.query.filter_by(league_name=leaguename, username=username).first()
     form = UpdateForm(obj=updateEntry)
     if form.validate_on_submit():
-        updateEntry.league_name = form.league_name.data
+        updateEntry.username = form.username.data
         if form.is_admin.data == "True":
             updateEntry.is_admin = True;
         elif form.is_admin.data == "False":
@@ -102,13 +102,16 @@ def edit_user(username, leaguename):
         return redirect(url_for('admin.list_users', leaguename=leaguename))
     #
     #form.id.data = user.id
-    form.league_name.data = updateEntry.league_name
+    form.username.data = updateEntry.username
     # form.email.data = user.email
     # form.username.data = user.username
     # form.first_name.data = user.first_name
     # form.last_name.data = user.last_name
     # #form.password_hash.data = user.password_hash
-    form.is_admin.data = updateEntry.is_admin
+    if updateEntry.is_admin == True:
+        form.is_admin.data = "True"
+    elif updateEntry.is_admin == False:
+        form.is_admin.data = "False"
 
     return render_template('admin/users/user.html', action="Edit",
                            add_user=add_user, form=form,leaguename=leaguename,

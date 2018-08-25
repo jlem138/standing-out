@@ -62,7 +62,8 @@ def add_event(leaguename):
         return redirect(url_for('admin.list_events', leaguename=leaguename))
 
     # load event template
-    return render_template('admin/events/event.html', add_event=add_event, form=form, title='Add Event', leaguename=leaguename)
+    return render_template('admin/events/event.html', add_event=add_event,
+                           form=form, title='Add Event', leaguename=leaguename)
 
 @admin.route('/events/edit/<leaguename>/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -81,9 +82,15 @@ def edit_event(leaguename, id):
         event.winner = form.winner.data
         event.loser = form.loser.data
         event.winning_score = form.winning_score.data
+
         event.losing_score = form.losing_score.data
-        db.session.commit()
-        flash('You have successfully edited the event.')
+
+        try:
+            db.session.commit()
+            flash('You have successfully edited the event.')
+
+        except:
+            flash('The information you have entered is not correct')
 
         # redirect to the events page
         return redirect(url_for('admin.list_events', leaguename=leaguename))
