@@ -17,14 +17,6 @@ def list_events(leaguename):
     List all events
     """
 
-    # list_of_teams2 = Team.query.filter_by(league_name=leaguename).all()
-    # #events_test = Event.query.filter(Event.winner.in_(list_of_teams2.name)).all()
-    # teamlist = []
-    # for item in list_of_teams2:
-    #     teamlist.append(item.name)
-    #
-    # list_of_teams_in_league = Team.query.filter_by(league_name=leaguename)
-    # events = Event.query.filter(Event.winner.in_(teamlist)).all()
     events = Event.query.filter_by(league_name=leaguename)
     return render_template('admin/events/events.html', leaguename = leaguename,
                            events=events, title='Events')
