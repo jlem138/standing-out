@@ -111,9 +111,6 @@ p.copyright {
 }
 
 .wrapper {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
   margin: 0 auto -4em;
 }
 
@@ -121,7 +118,6 @@ p.copyright {
 
 .outer {
     display: table;
-    position: absolute;
     height: 70%;
     width: 100%;
 }
