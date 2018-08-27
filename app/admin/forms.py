@@ -1,6 +1,7 @@
 # app/admin/forms.py
 
 from flask_wtf import FlaskForm
+from flask_login import current_user, login_required
 from wtforms import StringField, SubmitField, RadioField, BooleanField
 from wtforms.validators import DataRequired
 
@@ -12,7 +13,7 @@ class TeamForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     division_name = StringField('Division Name', validators=[DataRequired()])
     conference_name = StringField('Conference Name', validators=[DataRequired()])
-    league_name = StringField('League Name', validators=[DataRequired()])
+    #league_name = StringField('League Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class RankingForm(FlaskForm):
@@ -58,7 +59,7 @@ class UserForm(FlaskForm):
     Form for admin to add user details
     """
     id = StringField('id', validators=[DataRequired()])
-    league_name = StringField('League Name', validators=[DataRequired()])
+    #league_name = StringField('League Name', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     first_name = StringField('First name', validators=[DataRequired()])

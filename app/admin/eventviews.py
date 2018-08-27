@@ -8,7 +8,7 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking
 from sqlalchemy import func, distinct
-from .helper import check_admin
+from .helper import check_admin_user, check_admin, get_count
 
 @admin.route('/events/<leaguename>')
 @login_required
@@ -17,8 +17,10 @@ def list_events(leaguename):
     List all events
     """
 
+    admin_status=check_admin_user(leaguename)
     events = Event.query.filter_by(league_name=leaguename)
     return render_template('admin/events/events.html', leaguename = leaguename,
+                           admin_status=admin_status,
                            events=events, title='Events')
 
 @admin.route('events/add/<leaguename>', methods=['GET', 'POST'])
@@ -77,16 +79,25 @@ def edit_event(leaguename, id):
 
         event.losing_score = form.losing_score.data
 
-        try:
-            db.session.commit()
-            flash('You have successfully edited the event.')
+        # If winner and loser are different teams, and score isn't the same
+        if (event.winner != event.loser and int(event.winning_score) > int(event.losing_score)):
+            try:
+                db.session.commit()
+                flash('You have successfully edited the event.')
 
-        except:
-            flash('The information you have entered is not correct')
+            except:
+                flash('The information you have entered is not correct')
+
+            return redirect(url_for('admin.list_events', leaguename=leaguename))
+
+        else:
+            #flash('The winning and losing team you entered were the same')
+            #return redirect(url_for('admin.edit_event', id=id, leaguename=leaguename))
 
         # redirect to the events page
-        return redirect(url_for('admin.list_events', leaguename=leaguename))
-
+            return render_template('admin/events/event.html', action="Edit",
+                               add_event=add_event, form=form, leaguename=leaguename,
+                               event=event, title="Edit Event")
     #form.id.data = event.id
     form.day.data = event.day
     form.winner.data = event.winner
@@ -96,7 +107,7 @@ def edit_event(leaguename, id):
 
     return render_template('admin/events/event.html', action="Edit",
                            add_event=add_event, form=form, leaguename=leaguename,
-                           event=event, title="Edit EventX")
+                           event=event, title="Edit Event")
 
 
 @admin.route('/events/delete/<leaguename>/<int:id>', methods=['GET', 'POST'])

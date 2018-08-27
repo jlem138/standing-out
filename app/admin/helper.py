@@ -15,7 +15,6 @@ def check_admin():
         abort(403)
 
 def check_admin_user(leaguename):
-    print("IMPORT WAS GOOD")
     current_username = current_user.username
     status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
     status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()

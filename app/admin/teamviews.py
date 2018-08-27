@@ -21,7 +21,8 @@ def list_teams(leaguename):
     admin_status = check_admin_user(leaguename)
     teams = Team.query.all()
 
-    return render_template('admin/teams/teams.html', leaguename=leaguename, teams=teams, league=leaguename, title="teams", admin_status=admin_status)
+    return render_template('admin/teams/teams.html', leaguename=leaguename,
+                           teams=teams, league=leaguename, title="teams", admin_status=admin_status)
 
 
 @admin.route('/teams/<leaguename>/add', methods=['GET', 'POST'])
@@ -38,7 +39,7 @@ def add_team(leaguename):
         team = Team(name=form.name.data,
                     division_name = form.division_name.data,
                     conference_name = form.conference_name.data,
-                    league_name = form.league_name.data)
+                    league_name = leaguename)
         try:
             # add team to the database
             db.session.add(team)
@@ -76,7 +77,7 @@ def edit_team(teamname, leaguename):
         team.name = form.name.data
         team.division_name = form.division_name.data
         team.conference_name = form.conference_name.data
-        team.league_name = form.league_name.data
+        team.league_name = leaguename
         db.session.commit()
         flash('You have successfully edited the team.')
 
@@ -86,7 +87,7 @@ def edit_team(teamname, leaguename):
     form.name.data = team.name
     form.division_name.data = team.division_name
     form.conference_name.data = team.conference_name
-    form.league_name.data = team.league_name
+    #form.league_name.data = team.league_name
     return render_template('admin/teams/team.html', action="Edit", leaguename=leaguename, add_team=add_team, admin_status=admin_status, form=form,teamname=teamname, title="Edit Team")
 
 

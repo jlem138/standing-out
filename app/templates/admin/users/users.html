@@ -22,7 +22,7 @@
                   <th width="15%"> Last Name </th>
                   <th width="15%"> Username </th>
                   <th width="10%"> League </th>
-                  <th width="10%"> is admin </th>
+                  <th width="10%"> Admin </th>
                   {% if admin_status %}
                     <th width="10%"></th>
                     <th width="10%"></th>
@@ -30,39 +30,18 @@
                 </tr>
               </thead>
               <tbody>
-              {% for user in users %}
-              <!-- first print out the regular users -->
-                {% if user.league_name == "PASS" %}
-                  <tr>
-                    <td> {{ user.first_name }} </td>
-                    <td> {{ user.last_name }} </td>
-                    <td> {{ user.username}} </td>
-                    <td> {{ user.league_name }} </td>
-                    <td> {{ user.is_admin }} </td>
-                    {% if admin_status %}
-                      <td>
-                        <a href="{{ url_for('admin.edit_user', id=user.id, leaguename=user.league_name) }}">
-                          <i class="fa fa-pencil"></i> Edit
-                        </a>
-                      </td>
-                      <td>
-                        <a href="{{ url_for('admin.delete_user', id=user.id, leaguename=user.league_name) }}">
-                          <i class="fa fa-trash"></i> Delete
-                        </a>
-                      </td>
-                    {% endif %}
-                  </tr>
-                  {% endif %}
-              {% endfor %}
-              <!-- then print out the all of the updated users -->
               {% for user in users_updated %}
                   <tr>
                     <td> {{ user.first_name }}</td>
                     <td> {{ user.last_name}}</td>
                     <td> {{ user.username }} </td>
                     <td> {{ leaguename }} </td>
-                    <td> {{ user.is_admin }} </td>
-                    {% if admin_status %}
+                    {% if user.is_admin == False %}
+                    <td> No </td>
+                    {% elif user.is_admin == True %}
+                    <td> Yes </td>
+                    {% endif %}
+                    {% if admin_status and (current_username != user.username ) %}
                       <td>
                         <a href="{{ url_for('admin.edit_user', username=user.username, leaguename=leaguename) }}">
                           <i class="fa fa-pencil"></i> Edit
@@ -72,6 +51,11 @@
                         <a href="{{ url_for('admin.delete_user', username=user.username, leaguename=leaguename) }}">
                           <i class="fa fa-trash"></i> Delete
                         </a>
+                      </td>
+                    {% elif admin_status %}
+                      <td>
+                      </td>
+                      <td>
                       </td>
                     {% endif %}
                   </tr>

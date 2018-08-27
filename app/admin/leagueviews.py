@@ -57,8 +57,15 @@ def list_leagues():
     """
     List all leagues
     """
-    # changed
-    leagues = League.query.all()
+
+    current_username = current_user.username
+    leagues_held_by_user_entries = Update.query.filter_by(username=current_username).all()
+
+    user_league_list = []
+    for entry in leagues_held_by_user_entries:
+        user_league_list.append(entry.league_name)
+
+    leagues = League.query.filter(League.name.in_(user_league_list)).all()
 
     return render_template('admin/leagues/leagues.html', title="leagues", leagues=leagues)
 
