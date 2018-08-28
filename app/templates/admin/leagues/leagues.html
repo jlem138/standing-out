@@ -25,8 +25,7 @@
                   <th width="10%"> Number of Playoff Rounds </th>
                   <th width="10%"> Playoff Qualifiers  </th>
                   <th width="10%"> Byes </th>
-                  {% if admin_status %}
-                    <th width="8%"> </th>
+                  {% if at_least_one_admin %}
                     <th width="8%"> </th>
                   {% endif %}
                 </tr>
@@ -45,16 +44,10 @@
                   <td> {{ league.number_of_rounds }} </td>
                   <td> {{ league.number_of_qualifiers }} </td>
                   <td> {{ league.is_byes }} </td>
-                  {% if admin_status %}
+                  {% if overall_statuses[league.name] == True %}
                     <td>
                       <a href="{{ url_for('admin.edit_league', leaguename=league.name) }}">
                         <i class="fa fa-pencil"></i> Edit
-                      </a>
-                    </td>
-                    </td>
-                    <td>
-                      <a href="{{ url_for('admin.delete_league', leaguename=leaguename) }}">
-                        <i class="fa fa-trash"></i> Delete
                       </a>
                     </td>
                     {% endif %}

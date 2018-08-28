@@ -9,7 +9,7 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
-from .helper import check_admin
+from .helper import check_admin, check_admin_user
 
 # League Views
 
@@ -61,13 +61,24 @@ def list_leagues():
     current_username = current_user.username
     leagues_held_by_user_entries = Update.query.filter_by(username=current_username).all()
 
+    at_least_one_admin = False
     user_league_list = []
+    overall_statuses = {}
     for entry in leagues_held_by_user_entries:
         user_league_list.append(entry.league_name)
+        status = check_admin_user(entry.league_name)
+        overall_statuses[entry.league_name]=status
+        if status is True:
+            at_least_one_admin = True
 
     leagues = League.query.filter(League.name.in_(user_league_list)).all()
+    print("OS", overall_statuses['WNBA'])
+    print("OS", overall_statuses['MLB'])
+    print("ULL", user_league_list)
 
-    return render_template('admin/leagues/leagues.html', title="Leagues", leagues=leagues)
+    return render_template('admin/leagues/leagues.html', title="Leagues",
+                            overall_statuses=overall_statuses, leagues=leagues,
+                            at_least_one_admin=at_least_one_admin)
 
 
 @admin.route('/leagues/delete/<leaguename>', methods=['GET', 'POST'])
