@@ -65,6 +65,8 @@ class Team(db.Model):
     conference_name = db.Column(db.String(60))
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
+    wins = db.Column(db.Integer)
+    losses = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Team: {}>'.format(self.name)
@@ -116,9 +118,12 @@ class Ranking(db.Model):
 
     __tablename__ = 'rankings'
 
-    team = db.Column(db.String(200), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    team = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
+    team_constraint = relationship("Team", foreign_keys=[team])
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
+    games_played = db.Column(db.Integer)
     gb = db.Column(db.Integer)
     mnumber = db.Column(db.Integer)
 

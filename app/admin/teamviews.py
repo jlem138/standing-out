@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
+from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm, TeamNoNameForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
 from .helper import get_count, enough_teams, check_admin_user, check_admin
@@ -21,8 +21,9 @@ def list_teams(leaguename):
     admin_status = check_admin_user(leaguename)
     teams = Team.query.all()
 
+
     return render_template('admin/teams/teams.html', leaguename=leaguename,
-                           teams=teams, league=leaguename, title="teams", admin_status=admin_status)
+                           teams=teams, league=leaguename, title="Teams", admin_status=admin_status)
 
 
 @admin.route('/teams/<leaguename>/add', methods=['GET', 'POST'])
@@ -39,6 +40,8 @@ def add_team(leaguename):
         team = Team(name=form.name.data,
                     division_name = form.division_name.data,
                     conference_name = form.conference_name.data,
+                    wins=0,
+                    losses=0,
                     league_name = leaguename)
         try:
             # add team to the database
@@ -70,11 +73,16 @@ def edit_team(teamname, leaguename):
     admin_status = check_admin_user(leaguename)
 
     add_team = False
-
     team = Team.query.get_or_404(teamname)
-    form = TeamForm(obj=team)
+    game_count = team.wins + team.losses
+    if game_count > 0:
+        form = TeamNoNameForm(obj=team)
+    else:
+        form = TeamForm(obj=team)
+
     if form.validate_on_submit():
-        team.name = form.name.data
+        if game_count == 0:
+            team.name = form.name.data
         team.division_name = form.division_name.data
         team.conference_name = form.conference_name.data
         team.league_name = leaguename
@@ -84,7 +92,8 @@ def edit_team(teamname, leaguename):
         # redirect to the teams page
         return redirect(url_for('admin.list_teams', leaguename=leaguename))
 
-    form.name.data = team.name
+    if game_count == 0:
+        team.name = form.name.data
     form.division_name.data = team.division_name
     form.conference_name.data = team.conference_name
     #form.league_name.data = team.league_name
@@ -99,7 +108,8 @@ def delete_team(teamname, leaguename):
     """
     check_admin()
 
-    team = Team.query.get_or_404(teamname)
+    team = Team.query.filter_by(name=teamname).first()
+
     db.session.delete(team)
     db.session.commit()
     flash('You have successfully deleted the team.')

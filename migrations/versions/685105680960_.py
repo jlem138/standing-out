@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 2cab9a47050d
+Revision ID: 685105680960
 Revises: 
-Create Date: 2018-08-23 04:30:32.530733
+Create Date: 2018-08-27 20:56:18.625187
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2cab9a47050d'
+revision = '685105680960'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,19 +28,13 @@ def upgrade():
     sa.Column('is_byes', sa.String(length=200), nullable=True),
     sa.PrimaryKeyConstraint('name')
     )
-    op.create_table('rankings',
-    sa.Column('team', sa.String(length=200), nullable=False),
-    sa.Column('wins', sa.Integer(), nullable=True),
-    sa.Column('losses', sa.Integer(), nullable=True),
-    sa.Column('gb', sa.Integer(), nullable=True),
-    sa.Column('mnumber', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('team')
-    )
     op.create_table('teams',
     sa.Column('name', sa.String(length=60), nullable=False),
     sa.Column('division_name', sa.String(length=60), nullable=True),
     sa.Column('conference_name', sa.String(length=60), nullable=True),
     sa.Column('league_name', sa.String(length=60), nullable=False),
+    sa.Column('wins', sa.Integer(), nullable=True),
+    sa.Column('losses', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['league_name'], ['leagues.name'], ),
     sa.PrimaryKeyConstraint('name')
     )
@@ -73,6 +67,17 @@ def upgrade():
     sa.ForeignKeyConstraint(['winner'], ['teams.name'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('rankings',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('team', sa.String(length=200), nullable=False),
+    sa.Column('wins', sa.Integer(), nullable=True),
+    sa.Column('losses', sa.Integer(), nullable=True),
+    sa.Column('games_played', sa.Integer(), nullable=True),
+    sa.Column('gb', sa.Integer(), nullable=True),
+    sa.Column('mnumber', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['team'], ['teams.name'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('updates',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('username', sa.String(length=60), nullable=False),
@@ -94,6 +99,7 @@ def downgrade():
     op.drop_index(op.f('ix_updates_last_name'), table_name='updates')
     op.drop_index(op.f('ix_updates_first_name'), table_name='updates')
     op.drop_table('updates')
+    op.drop_table('rankings')
     op.drop_table('events')
     op.drop_index(op.f('ix_users_username'), table_name='users')
     op.drop_index(op.f('ix_users_last_name'), table_name='users')
@@ -101,6 +107,5 @@ def downgrade():
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     op.drop_table('teams')
-    op.drop_table('rankings')
     op.drop_table('leagues')
     # ### end Alembic commands ###

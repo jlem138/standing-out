@@ -21,7 +21,7 @@ def list_events(leaguename):
     events = Event.query.filter_by(league_name=leaguename)
     return render_template('admin/events/events.html', leaguename = leaguename,
                            admin_status=admin_status,
-                           events=events, title='Events')
+                           events=events, title='Game Results')
 
 @admin.route('events/add/<leaguename>', methods=['GET', 'POST'])
 @login_required
@@ -41,10 +41,16 @@ def add_event(leaguename):
             loser = form.loser.data,
             league_name=leaguename,
             winning_score = form.winning_score.data,
-            losing_score = form.losing_score.data)
+            losing_score = form.losing_score.data
+            )
+
+        winning_team_entry=Team.query.filter_by(name=event.winner).first()
+        losing_team_entry=Team.query.filter_by(name=event.loser).first()
+
+        winning_team_entry.wins = (str(int(winning_team_entry.wins)+1))
+        losing_team_entry.losses = (str(int(losing_team_entry.losses)+1))
 
         try:
-            # add event to the database
             db.session.add(event)
             db.session.commit()
             flash('You have successfully added a new event.')
@@ -57,7 +63,7 @@ def add_event(leaguename):
 
     # load event template
     return render_template('admin/events/event.html', add_event=add_event,
-                           form=form, title='Add Event', leaguename=leaguename)
+                           form=form, title='Add Game Result', leaguename=leaguename)
 
 @admin.route('/events/edit/<leaguename>/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -72,16 +78,33 @@ def edit_event(leaguename, id):
     form = EventForm(obj=event)
     if form.validate_on_submit():
         #event.id = form.id.data
+
+
+        previous_winning_team_entry=Team.query.filter_by(name=event.winner).first()
+        previous_losing_team_entry=Team.query.filter_by(name=event.loser).first()
+
+        #previous_winning_team_entry.wins = (str(int(previous_winning_team_entry.wins)-1))
+        #previous_losing_team_entry.losses = (str(int(previous_losing_team_entry.losses)-1))
+
         event.day = form.day.data
         event.winner = form.winner.data
         event.loser = form.loser.data
         event.winning_score = form.winning_score.data
-
         event.losing_score = form.losing_score.data
+
+        new_winning_team_entry=Team.query.filter_by(name=event.winner).first()
+        new_losing_team_entry=Team.query.filter_by(name=event.loser).first()
+
+        #new_winning_team_entry.wins = (str(int(new_winning_team_entry.wins)+1))
+        #new_losing_team_entry.losses = (str(int(new_losing_team_entry.losses)+1))
 
         # If winner and loser are different teams, and score isn't the same
         if (event.winner != event.loser and int(event.winning_score) > int(event.losing_score)):
             try:
+                previous_winning_team_entry.wins = (str(int(previous_winning_team_entry.wins)-1))
+                previous_losing_team_entry.losses = (str(int(previous_losing_team_entry.losses)-1))
+                new_winning_team_entry.wins = (str(int(new_winning_team_entry.wins)+1))
+                new_losing_team_entry.losses = (str(int(new_losing_team_entry.losses)+1))
                 db.session.commit()
                 flash('You have successfully edited the event.')
 
@@ -97,7 +120,7 @@ def edit_event(leaguename, id):
         # redirect to the events page
             return render_template('admin/events/event.html', action="Edit",
                                add_event=add_event, form=form, leaguename=leaguename,
-                               event=event, title="Edit Event")
+                               event=event, title="Edit Game Result")
     #form.id.data = event.id
     form.day.data = event.day
     form.winner.data = event.winner
@@ -107,7 +130,7 @@ def edit_event(leaguename, id):
 
     return render_template('admin/events/event.html', action="Edit",
                            add_event=add_event, form=form, leaguename=leaguename,
-                           event=event, title="Edit Event")
+                           event=event, title="Edit Game Result")
 
 
 @admin.route('/events/delete/<leaguename>/<int:id>', methods=['GET', 'POST'])
@@ -119,6 +142,13 @@ def delete_event(leaguename, id):
     check_admin()
 
     event = Event.query.get_or_404(id)
+
+    winning_team_entry=Team.query.filter_by(name=event.winner).first()
+    losing_team_entry=Team.query.filter_by(name=event.loser).first()
+
+    winning_team_entry.wins = (str(int(winning_team_entry.wins)-1))
+    losing_team_entry.losses = (str(int(losing_team_entry.losses)-1))
+
     db.session.delete(event)
     db.session.commit()
     flash('You have successfully deleted the event.')
@@ -126,4 +156,4 @@ def delete_event(leaguename, id):
     # redirect to the events page
     return redirect(url_for('admin.list_events', leaguename=leaguename))
 
-    return render_template(title="Delete Event")
+    return render_template(title="Delete Game Result")

@@ -113,7 +113,9 @@ def list_rankings(leaguename):
         else:
             playoff_marker = 'ALIVE'
         final_team['eligible'] = playoff_marker
-        final_data[rank] = final_team;
+        final_team['games'] = team_wins + team_losses
 
-    return render_template('admin/rankings/rankings.html', ranking=ranking, leaguename=leaguename,
-                           teams=teams,data=final_data, diffs=differentials,title=leaguename)
+    # Add games to database
+
+
+    return render_template('admin/rankings/rankings.html', ranking=ranking, leaguename=leaguename, teams=teams,data=final_data, diffs=differentials, title=title)

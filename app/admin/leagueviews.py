@@ -67,7 +67,7 @@ def list_leagues():
 
     leagues = League.query.filter(League.name.in_(user_league_list)).all()
 
-    return render_template('admin/leagues/leagues.html', title="leagues", leagues=leagues)
+    return render_template('admin/leagues/leagues.html', title="Leagues", leagues=leagues)
 
 
 @admin.route('/leagues/delete/<leaguename>', methods=['GET', 'POST'])
@@ -86,7 +86,7 @@ def delete_league(leaguename):
     # redirect to the events page
     return redirect(url_for('admin.list_leagues'))
 
-    return render_template(title="Delete Leagues")
+    return render_template(title="Delete League")
 
 
 @admin.route('/leagues/edit/<leaguename>', methods=['GET', 'POST'])

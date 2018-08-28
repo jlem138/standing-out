@@ -16,13 +16,22 @@ class TeamForm(FlaskForm):
     #league_name = StringField('League Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class TeamNoNameForm(FlaskForm):
+    """
+    Form for admin to add or edit a team
+    """
+
+    division_name = StringField('Division Name', validators=[DataRequired()])
+    conference_name = StringField('Conference Name', validators=[DataRequired()])
+    #league_name = StringField('League Name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 class RankingForm(FlaskForm):
     """
     Form for admin to add or edit a team
     """
 
-    team = StringField('Name', validators=[DataRequired()])
-    wins = StringField('ws', validators=[DataRequired()])
+    id = StringField('id', validators=[DataRequired()])
     losses = StringField('Ls', validators=[DataRequired()])
     gb = StringField('gb', validators=[DataRequired()])
     mnumber = StringField('mnumber', validators=[DataRequired()])

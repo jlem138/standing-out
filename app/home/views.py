@@ -41,8 +41,6 @@ def admin_dashboard(leaguename):
         else:
             ranking_criteria = False
 
-        print("TEAMCOUNT", teamcount)
-        print("team requirement", team_requirement)
         return(ranking_criteria)
 
     session['ranking_criteria'] = enough_teams(leaguename)

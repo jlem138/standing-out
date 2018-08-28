@@ -43,9 +43,11 @@
                         </a>
                       </td>
                       <td>
-                        <a href="{{ url_for('admin.delete_team', teamname=team.name, leaguename=team.league_name) }}">
-                          <i class="fa fa-trash"></i> Delete
-                        </a>
+                        {% if (team.wins + team.losses) == 0 %}
+                          <a href="{{ url_for('admin.delete_team', teamname=team.name, leaguename=team.league_name) }}">
+                            <i class="fa fa-trash"></i> Delete
+                          </a>
+                        {% endif %}
                       </td>
                     </tr>
                     {% endif %}

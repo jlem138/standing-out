@@ -122,4 +122,4 @@ def edit_user(username, leaguename):
 
     return render_template('admin/users/user.html', action="Edit",
                            add_user=add_user, form=form,leaguename=leaguename,
-                           users_updated=updateEntry, title="Edit user")
+                           users_updated=updateEntry, title="Edit User")
