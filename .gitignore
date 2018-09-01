@@ -4,6 +4,7 @@ data.py
 database.py
 *.pyc
 venv
+tests.py
 
 # Ignore instance folder
 instance/

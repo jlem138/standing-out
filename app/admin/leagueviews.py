@@ -72,9 +72,6 @@ def list_leagues():
             at_least_one_admin = True
 
     leagues = League.query.filter(League.name.in_(user_league_list)).all()
-    print("OS", overall_statuses['WNBA'])
-    print("OS", overall_statuses['MLB'])
-    print("ULL", user_league_list)
 
     return render_template('admin/leagues/leagues.html', title="Leagues",
                             overall_statuses=overall_statuses, leagues=leagues,
@@ -113,7 +110,7 @@ def edit_league(leaguename):
     league = League.query.get_or_404(leaguename)
     form = LeagueForm(obj=league)
     if form.validate_on_submit():
-        league.name = form.name.data
+        #league.name = form.name.data
         league.number_of_conferences = form.number_of_conferences.data
         league.number_of_games = form.number_of_games.data
         league.number_of_total_teams = form.number_of_total_teams.data
@@ -126,7 +123,7 @@ def edit_league(leaguename):
         # redirect to the events page
         return redirect(url_for('admin.list_leagues'))
 
-    form.name.data = league.name
+    #form.name.data = league.name
     form.number_of_conferences.data = league.number_of_conferences
     form.number_of_games.data = league.number_of_games
     form.number_of_total_teams.data = league.number_of_total_teams

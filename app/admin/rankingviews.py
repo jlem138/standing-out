@@ -100,10 +100,10 @@ def list_rankings(leaguename):
         final_team['losses'] = team_losses
         final_team['GB'] = (leader_differential - (team_wins - team_losses)) / 2.0
         if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
-            final_team['place'] = current_ranking
+           final_team['place'] = current_ranking
         else:
-            current_ranking = ranking[rank]+1
-            final_team['place'] = current_ranking
+           current_ranking = ranking[rank]+1
+           final_team['place'] = current_ranking
         magic_number = (games + 1) - (last_in_losses + team_wins) + 1
         final_team['magic'] = magic_number
         if (games - team_wins < first_out_least_possible_losses):
@@ -113,9 +113,10 @@ def list_rankings(leaguename):
         else:
             playoff_marker = 'ALIVE'
         final_team['eligible'] = playoff_marker
-        final_team['games'] = team_wins + team_losses
+        final_data[rank] = final_team
 
     # Add games to database
 
+    title = leaguename + " Rankings"
 
     return render_template('admin/rankings/rankings.html', ranking=ranking, leaguename=leaguename, teams=teams,data=final_data, diffs=differentials, title=title)

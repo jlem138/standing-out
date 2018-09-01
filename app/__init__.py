@@ -7,11 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+from flask.ext.heroku import Heroku
 
 # local imports
 from config import app_config
 
 # db variable initialization
+heroku = Heroku(app)
 db = SQLAlchemy()
 login_manager = LoginManager()
 
