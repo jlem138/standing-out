@@ -1,5 +1,6 @@
 # app/__init__.py
 import sys
+import os
 #print("path ",sys.path)
 # third-party imports
 from flask import Flask
@@ -7,13 +8,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from flask.ext.heroku import Heroku
 
 # local imports
 from config import app_config
 
 # db variable initialization
-heroku = Heroku(app)
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -21,6 +20,8 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(app_config[config_name])
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    ]
     app.config.from_pyfile('config.py')
     db.init_app(app)
 
