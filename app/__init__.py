@@ -20,8 +20,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(app_config[config_name])
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-    ]
+    #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
     app.config.from_pyfile('config.py')
     db.init_app(app)
 
