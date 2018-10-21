@@ -93,6 +93,7 @@ def list_rankings(leaguename):
     prev_GB = -1
     final_data = {}
     current_ranking = 1
+    # test
     for rank in range(number_of_teams):
         final_team = {}
         name = differentials[rank]
