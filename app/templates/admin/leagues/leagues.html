@@ -44,7 +44,7 @@
                   <td> {{ league.number_of_rounds }} </td>
                   <td> {{ league.number_of_qualifiers }} </td>
                   <td> {{ league.is_byes }} </td>
-                  {% if overall_statuses[league.name] == True %}
+                  {% if overall_statuses[league.name] == "1" %}
                     <td>
                       <a href="{{ url_for('admin.edit_league', leaguename=league.name) }}">
                         <i class="fa fa-pencil"></i> Edit

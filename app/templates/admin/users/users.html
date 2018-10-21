@@ -36,10 +36,10 @@
                     <td> {{ user.last_name}}</td>
                     <td> {{ user.username }} </td>
                     <td> {{ leaguename }} </td>
-                    {% if user.is_admin == False %}
-                    <td> No </td>
-                    {% elif user.is_admin == True %}
+                    {% if user.is_admin == '1' %}
                     <td> Yes </td>
+                    {% elif user.is_admin == '0' %}
+                    <td> No </td>
                     {% endif %}
                     {% if admin_status and (current_username != user.username ) %}
                       <td>

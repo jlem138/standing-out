@@ -71,13 +71,16 @@ def list_rankings(leaguename):
                 not_stored = False
                 print(j, team.name, current_diff, team_diff)
 
-    last_in = differentials[qualifiers]
+    # print("test line")
+    print("Q", qualifiers)
+    print(differentials)
+    last_in = differentials[qualifiers-1]
     last_in_wins = ranking_data[last_in]['wins']
     last_in_losses = ranking_data[last_in]['losses']
     leader_differential = ranking_data[differentials[0]]['differential']
 
     first_out_least_possible_losses = lossesall[number_of_teams - qualifiers - 1]
-    last_in_least_possible_wins = winsall[qualifiers]
+    last_in_least_possible_wins = winsall[qualifiers-1]
 
     def zero_out(entry):
         if (type(entry) != int):

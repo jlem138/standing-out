@@ -21,7 +21,10 @@ def list_users(leaguename):
     # finding usernames of all updated
     updated_entries = Update.query.filter_by(league_name=leaguename).all()
     admin_status = check_admin_user(leaguename)
-    return render_template('admin/users/users.html', leaguename=leaguename, admin_status=admin_status, updates=updates, users_updated=updated_entries, current_username = current_username, title='Users')
+    #print("THIS ONE", leaguename, current_username, admin_status)
+    return render_template('admin/users/users.html', leaguename=leaguename,
+    admin_status=admin_status, updates=updates, users_updated=updated_entries,
+    current_username = current_username, title='Users')
 
 
 @admin.route('/users/delete/<leaguename>/<username>', methods=['GET', 'POST'])
@@ -60,12 +63,13 @@ def add_user(leaguename):
 
     form = UpdateForm()
     if form.validate_on_submit():
-        if form.is_admin.data == True:
-            current_is_admin = True
-        elif form.is_admin.data == False:
-            current_is_admin = False
+        if form.is_admin.data == '1':
+            current_is_admin = '1'
+        elif form.is_admin.data == '0':
+            current_is_admin = '0'
         #if 1==1:
         #    current_is_admin = True
+        print("GO", current_is_admin)
         userEntry = User.query.filter_by(username=form.username.data).first()
         user_first_name = userEntry.first_name
         user_last_name = userEntry.last_name
@@ -105,20 +109,23 @@ def edit_user(username, leaguename):
         userEntry = User.query.filter_by(username=form.username.data).first()
         updateEntry.first_name = userEntry.first_name
         updateEntry.last_name = userEntry.last_name
-        if form.is_admin.data == True:
-            updateEntry.is_admin = True;
-        elif form.is_admin.data == False:
-            updateEntry.is_admin = False;
+        #updateEntry.is_admin = form.is_admin.data
+        print("DATA-ONE", form.is_admin.data)
+        if form.is_admin.data == 'True':
+            updateEntry.is_admin = '1'
+        elif form.is_admin.data == 'False':
+            updateEntry.is_admin = '0'
+        print("DATA7777", updateEntry.is_admin)
         db.session.commit()
         flash('You have successfully edited the user.')
     #     # redirect to the events page
         return redirect(url_for('admin.list_users', leaguename=leaguename))
     #
     form.username.data = updateEntry.username
-    if updateEntry.is_admin == True:
-        form.is_admin.data = True
-    elif updateEntry.is_admin == False:
-        form.is_admin.data = False
+    if updateEntry.is_admin == '1':
+        form.is_admin.data = '1'
+    elif updateEntry.is_admin == '0':
+        form.is_admin.data = '0'
 
     return render_template('admin/users/user.html', action="Edit",
                            add_user=add_user, form=form,leaguename=leaguename,

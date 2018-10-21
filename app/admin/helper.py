@@ -17,11 +17,16 @@ def check_admin():
 def check_admin_user(leaguename):
     current_username = current_user.username
     status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
+    #status_users = User.query.all()
     status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
+
     for status in status_updates:
-        if ((status.username == current_username) and (status.is_admin == True)):
-            return True
-    return False
+        if ((status.username == current_username) and (status.is_admin == '1')):
+            return '1'
+    for status in status_users:
+        if ((status.username == current_username) and (status.is_admin == '1')):
+            return '1'
+    return '0'
 
 def get_count(q):
     count_q = q.statement.with_only_columns([func.count()]).order_by(None)

@@ -68,9 +68,10 @@ def list_leagues():
         user_league_list.append(entry.league_name)
         status = check_admin_user(entry.league_name)
         overall_statuses[entry.league_name]=status
-        if status is True:
+        print("ENTRY STATUS", status)
+        if status == "1":
             at_least_one_admin = True
-
+    print("at least", at_least_one_admin)
     leagues = League.query.filter(League.name.in_(user_league_list)).all()
 
     return render_template('admin/leagues/leagues.html', title="Leagues",
