@@ -6,6 +6,7 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
+import math as math
 
 def check_admin():
     """
@@ -45,3 +46,10 @@ def enough_teams(leaguename):
         ranking_criteria = False
 
     return(ranking_criteria)
+
+def round_to_three(wins, losses):
+    games = (1.0 * wins) + losses
+    percent = (wins/games) * 1000
+    three_digits = math.floor(percent)
+    winning_percent = (three_digits / 1000.0)
+    return(format(winning_percent, '0.3f'))

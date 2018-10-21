@@ -9,7 +9,7 @@ from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, Updat
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
 from .database import database_engine
-from .helper import check_admin, get_count
+from .helper import check_admin, get_count, round_to_three
 
 
 @admin.route('/rankings/<leaguename>', methods=['GET', 'POST'])
@@ -102,7 +102,7 @@ def list_rankings(leaguename):
         final_team['name'] = name
         final_team['wins'] = team_wins
         final_team['losses'] = team_losses
-        final_team['winning percentage'] = team_wins / (team_wins + team_losses)
+        final_team['winning percentage'] = round_to_three(team_wins, team_losses)
         final_team['GB'] = (leader_differential - (team_wins - team_losses)) / 2.0
         if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
            final_team['place'] = current_ranking
