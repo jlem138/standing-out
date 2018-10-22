@@ -32,7 +32,7 @@ def add_team(leaguename):
     """
     Add a team to the database
     """
-    check_admin()
+    #check_admin()
 
     add_team = True
     form = TeamForm()
@@ -68,7 +68,7 @@ def edit_team(teamname, leaguename):
     """
     Edit a team
     """
-    check_admin()
+    #check_admin()
 
     admin_status = check_admin_user(leaguename)
 
@@ -106,7 +106,7 @@ def delete_team(teamname, leaguename):
     """
     Delete a team from the database
     """
-    check_admin()
+    #check_admin()
 
     team = Team.query.filter_by(name=teamname).first()
 

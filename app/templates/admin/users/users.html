@@ -11,7 +11,7 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">Users</h1>
+        <h1 style="text-align:center;">{{leaguename}} Users</h1>
         {% if users or updates %}
           <hr class="intro-divider">
           <div class="center">
@@ -23,7 +23,7 @@
                   <th width="15%"> Username </th>
                   <th width="10%"> League </th>
                   <th width="10%"> Admin </th>
-                  {% if admin_status %}
+                  {% if admin_status == '1' %}
                     <th width="10%"></th>
                     <th width="10%"></th>
                   {% endif %}
@@ -41,7 +41,7 @@
                     {% elif user.is_admin == '0' %}
                     <td> No </td>
                     {% endif %}
-                    {% if admin_status and (current_username != user.username ) %}
+                    {% if admin_status == '1' and (current_username != user.username ) %}
                       <td>
                         <a href="{{ url_for('admin.edit_user', username=user.username, leaguename=leaguename) }}">
                           <i class="fa fa-pencil"></i> Edit
@@ -52,7 +52,7 @@
                           <i class="fa fa-trash"></i> Delete
                         </a>
                       </td>
-                    {% elif admin_status %}
+                    {% elif admin_status == '1' %}
                       <td>
                       </td>
                       <td>
@@ -70,7 +70,7 @@
             <h3> No events have been added. </h3>
             <hr class="intro-divider">
         {% endif %}
-        {% if admin_status %}
+        {% if admin_status == '1' %}
               <a href="{{ url_for('admin.add_user', leaguename=leaguename) }}" class="btn btn-default btn-lg">
                 <i class="fa fa-plus"></i>
               Add Existing User

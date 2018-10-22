@@ -104,7 +104,7 @@ def edit_league(leaguename):
     """
     Edit a league
     """
-    check_admin()
+    #check_admin()
 
     add_league = False
 
