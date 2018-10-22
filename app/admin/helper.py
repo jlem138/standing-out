@@ -12,21 +12,22 @@ def check_admin():
     """
     Prevent non-admins from accessing the page
     """
+    print("CU", current_user.username)
     if not current_user.is_admin:
         abort(403)
 
 def check_admin_user(leaguename):
     current_username = current_user.username
-    status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
+    #status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
     #status_users = User.query.all()
     status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
 
     for status in status_updates:
         if ((status.username == current_username) and (status.is_admin == '1')):
             return '1'
-    for status in status_users:
-        if ((status.username == current_username) and (status.is_admin == '1')):
-            return '1'
+    #for status in status_users:
+    #    if ((status.username == current_username) and (status.is_admin == '1')):
+    #        return '1'
     return '0'
 
 def get_count(q):

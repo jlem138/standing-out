@@ -11,7 +11,7 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">Teams</h1>
+        <h1 style="text-align:center;"> {{league}} Teams</h1>
         {% if teams %}
         <hr class="intro-divider">
         <div class="center">
@@ -21,8 +21,7 @@
                 <th width="25%"> Name </th>
                 <th width="15%"> Division </th>
                 <th width="15%"> Conference </th>
-                <th width="15%"> League </th>
-                {% if admin_status %}
+                {% if admin_status == '1' %}
                 <th width="15%"> </th>
                 <th width="15%"> </th>
                 {% endif %}
@@ -35,8 +34,7 @@
                     <td> {{ team.name }} </td>
                     <td> {{ team.division_name }} </td>
                     <td> {{ team.conference_name }} </td>
-                    <td> {{ team.league_name }} </td>
-                    {% if admin_status %}
+                    {% if admin_status == '1' %}
                       <td>
                         <a href="{{ url_for('admin.edit_team', teamname=team.name, leaguename=team.league_name) }}">
                           <i class="fa fa-pencil"></i> Edit
@@ -63,7 +61,7 @@
             <hr class="intro-divider">
           </div>
           {% endif %}
-          {% if admin_status %}
+          {% if admin_status == '1' %}
               <a href="{{ url_for('admin.add_team', leaguename=leaguename) }}" class="btn btn-default btn-lg">
                 <i class="fa fa-plus"></i>
                 Add Team

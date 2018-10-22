@@ -20,10 +20,10 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(60), index=True, unique=True)
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
-    league_constraint = relationship("League", foreign_keys=[league_name])
+    #league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    #league_constraint = relationship("League", foreign_keys=[league_name])
     password_hash = db.Column(db.String(128))
-    is_admin = db.Column(db.String(200))
+    #is_admin = db.Column(db.String(200))
 
     @property
     def password(self):

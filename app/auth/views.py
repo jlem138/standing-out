@@ -20,21 +20,20 @@ def register():
                         username=form.username.data,
                         first_name=form.first_name.data,
                         last_name=form.last_name.data,
-                        password=form.password.data,
-                        league_name=form.league_name.data)
+                        password=form.password.data)
 
-        update = Update(
-                        username=form.username.data,
-                        league_name=form.league_name.data,
-                        first_name=form.first_name.data,
-                        last_name=form.last_name.data,
-                        is_admin=False)
+        #update = Update(
+        #                username=form.username.data,
+        #                league_name="WNBA",
+        #                first_name=form.first_name.data,
+        #                last_name=form.last_name.data,
+        #                is_admin=False)
 
         # add user to the database
         db.session.add(user)
         db.session.commit()
-        db.session.add(update)
-        db.session.commit()
+        #db.session.add(update)
+        #db.session.commit()
         flash('You have successfully registered! You may now login.')
 
         # redirect to the login page
@@ -57,10 +56,10 @@ def login():
             login_user(user)
 
             # redirect to the appropriate dashboard page
-            if user.is_admin:
-                return redirect(url_for('admin.list_leagues'))
-            else:
-                return redirect(url_for('home.dashboard'))
+            # if user.is_admin:
+            return redirect(url_for('admin.list_leagues'))
+            #else:
+            #    return redirect(url_for('home.dashboard'))
 
         # when login details are incorrect
         else:
