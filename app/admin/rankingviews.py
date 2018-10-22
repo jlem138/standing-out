@@ -93,7 +93,7 @@ def list_rankings(leaguename):
     prev_GB = -1
     final_data = {}
     current_ranking = 1
-    # test
+    # test the winning percentage branch
     for rank in range(number_of_teams):
         final_team = {}
         name = differentials[rank]
@@ -124,4 +124,6 @@ def list_rankings(leaguename):
 
     title = leaguename + " Rankings"
 
-    return render_template('admin/rankings/rankings.html', ranking=ranking, leaguename=leaguename, teams=teams,data=final_data, diffs=differentials, title=title)
+    return render_template('admin/rankings/rankings.html', ranking=ranking,
+    leaguename=leaguename, teams=teams,data=final_data, diffs=differentials,
+    title=title)
