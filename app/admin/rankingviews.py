@@ -123,6 +123,23 @@ def list_rankings(leaguename):
     # Add games to database
 
     title = leaguename + " Rankings"
+    #print("FD", final_data)
+
+    for rank in range(number_of_teams):
+        print("FD", final_data[rank])
+
+
+    # Create standings string:
+    message = []
+    for rank in range(number_of_teams):
+        # add Rank
+        message.append(str(rank+1))
+        message.append(". ")
+        message.append(final_data[rank]['name'])
+        if (rank+1) != number_of_teams:
+            message.append('\n')
+    message=''.join(message)
+    print(message)
 
     return render_template('admin/rankings/rankings.html', ranking=ranking,
     leaguename=leaguename, teams=teams,data=final_data, diffs=differentials,
