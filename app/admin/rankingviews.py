@@ -73,11 +73,7 @@ def list_rankings(leaguename):
                 # Creates list of rankings
                 ranking[j] = j
                 not_stored = False
-                print(j, team.name, current_diff, team_diff)
-
-    # print("test line")
-    print("Q", qualifiers)
-    print(differentials)
+                
     last_in = differentials[qualifiers-1]
     last_in_wins = ranking_data[last_in]['wins']
     last_in_losses = ranking_data[last_in]['losses']
@@ -147,6 +143,10 @@ def list_rankings(leaguename):
 @login_required
 def rankings_text(leaguename, rankings_message):
 
+    # get league users
+
+    league_users = Update.query.filter_by(league_name=leaguename).all()
+
     admin_status = check_admin_user(leaguename)
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -156,11 +156,20 @@ def rankings_text(leaguename, rankings_message):
 
     client = Client(account_sid, auth_token)
 
-    client.messages.create(
-        to=personal_number,
-        from_=twilio_number,
-        body=rankings_message
-    )
+
+    # for every user in the updates for the league, if their phone number is
+    # registered then send that person a text with the standings
+
+    for user in league_users:
+        phone = user.phone_number
+        if phone is not None:
+            to_number="1"+phone
+
+            client.messages.create(
+                to="1"+to_number,
+                from_=twilio_number,
+                body=rankings_message
+                )
 
     title="FINISHED"
 
