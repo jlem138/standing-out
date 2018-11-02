@@ -20,6 +20,7 @@ def register():
                         username=form.username.data,
                         first_name=form.first_name.data,
                         last_name=form.last_name.data,
+                        phone_number=form.phone_number.data,
                         password=form.password.data)
 
         #update = Update(

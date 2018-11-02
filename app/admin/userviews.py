@@ -23,7 +23,6 @@ def list_users(leaguename):
     admin_status = check_admin_user(leaguename)
     #if admin_status == '0':
     #    admin_status = False
-    print("THIS ONE", leaguename, current_username, admin_status)
     return render_template('admin/users/users.html', leaguename=leaguename,
     admin_status=admin_status, updates=updates, users_updated=updated_entries,
     current_username = current_username, title='Users')
@@ -74,14 +73,16 @@ def add_user(leaguename):
         #if 1==1:
         #    current_is_admin = True
         #print("GO", current_is_admin)
-        userEntry = User.query.filter_by(username=form.username.data).first()
+        userEntry = User.query.filter_by(username=form.username.data).all()
         user_first_name = userEntry.first_name
         user_last_name = userEntry.last_name
+        user_phone_number = userEntry.phone_number
         update = Update(
             username=form.username.data,
             first_name=user_first_name,
             last_name=user_last_name,
             league_name=leaguename,
+            phone_number=user_phone_number,
             is_admin=current_is_admin
             )
         try:

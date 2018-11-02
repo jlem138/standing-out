@@ -1,4 +1,5 @@
-# app/admin/views.py
+# app/admin/rankings.py
+import os
 
 from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
@@ -9,7 +10,8 @@ from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, Updat
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
 from .database import database_engine
-from .helper import check_admin, get_count, round_to_three
+from .helper import get_count, enough_teams, check_admin_user, check_admin, round_to_three
+from twilio.rest import Client
 
 
 @admin.route('/rankings/<leaguename>', methods=['GET', 'POST'])
@@ -20,6 +22,8 @@ def list_rankings(leaguename):
     """
     engine = database_engine
     conn = engine.connect()
+
+    admin_status = check_admin_user(leaguename)
 
     # Retrieve data on teh number of games, number of teams, and qualifiers for the league
     games = League.query.filter_by(name=leaguename).first().number_of_games
@@ -69,11 +73,7 @@ def list_rankings(leaguename):
                 # Creates list of rankings
                 ranking[j] = j
                 not_stored = False
-                print(j, team.name, current_diff, team_diff)
-
-    # print("test line")
-    print("Q", qualifiers)
-    print(differentials)
+                
     last_in = differentials[qualifiers-1]
     last_in_wins = ranking_data[last_in]['wins']
     last_in_losses = ranking_data[last_in]['losses']
@@ -120,10 +120,57 @@ def list_rankings(leaguename):
         final_team['eligible'] = playoff_marker
         final_data[rank] = final_team
 
-    # Add games to database
-
     title = leaguename + " Rankings"
 
+    #Create standings string:
+    message = []
+    for rank in range(number_of_teams):
+        # add Rank
+        message.append(str(rank+1))
+        message.append(". ")
+        message.append(final_data[rank]['name'])
+        if (rank+1) != number_of_teams:
+            message.append('\n')
+    rankings_message=''.join(message)
+
+
     return render_template('admin/rankings/rankings.html', ranking=ranking,
-    leaguename=leaguename, teams=teams,data=final_data, diffs=differentials,
+    leaguename=leaguename, admin_status=admin_status, number_of_teams=number_of_teams,
+    teams=teams,data=final_data, diffs=differentials, rankings_message=rankings_message,
     title=title)
+
+@admin.route('/rankings/sendtext/<leaguename>/<rankings_message>', methods=['GET', 'POST'])
+@login_required
+def rankings_text(leaguename, rankings_message):
+
+    # get league users
+
+    league_users = Update.query.filter_by(league_name=leaguename).all()
+
+    admin_status = check_admin_user(leaguename)
+
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    personal_number = os.environ['PERSONAL_NUMBER']
+    twilio_number = os.environ['TWILIO_NUMBER']
+
+    client = Client(account_sid, auth_token)
+
+
+    # for every user in the updates for the league, if their phone number is
+    # registered then send that person a text with the standings
+
+    for user in league_users:
+        phone = user.phone_number
+        if phone is not None:
+            to_number="1"+phone
+
+            client.messages.create(
+                to="1"+to_number,
+                from_=twilio_number,
+                body=rankings_message
+                )
+
+    title="FINISHED"
+
+    return redirect(url_for('admin.list_rankings', leaguename=leaguename))
