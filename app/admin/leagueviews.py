@@ -68,26 +68,24 @@ def list_leagues():
         user_league_list.append(entry.league_name)
         status = check_admin_user(entry.league_name)
         overall_statuses[entry.league_name]=status
-        print("ENTRY STATUS", status)
         if status == "1":
             at_least_one_admin = True
-    print("at least", at_least_one_admin)
-    leagues = League.query.filter(League.name.in_(user_league_list)).all()
+    leagues = League.query.filter(League.league_name.in_(user_league_list)).all()
 
     return render_template('admin/leagues/leagues.html', title="Leagues",
                             overall_statuses=overall_statuses, leagues=leagues,
                             at_least_one_admin=at_least_one_admin)
 
 
-@admin.route('/leagues/delete/<leaguename>', methods=['GET', 'POST'])
+@admin.route('/leagues/delete/<league_name>', methods=['GET', 'POST'])
 @login_required
-def delete_league(leaguename):
+def delete_league(league_name):
     """
     Delete a league from the database
     """
     check_admin()
 
-    league = League.query.get_or_404(leaguename)
+    league = League.query.get_or_404(league_name)
     db.session.delete(league)
     db.session.commit()
     flash('You have successfully deleted the league.')
@@ -98,20 +96,17 @@ def delete_league(leaguename):
     return render_template(title="Delete League")
 
 
-@admin.route('/leagues/edit/<leaguename>', methods=['GET', 'POST'])
+@admin.route('/leagues/edit/<league_name>', methods=['GET', 'POST'])
 @login_required
-def edit_league(leaguename):
+def edit_league(league_name):
     """
     Edit a league
     """
-    #check_admin()
-
     add_league = False
 
-    league = League.query.get_or_404(leaguename)
+    league = League.query.get_or_404(league_name)
     form = LeagueForm(obj=league)
     if form.validate_on_submit():
-        #league.name = form.name.data
         league.number_of_conferences = form.number_of_conferences.data
         league.number_of_games = form.number_of_games.data
         league.number_of_total_teams = form.number_of_total_teams.data
@@ -124,7 +119,6 @@ def edit_league(leaguename):
         # redirect to the events page
         return redirect(url_for('admin.list_leagues'))
 
-    #form.name.data = league.name
     form.number_of_conferences.data = league.number_of_conferences
     form.number_of_games.data = league.number_of_games
     form.number_of_total_teams.data = league.number_of_total_teams
@@ -133,4 +127,4 @@ def edit_league(leaguename):
     form.is_byes.data = league.is_byes
 
     return render_template('admin/leagues/league.html', action="Edit", add_league=add_league, form=form,
-    leaguename=leaguename, title="Edit League")
+    league_name=league_name, title="Edit League")

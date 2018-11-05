@@ -10,22 +10,22 @@ from ..models import Team, Event, League, User, Ranking
 from sqlalchemy import func, distinct
 from .helper import check_admin_user, check_admin, get_count
 
-@admin.route('/events/<leaguename>')
+@admin.route('/events/<league_name>')
 @login_required
-def list_events(leaguename):
+def list_events(league_name):
     """
     List all events
     """
 
-    admin_status=check_admin_user(leaguename)
-    events = Event.query.filter_by(league_name=leaguename)
-    return render_template('admin/events/events.html', leaguename = leaguename,
+    admin_status=check_admin_user(league_name)
+    events = Event.query.filter_by(league_name=league_name)
+    return render_template('admin/events/events.html', league_name = league_name,
                            admin_status=admin_status,
                            events=events, title='Game Results')
 
-@admin.route('events/add/<leaguename>', methods=['GET', 'POST'])
+@admin.route('events/add/<league_name>', methods=['GET', 'POST'])
 @login_required
-def add_event(leaguename):
+def add_event(league_name):
     """
     Add a event to the database
     """
@@ -39,7 +39,7 @@ def add_event(leaguename):
             day = form.day.data,
             winner = form.winner.data,
             loser = form.loser.data,
-            league_name=leaguename,
+            league_name=league_name,
             winning_score = form.winning_score.data,
             losing_score = form.losing_score.data
             )
@@ -59,15 +59,15 @@ def add_event(leaguename):
             flash('Error: event name already exists.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_events', leaguename=leaguename))
+        return redirect(url_for('admin.list_events', league_name=league_name))
 
     # load event template
     return render_template('admin/events/event.html', add_event=add_event,
-                           form=form, title='Add Game Result', leaguename=leaguename)
+                           form=form, title='Add Game Result', league_name=league_name)
 
-@admin.route('/events/edit/<leaguename>/<int:id>', methods=['GET', 'POST'])
+@admin.route('/events/edit/<league_name>/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_event(leaguename, id):
+def edit_event(league_name, id):
     """
     Edit a event
     """
@@ -111,15 +111,15 @@ def edit_event(leaguename, id):
             except:
                 flash('The information you have entered is not correct')
 
-            return redirect(url_for('admin.list_events', leaguename=leaguename))
+            return redirect(url_for('admin.list_events', league_name=league_name))
 
         else:
             #flash('The winning and losing team you entered were the same')
-            #return redirect(url_for('admin.edit_event', id=id, leaguename=leaguename))
+            #return redirect(url_for('admin.edit_event', id=id, league_name=league_name))
 
         # redirect to the events page
             return render_template('admin/events/event.html', action="Edit",
-                               add_event=add_event, form=form, leaguename=leaguename,
+                               add_event=add_event, form=form, league_name=league_name,
                                event=event, title="Edit Game Result")
     #form.id.data = event.id
     form.day.data = event.day
@@ -129,13 +129,13 @@ def edit_event(leaguename, id):
     form.losing_score.data = event.losing_score
 
     return render_template('admin/events/event.html', action="Edit",
-                           add_event=add_event, form=form, leaguename=leaguename,
+                           add_event=add_event, form=form, league_name=league_name,
                            event=event, title="Edit Game Result")
 
 
-@admin.route('/events/delete/<leaguename>/<int:id>', methods=['GET', 'POST'])
+@admin.route('/events/delete/<league_name>/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_event(leaguename, id):
+def delete_event(league_name, id):
     """
     Delete a event from the database
     """
@@ -154,6 +154,6 @@ def delete_event(leaguename, id):
     flash('You have successfully deleted the event.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_events', leaguename=leaguename))
+    return redirect(url_for('admin.list_events', league_name=league_name))
 
     return render_template(title="Delete Game Result")

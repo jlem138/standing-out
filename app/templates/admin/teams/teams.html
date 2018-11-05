@@ -36,13 +36,13 @@
                     <td> {{ team.conference_name }} </td>
                     {% if admin_status == '1' %}
                       <td>
-                        <a href="{{ url_for('admin.edit_team', teamname=team.name, leaguename=team.league_name) }}">
+                        <a href="{{ url_for('admin.edit_team', teamname=team.name, league_name=team.league_name) }}">
                           <i class="fa fa-pencil"></i> Edit
                         </a>
                       </td>
                       <td>
                         {% if (team.wins + team.losses) == 0 %}
-                          <a href="{{ url_for('admin.delete_team', teamname=team.name, leaguename=team.league_name) }}">
+                          <a href="{{ url_for('admin.delete_team', teamname=team.name, league_name=team.league_name) }}">
                             <i class="fa fa-trash"></i> Delete
                           </a>
                         {% endif %}
@@ -62,7 +62,7 @@
           </div>
           {% endif %}
           {% if admin_status == '1' %}
-              <a href="{{ url_for('admin.add_team', leaguename=leaguename) }}" class="btn btn-default btn-lg">
+              <a href="{{ url_for('admin.add_team', league_name=league_name) }}" class="btn btn-default btn-lg">
                 <i class="fa fa-plus"></i>
                 Add Team
               </a>

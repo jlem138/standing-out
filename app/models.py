@@ -21,15 +21,12 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
     phone_number = db.Column(db.String(10), index=True, unique=True)
-    #league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
-    #league_constraint = relationship("League", foreign_keys=[league_name])
     password_hash = db.Column(db.String(128))
-    #is_admin = db.Column(db.String(200))
 
     @property
     def password(self):
         """
-        Prevent pasword from being accessed
+        Prevents the pasword from ever being accessed
         """
         raise AttributeError('password is not a readable attribute.')
 
@@ -64,7 +61,7 @@ class Team(db.Model):
     name = db.Column(db.String(60), primary_key=True)
     division_name = db.Column(db.String(60))
     conference_name = db.Column(db.String(60))
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
@@ -83,7 +80,7 @@ class Event(db.Model):
     day = db.Column(db.Date())
     winner = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
     loser = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
     winner_constraint = relationship("Team", foreign_keys=[winner])
     loser_constraint = relationship("Team", foreign_keys=[loser])
@@ -100,7 +97,7 @@ class League(db.Model):
 
     __tablename__ = 'leagues'
 
-    name = db.Column(db.String(200), primary_key=True)
+    league_name = db.Column(db.String(200), primary_key=True)
     number_of_games = db.Column(db.Integer)
     number_of_conferences = db.Column(db.Integer)
     number_of_total_teams = db.Column(db.Integer)
@@ -143,7 +140,7 @@ class Update(db.Model):
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
     username_constraint = relationship("User", foreign_keys=[username])
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.name'), nullable=False)
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
     phone_number = db.Column(db.String(10), index=True, unique=True)
     is_admin = db.Column(db.String(200))

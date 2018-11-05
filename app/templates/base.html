@@ -25,14 +25,14 @@
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
-                  {% if leaguename %}
-                    <li><a href="{{ url_for('admin.list_leagues') }}">{{leaguename}}</a></li>
+                  {% if league_name %}
+                    <li><a href="{{ url_for('admin.list_leagues') }}">{{league_name}}</a></li>
                     {% if session['ranking_criteria'] %}
-                      <li><a href="{{ url_for('admin.list_rankings', leaguename=leaguename)  }}">Rankings</a></li>
+                      <li><a href="{{ url_for('admin.list_rankings', league_name=league_name)  }}">Rankings</a></li>
                     {% endif %}
-                    <li><a href="{{ url_for('admin.list_teams', leaguename=leaguename) }}">Teams</a></li>
-                    <li><a href="{{ url_for('admin.list_events', leaguename=leaguename) }}">Game Results</a></li>
-                    <li><a href="{{ url_for('admin.list_users', leaguename=leaguename) }}">Users</a></li>
+                    <li><a href="{{ url_for('admin.list_teams', league_name=league_name) }}">Teams</a></li>
+                    <li><a href="{{ url_for('admin.list_events', league_name=league_name) }}">Game Results</a></li>
+                    <li><a href="{{ url_for('admin.list_users', league_name=league_name) }}">Users</a></li>
                   {% endif %}
                   <li><a href="{{ url_for('admin.list_leagues') }}">Leagues</a></li>
                   <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
