@@ -9,35 +9,35 @@ from sqlalchemy import func, distinct
 from .helper import check_admin_user, check_admin, get_count
 
 
-@admin.route('/users/<leaguename>')
+@admin.route('/users/<league_name>')
 @login_required
-def list_users(leaguename):
+def list_users(league_name):
     """
     List all users
     """
-    updates = Update.query.filter_by(league_name=leaguename).all()
+    updates = Update.query.filter_by(league_name=league_name).all()
 
     current_username = current_user.username
     # finding usernames of all updated
-    updated_entries = Update.query.filter_by(league_name=leaguename).all()
-    admin_status = check_admin_user(leaguename)
+    updated_entries = Update.query.filter_by(league_name=league_name).all()
+    admin_status = check_admin_user(league_name)
     #if admin_status == '0':
     #    admin_status = False
-    return render_template('admin/users/users.html', leaguename=leaguename,
+    return render_template('admin/users/users.html', league_name=league_name,
     admin_status=admin_status, updates=updates, users_updated=updated_entries,
     current_username = current_username, title='Users')
 
 
-@admin.route('/users/delete/<leaguename>/<username>', methods=['GET', 'POST'])
+@admin.route('/users/delete/<league_name>/<username>', methods=['GET', 'POST'])
 @login_required
-def delete_user(username, leaguename):
+def delete_user(username, league_name):
     """
     Delete an entry from the update table
     """
-    updateEntry = Update.query.filter_by(league_name=leaguename, username=username).first()
+    updateEntry = Update.query.filter_by(league_name=league_name, username=username).first()
     userEntry = User.query.filter_by(username=username)
     # Get number of entries that have the same username
-    entries_count = get_count(Update.query.filter_by(league_name=leaguename))
+    entries_count = get_count(Update.query.filter_by(league_name=league_name))
 
     # if there is only 1 entry, then this is the only information the user has, so delete the user, first delete the update
     db.session.delete(updateEntry)
@@ -49,13 +49,13 @@ def delete_user(username, leaguename):
     flash('You have successfully deleted the update.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_users', leaguename=leaguename))
+    return redirect(url_for('admin.list_users', league_name=league_name))
 
     return render_template(title="Delete users")
 
-@admin.route('user/add/<leaguename>', methods=['GET', 'POST'])
+@admin.route('user/add/<league_name>', methods=['GET', 'POST'])
 @login_required
-def add_user(leaguename):
+def add_user(league_name):
     """
     Add a user to the updated list of leagues
     """
@@ -67,12 +67,7 @@ def add_user(leaguename):
         if form.is_admin.data == '1':
             current_is_admin = '1'
         else:
-
-        #elif form.is_admin.data == '0':
             current_is_admin = '0'
-        #if 1==1:
-        #    current_is_admin = True
-        #print("GO", current_is_admin)
         userEntry = User.query.filter_by(username=form.username.data).all()
         user_first_name = userEntry.first_name
         user_last_name = userEntry.last_name
@@ -81,7 +76,7 @@ def add_user(leaguename):
             username=form.username.data,
             first_name=user_first_name,
             last_name=user_last_name,
-            league_name=leaguename,
+            league_name=league_name,
             phone_number=user_phone_number,
             is_admin=current_is_admin
             )
@@ -95,36 +90,34 @@ def add_user(leaguename):
             flash('Error: user name already exists.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_users', leaguename=leaguename))
+        return redirect(url_for('admin.list_users', league_name=league_name))
 
     # load event template
-    return render_template('admin/users/user.html', add_user=add_user, form=form, title='Add User', leaguename=leaguename)
+    return render_template('admin/users/user.html', add_user=add_user, form=form,
+    title='Add User', league_name=league_name)
 
-@admin.route('/users/edit/<leaguename>/<username>', methods=['GET', 'POST'])
+@admin.route('/users/edit/<league_name>/<username>', methods=['GET', 'POST'])
 @login_required
-def edit_user(username, leaguename):
+def edit_user(username, league_name):
     """
     Edit a user
     """
     add_user = False
-    updateEntry = Update.query.filter_by(league_name=leaguename, username=username).first()
+    updateEntry = Update.query.filter_by(league_name=league_name, username=username).first()
     form = UpdateForm(obj=updateEntry)
     if form.validate_on_submit():
         updateEntry.username = form.username.data
         userEntry = User.query.filter_by(username=form.username.data).first()
         updateEntry.first_name = userEntry.first_name
         updateEntry.last_name = userEntry.last_name
-        #updateEntry.is_admin = form.is_admin.data
-        print("DATA-ONE", form.is_admin.data)
         if form.is_admin.data == 'True':
             updateEntry.is_admin = '1'
         elif form.is_admin.data == 'False':
             updateEntry.is_admin = '0'
-        print("DATA7777", updateEntry.is_admin)
         db.session.commit()
         flash('You have successfully edited the user.')
     #     # redirect to the events page
-        return redirect(url_for('admin.list_users', leaguename=leaguename))
+        return redirect(url_for('admin.list_users', league_name=league_name))
     #
     form.username.data = updateEntry.username
     if updateEntry.is_admin == '1':
@@ -133,5 +126,5 @@ def edit_user(username, leaguename):
         form.is_admin.data = '0'
 
     return render_template('admin/users/user.html', action="Edit",
-                           add_user=add_user, form=form,leaguename=leaguename,
+                           add_user=add_user, form=form,league_name=league_name,
                            users_updated=updateEntry, title="Edit User")

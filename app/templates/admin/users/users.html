@@ -11,7 +11,7 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">{{leaguename}} Users</h1>
+        <h1 style="text-align:center;">{{league_name}} Users</h1>
         {% if users or updates %}
           <hr class="intro-divider">
           <div class="center">
@@ -35,7 +35,7 @@
                     <td> {{ user.first_name }}</td>
                     <td> {{ user.last_name}}</td>
                     <td> {{ user.username }} </td>
-                    <td> {{ leaguename }} </td>
+                    <td> {{ league_name }} </td>
                     {% if user.is_admin == '1' %}
                     <td> Yes </td>
                     {% elif user.is_admin == '0' %}
@@ -43,12 +43,12 @@
                     {% endif %}
                     {% if admin_status == '1' and (current_username != user.username ) %}
                       <td>
-                        <a href="{{ url_for('admin.edit_user', username=user.username, leaguename=leaguename) }}">
+                        <a href="{{ url_for('admin.edit_user', username=user.username, league_name=league_name) }}">
                           <i class="fa fa-pencil"></i> Edit
                         </a>
                       </td>
                       <td>
-                        <a href="{{ url_for('admin.delete_user', username=user.username, leaguename=leaguename) }}">
+                        <a href="{{ url_for('admin.delete_user', username=user.username, league_name=league_name) }}">
                           <i class="fa fa-trash"></i> Delete
                         </a>
                       </td>
@@ -71,7 +71,7 @@
             <hr class="intro-divider">
         {% endif %}
         {% if admin_status == '1' %}
-              <a href="{{ url_for('admin.add_user', leaguename=leaguename) }}" class="btn btn-default btn-lg">
+              <a href="{{ url_for('admin.add_user', league_name=league_name) }}" class="btn btn-default btn-lg">
                 <i class="fa fa-plus"></i>
               Add Existing User
               </a>

@@ -12,22 +12,16 @@ def check_admin():
     """
     Prevent non-admins from accessing the page
     """
-    print("CU", current_user.username)
     if not current_user.is_admin:
         abort(403)
 
-def check_admin_user(leaguename):
+def check_admin_user(league_name):
     current_username = current_user.username
-    #status_users = User.query.filter_by(league_name=leaguename, username=current_username).all()
-    #status_users = User.query.all()
-    status_updates = Update.query.filter_by(league_name=leaguename, username=current_username).all()
+    status_updates = Update.query.filter_by(league_name=league_name, username=current_username).all()
 
     for status in status_updates:
         if ((status.username == current_username) and (status.is_admin == '1')):
             return '1'
-    #for status in status_users:
-    #    if ((status.username == current_username) and (status.is_admin == '1')):
-    #        return '1'
     return '0'
 
 def get_count(q):
@@ -36,10 +30,10 @@ def get_count(q):
     return count_x
 
 
-def enough_teams(leaguename):
+def enough_teams(league_name):
 
-    teamcount = get_count(Team.query.filter_by(league_name=leaguename))
-    team_requirement = League.query.filter_by(name=leaguename).first().number_of_total_teams
+    teamcount = get_count(Team.query.filter_by(league_name=league_name))
+    team_requirement = League.query.filter_by(league_name=league_name).first().number_of_total_teams
 
     if (teamcount == team_requirement):
         ranking_criteria = True
@@ -50,7 +44,4 @@ def enough_teams(leaguename):
 
 def round_to_three(wins, losses):
     games = (1.0 * wins) + losses
-    percent = (wins/games) * 1000
-    three_digits = math.floor(percent)
-    winning_percent = (three_digits / 1000.0)
-    return(format(winning_percent, '0.3f'))
+    return(format(wins/games, '0.3f'))

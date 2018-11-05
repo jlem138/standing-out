@@ -11,7 +11,7 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">{{leaguename}} Rankings</h1>
+        <h1 style="text-align:center;">{{league_name}} Rankings</h1>
         {% if data %}
           <hr class="intro-divider">
           <div class="center">
@@ -51,7 +51,7 @@
             <hr class="intro-divider">
         {% endif %}
         {% if admin_status == '1' %}
-            <a href="{{ url_for('admin.rankings_text', leaguename=leaguename,
+            <a href="{{ url_for('admin.rankings_text', league_name=league_name,
             rankings_message=rankings_message) }}" class="btn btn-default btn-lg">
               <i class="fa fa-plus"></i>
               Send Rankings Update
