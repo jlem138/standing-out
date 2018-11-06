@@ -20,9 +20,10 @@ def list_users(league_name):
     current_username = current_user.username
     # finding usernames of all updated
     updated_entries = Update.query.filter_by(league_name=league_name).all()
+
+    # Check the admin status to be passed to html page
     admin_status = check_admin_user(league_name)
-    #if admin_status == '0':
-    #    admin_status = False
+
     return render_template('admin/users/users.html', league_name=league_name,
     admin_status=admin_status, updates=updates, users_updated=updated_entries,
     current_username = current_username, title='Users')
