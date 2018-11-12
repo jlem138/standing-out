@@ -27,7 +27,7 @@ def list_teams(league_name):
 
 @admin.route('/teams/<league_name>/add', methods=['GET', 'POST'])
 @login_required
-def add_team(leaguen_ame):
+def add_team(league_name):
     """
     Add a team to the database
     """
