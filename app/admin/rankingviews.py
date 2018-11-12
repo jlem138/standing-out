@@ -9,7 +9,7 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
-from .database import database_engine
+#from .database import database_engine
 from .helper import get_count, enough_teams, check_admin_user, check_admin, round_to_three
 from twilio.rest import Client
 
@@ -20,8 +20,8 @@ def list_rankings(league_name):
     """
     List all teams
     """
-    engine = database_engine
-    conn = engine.connect()
+    #engine = database_engine
+    #conn = engine.connect()
 
     admin_status = check_admin_user(league_name)
 
