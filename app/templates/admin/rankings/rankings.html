@@ -25,7 +25,7 @@
                   <th width="15%"> Win % </th>
                   <th width="10%"> GB </th>
                   <th width="15%"> Magic Number </th>
-                  <th width="20%"> Playoff Eligible </th>
+                  <th width="20%"> Playoff Status </th>
                 </tr>
               </thead>
               <tbody>
@@ -38,7 +38,7 @@
                   <td> {{ data[rank]['winning percentage'] }}
                   <td> {{ data[rank]['GB'] }}</td>
                   <td> {{ data[rank]['magic'] }} </td>
-                  <td> {{ data[rank]['eligible'] }}</td>
+                  <td> {{ data[rank]['status'] }}</td>
                 </tr>
               {% endfor %}
               </tbody>
