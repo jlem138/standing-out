@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     # as is the name of the model
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id_number = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60), index=True, unique=True)
     username = db.Column(db.String(60), index=True, unique=True)
     first_name = db.Column(db.String(60), index=True)
@@ -58,11 +58,12 @@ class Team(db.Model):
 
     __tablename__ = 'teams'
 
-    name = db.Column(db.String(60), primary_key=True)
+    id_number = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(60), unique=True)
     division_name = db.Column(db.String(60))
     conference_name = db.Column(db.String(60))
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
-    league_constraint = relationship("League", foreign_keys=[league_name])
+    league_id = db.Column(db.String(60), db.ForeignKey('leagues.id_number'), nullable=False)
+    league_id_constraint = relationship("League", foreign_keys=[league_id])
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
 
@@ -76,14 +77,14 @@ class Event(db.Model):
 
     __tablename__ = 'events'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_number = db.Column(db.Integer, primary_key=True, autoincrement=True)
     day = db.Column(db.Date())
-    winner = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
-    loser = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
-    league_constraint = relationship("League", foreign_keys=[league_name])
-    winner_constraint = relationship("Team", foreign_keys=[winner])
-    loser_constraint = relationship("Team", foreign_keys=[loser])
+    winner_id = db.Column(db.String(200), db.ForeignKey('teams.id_number'), nullable=False)
+    loser_id = db.Column(db.String(200), db.ForeignKey('teams.id_number'), nullable=False)
+    league_id = db.Column(db.String(60), db.ForeignKey('leagues.id_number'), nullable=False)
+    league_id_constraint = relationship("League", foreign_keys=[league_id])
+    winner_id_constraint = relationship("Team", foreign_keys=[winner_id])
+    loser_id_constraint = relationship("Team", foreign_keys=[loser_id])
     winning_score = db.Column(db.Integer)
     losing_score = db.Column(db.Integer)
 
@@ -97,7 +98,8 @@ class League(db.Model):
 
     __tablename__ = 'leagues'
 
-    league_name = db.Column(db.String(200), primary_key=True)
+    id_number = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    league_name = db.Column(db.String(200), unique=True)
     number_of_games = db.Column(db.Integer)
     number_of_conferences = db.Column(db.Integer)
     number_of_total_teams = db.Column(db.Integer)
@@ -116,14 +118,12 @@ class Ranking(db.Model):
 
     __tablename__ = 'rankings'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    team = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
-    team_constraint = relationship("Team", foreign_keys=[team])
+    id_number = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    team_id = db.Column(db.String(200), db.ForeignKey('teams.id_number'), nullable=False)
+    team_constraint = relationship("Team", foreign_keys=[team_id])
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
     games_played = db.Column(db.Integer)
-    gb = db.Column(db.Integer)
-    mnumber = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Ranking: {}>'.format(self.name)
@@ -135,12 +135,12 @@ class Update(db.Model):
 
     __tablename__ = 'updates'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_number = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(60), db.ForeignKey('users.username'), nullable=False)
-    first_name = db.Column(db.String(60), index=True)
-    last_name = db.Column(db.String(60), index=True)
+    #first_name = db.Column(db.String(60), index=True)
+    #last_name = db.Column(db.String(60), index=True)
     username_constraint = relationship("User", foreign_keys=[username])
-    league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
+    league_name = db.Column(db.String(60), db.ForeignKey('leagues.id_number'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
     phone_number = db.Column(db.String(10), index=True, unique=True)
     is_admin = db.Column(db.String(200))
