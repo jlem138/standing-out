@@ -101,7 +101,11 @@ def list_rankings(league_name):
             final_team['winning percentage'] = round_to_three(team_wins, team_losses)
 
             # Add games behind to team dictionary
-            final_team['GB'] = (leader_differential - (team_wins - team_losses)) / 2.0
+            final_team['GB'] = games_behind(leader_differential, team_wins, team_losses)
+                # games_behind_leader = (leader_differential - (team_wins - team_losses)) / 2.0
+                # if games_behind_leader == 0:
+                #     games_behind_leader = '-'
+                # final_team['GB'] = games_behind_leader
 
             # Add team's rank to each team dictionary -- allows for ties between teams with the same record
             if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
@@ -114,21 +118,37 @@ def list_rankings(league_name):
             final_team['magic'] = magic_number_with_losses - team_wins
 
             # Determine team playoff status
-            final_team['status'] = determine_playoff_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses)
+            final_team['status'] = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, 0)
+
+            playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses)
+            #final_data['status'] =
+            #print("ONE", playoff_stats[0])
+            #print("TWO", playoff_stats[1])#final_team['magic'] = playoff_stats[1]
+
+            final_team['status'] = playoff_stats[0]
+            final_team['magic'] = playoff_stats[1]
+
+            # Determine team playoff status
+            #final_team['status']
 
             final_data[rank] = final_team
         results = [final_data, ranking]
         return(results)
 
-    def determine_playoff_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses):
+    def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses,  magic_number_with_losses):
         # Determine team playoff status
         if (team_wins > first_out_max_wins):
             status = 'IN'
+            magic = '-'
         elif (team_losses > last_in_max_losses):
             status = 'OUT'
+            magic = '-'
         else:
             status = 'ALIVE'
-        return(status)
+            # Determines 'Magic Number' for teams to qualify
+            magic = magic_number_with_losses - team_wins
+
+        return([status,magic])
 
     def create_standings_message(number_of_teams, data):
         #Create standings string:
@@ -143,6 +163,11 @@ def list_rankings(league_name):
         rankings_message=''.join(message)
         return(rankings_message)
 
+    def games_behind(leader_differential, team_wins, team_losses):
+        games_behind_leader = (leader_differential - (team_wins - team_losses)) / 2.0
+        if games_behind_leader == 0:
+            games_behind_leader = '-'
+        return(games_behind_leader)
 
     returned_data = collect_ranking_data(teams)
     returned_ranking_data = returned_data[0]

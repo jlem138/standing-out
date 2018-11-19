@@ -2,7 +2,9 @@
 
 {% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
-{% block title %}Leagues{% endblock %}
+{% block title %}
+Leagues
+{% endblock %}
 {% block body %}
 <div class="content-section">
   <div class="outer">
@@ -11,33 +13,33 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">Leagues</h1>
+        <h1 style="text-align:center;" class="title-label">Leagues</h1>
         {% if leagues %}
           <hr class="intro-divider">
-          <div class="center">
-            <table class="table table-striped table-bordered">
+          <div>
+            <table align="center" class="league-table">
               <thead>
                 <tr>
-                  <th width="15%"> Name </th>
-                  <th width="10%"> Number of Conferences </th>
-                  <th width="10%"> Number of Total Teams </th>
-                  <th width="8%"> Number of games </th>
-                  <th width="10%"> Number of Playoff Rounds </th>
-                  <th width="10%"> Playoff Qualifiers  </th>
-                  <th width="10%"> Byes </th>
+                  <th width="12%"> Name </th>
+                  <th width="8%"> Number of Conferences </th>
+                  <th width="8%"> Number of Teams </th>
+                  <th width="12%"> Number of Games in Season </th>
+                  <th width="11%"> Number of Playoff Rounds </th>
+                  <th width="12%"> Number of Playoff Qualifiers  </th>
+                  <th width="10%"> Byes Awarded in Playoffs</th>
                   {% if at_least_one_admin %}
-                    <th width="8%"> </th>
+                    <th width="7%"> </th>
                   {% endif %}
                 </tr>
               </thead>
               <tbody>
               {% for league in leagues %}
                 <tr>
-                  <td>
-                    <a href="{{ url_for('home.admin_dashboard', league_name=league.league_name) }}">
-                      <i class="fa fa-pencil"></i> {{ league.league_name }}
-                    </a>
-                  </td>
+                    <td>
+                      <a href="{{ url_for('admin.list_teams', league_name=league.league_name) }}" class="color-link">
+                        {{ league.league_name }}
+                      </a>
+                    </td>
                   <td> {{ league.number_of_conferences }} </td>
                   <td> {{ league.number_of_total_teams }} </td>
                   <td> {{ league.number_of_games }} </td>

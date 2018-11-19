@@ -2,7 +2,7 @@
 
 from flask_wtf import FlaskForm
 from flask_login import current_user, login_required
-from wtforms import StringField, SubmitField, RadioField, BooleanField
+from wtforms import StringField, SubmitField, RadioField, BooleanField, SelectField
 from wtforms.validators import DataRequired
 
 class TeamForm(FlaskForm):
@@ -40,8 +40,9 @@ class EventForm(FlaskForm):
     Form for admin to add or edit an event
     """
     day = StringField('Date', validators=[DataRequired()])
-    winner = StringField('Winner', validators=[DataRequired()])
-    loser = StringField('Loser', validators=[DataRequired()])
+    winner = SelectField('Winner', choices=[], validators=[DataRequired()])
+    #winner = StringField('Winner', validators=[DataRequired()])
+    loser = SelectField('Loser', choices=[], validators=[DataRequired()])
     winning_score = StringField('Winning Score', validators=[DataRequired()])
     losing_score = StringField('Losing Score', validators=[DataRequired()])
     submit = SubmitField('Submit')

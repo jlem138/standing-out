@@ -18,7 +18,8 @@ def list_events(league_name):
     """
 
     admin_status=check_admin_user(league_name)
-    events = Event.query.filter_by(league_name=league_name)
+    events = Event.query.filter_by(league_name=league_name).all()
+
     return render_template('admin/events/events.html', league_name = league_name,
                            admin_status=admin_status,
                            events=events, title='Game Results')
@@ -33,6 +34,11 @@ def add_event(league_name):
     add_event = True
 
     form = EventForm()
+
+    entered_teams = [(team.name, team.name) for team in Team.query.filter_by(league_name=league_name).all()]
+    form.winner.choices = entered_teams
+    form.loser.choices = entered_teams
+
     if form.validate_on_submit():
         event = Event(
         #id = form.id.data,
@@ -76,9 +82,13 @@ def edit_event(league_name, id):
 
     event = Event.query.get_or_404(id)
     form = EventForm(obj=event)
+
+    entered_teams = [(team.name, team.name) for team in Team.query.filter_by(league_name=league_name).all()]
+    form.winner.choices = entered_teams
+    form.loser.choices = entered_teams
+
     if form.validate_on_submit():
         #event.id = form.id.data
-
 
         previous_winning_team_entry=Team.query.filter_by(name=event.winner).first()
         previous_losing_team_entry=Team.query.filter_by(name=event.loser).first()
@@ -139,7 +149,7 @@ def delete_event(league_name, id):
     """
     Delete a event from the database
     """
-    check_admin()
+    #check_admin()
 
     event = Event.query.get_or_404(id)
 

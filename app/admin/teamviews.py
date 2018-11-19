@@ -19,7 +19,7 @@ def list_teams(league_name):
     """
 
     admin_status = check_admin_user(league_name)
-    teams = Team.query.all()
+    teams = Team.query.filter_by(league_name=league_name).all()
 
     return render_template('admin/teams/teams.html', league_name=league_name,
                            teams=teams, league=league_name, title="Teams",
@@ -27,13 +27,14 @@ def list_teams(league_name):
 
 @admin.route('/teams/<league_name>/add', methods=['GET', 'POST'])
 @login_required
-def add_team(leaguen_ame):
+def add_team(league_name):
     """
     Add a team to the database
     """
 
     add_team = True
     form = TeamForm()
+    #entered_teams = Team.query.filter_by(league)
     if form.validate_on_submit():
         team = Team(name=form.name.data,
                     division_name = form.division_name.data,
@@ -46,12 +47,14 @@ def add_team(leaguen_ame):
             db.session.add(team)
             db.session.commit()
             flash('You have successfully added a new team.')
+            ranking_criteria = enough_teams(league_name)
+            session['ranking_criteria'] = ranking_criteria
+
         except:
             # in case team name already exists
-            flash('Error: team name already exists.')
+            flash('Team has already been registered for this league.')
+            return redirect(url_for('admin.list_teams', league_name=league_name))
 
-        ranking_criteria = enough_teams(league_name)
-        session['ranking_criteria'] = ranking_criteria
         # redirect to teams page
         return redirect(url_for('admin.list_teams', league_name=league_name, ranking_criteria=ranking_criteria))
 
