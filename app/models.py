@@ -63,8 +63,8 @@ class Team(db.Model):
     conference_name = db.Column(db.String(60))
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
     league_constraint = relationship("League", foreign_keys=[league_name])
-    event_winner = relationship("Event", cascade="save-update")
-    event_loser = relationship("Event", cascade="save-update")
+    #event_winner = relationship("Event", cascade="save-update", foreign_keys=[winner])
+    #event_loser = relationship("Event", cascade="save-update")
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
 

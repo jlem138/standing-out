@@ -21,12 +21,14 @@ def create_app(config_name):
         app = Flask(__name__)
         app.config.update(
             SECRET_KEY=os.getenv('SECRET_KEY'),
-            SQLALCHEMY_DATABASE_URI=os.getenv('SQLALCHEMY_DATABASE_URI')
+            SQLALCHEMY_DATABASE_URI=os.getenv('SQLALCHEMY_DATABASE_URI'),
+            SQLALCHEMY_TRACK_MODIFICATIONS = False
         )
     else:
         app = Flask(__name__, instance_relative_config=True)
         app.config.from_object(app_config[config_name])
         app.config.from_pyfile('config.py')
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
 
