@@ -20,6 +20,7 @@ class TeamNoNameForm(FlaskForm):
     Form for admin to add or edit a team
     """
 
+    #name = StringField('Team Name', validators=[DataRequired()])
     division_name = StringField('Division Name', validators=[DataRequired()])
     conference_name = StringField('Conference Name', validators=[DataRequired()])
     submit = SubmitField('Submit')

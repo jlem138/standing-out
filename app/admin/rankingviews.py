@@ -24,7 +24,7 @@ def list_rankings(league_name):
     admin_status = check_admin_user(league_name)
 
     # Retrieve data on the number of games, number of teams, and qualifiers for the league
-    number_of_teams = League.query.filter_by(league_name=league_name).first().number_of_total_teams
+    number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
     teams = Team.query.filter_by(league_name=league_name)
 
     # Determine the initial rankings based upon the wins and losses
@@ -79,13 +79,23 @@ def list_rankings(league_name):
     # Determine the advanced statistics for each team's season and playoff status
     def determine_ranking_statistics(number_of_qualifiers, differentials, ranking_data, number_of_teams, ordered_wins, ordered_losses, ranking):
 
-        season_games = League.query.filter_by(league_name=league_name).first().number_of_games
         leader_differential = ranking_data[differentials[0]]['differential']
-        first_out_least_possible_losses = ordered_losses[number_of_teams - number_of_qualifiers - 1]
-        last_in_least_possible_wins = ordered_wins[number_of_qualifiers-1]
-        first_out_max_wins = season_games - first_out_least_possible_losses
-        last_in_max_losses = season_games - last_in_least_possible_wins
-        magic_number_with_losses = season_games - first_out_least_possible_losses + 1
+        season_games = League.query.filter_by(league_name=league_name).first().number_of_games
+
+        def playoff_information(qualifiers, games):
+            if qualifiers is None or games is None:
+                return False
+            else:
+                return True
+
+        information = playoff_information(number_of_qualifiers, season_games)
+
+        if information is True:
+            first_out_least_possible_losses = ordered_losses[number_of_teams - number_of_qualifiers - 1]
+            last_in_least_possible_wins = ordered_wins[number_of_qualifiers-1]
+            first_out_max_wins = season_games - first_out_least_possible_losses
+            last_in_max_losses = season_games - last_in_least_possible_wins
+            magic_number_with_losses = season_games - first_out_least_possible_losses + 1
 
         # If including win percentage, account for a team that hasn't played yet (division by 0)
         final_data = {}
@@ -114,25 +124,26 @@ def list_rankings(league_name):
                current_ranking = ranking[rank]+1
                final_team['place'] = current_ranking
 
-            # Determines 'Magic Number' for teams to qualify
-            final_team['magic'] = magic_number_with_losses - team_wins
+            if information:
+                # Determines 'Magic Number' for teams to qualify
+                final_team['magic'] = magic_number_with_losses - team_wins
 
-            # Determine team playoff status
-            final_team['status'] = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, 0)
+                # Determine team playoff status
+                final_team['status'] = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, 0)
 
-            playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses)
-            #final_data['status'] =
-            #print("ONE", playoff_stats[0])
-            #print("TWO", playoff_stats[1])#final_team['magic'] = playoff_stats[1]
+                playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses)
+                #final_data['status'] =
+                #print("ONE", playoff_stats[0])
+                #print("TWO", playoff_stats[1])#final_team['magic'] = playoff_stats[1]
 
-            final_team['status'] = playoff_stats[0]
-            final_team['magic'] = playoff_stats[1]
+                final_team['status'] = playoff_stats[0]
+                final_team['magic'] = playoff_stats[1]
 
-            # Determine team playoff status
-            #final_team['status']
+                # Determine team playoff status
+                #final_team['status']
 
             final_data[rank] = final_team
-        results = [final_data, ranking]
+        results = [final_data, ranking, information]
         return(results)
 
     def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses,  magic_number_with_losses):
@@ -150,14 +161,14 @@ def list_rankings(league_name):
 
         return([status,magic])
 
-    def create_standings_message(number_of_teams, data):
+    def create_standings_message(number_of_teams, team_order):
         #Create standings string:
         message = []
         for rank in range(number_of_teams):
             # add Rank
             message.append(str(rank+1))
             message.append(". ")
-            message.append(data[rank]['name'])
+            message.append(team_order[rank])
             if (rank+1) != number_of_teams:
                 message.append('\n')
         rankings_message=''.join(message)
@@ -176,22 +187,25 @@ def list_rankings(league_name):
     returned_lossesall = returned_data[3]
 
     order_results = order_rankings(teams, returned_ranking_data, returned_differentials, returned_winsall, returned_lossesall)
-    ordered_differentials = order_results[0]
-    ordered_ranking = order_results[1]
+    team_names_ranked = order_results[0]
+    numbered_ranks = order_results[1]
+    message = create_standings_message(number_of_teams, team_names_ranked)
+
+    print("ORDER1", numbered_ranks)
+    print("ORDER2", team_names_ranked)
+    print("ORDER3", returned_ranking_data)
 
     number_of_qualifiers = League.query.filter_by(league_name=league_name).first().number_of_qualifiers
-    final_stats = determine_ranking_statistics(number_of_qualifiers, ordered_differentials, returned_ranking_data, number_of_teams, returned_winsall, returned_lossesall, ordered_ranking)
-
+    final_stats = determine_ranking_statistics(number_of_qualifiers, team_names_ranked, returned_ranking_data, number_of_teams, returned_winsall, returned_lossesall, numbered_ranks)
     final_stats_data = final_stats[0]
     final_stats_ranking = final_stats[1]
+    final_information = final_stats[2]
+
     title = league_name + " Rankings"
 
-    message = create_standings_message(number_of_teams, final_stats_data)
-
-    return render_template('admin/rankings/rankings.html', ranking=ordered_ranking,
+    return render_template('admin/rankings/rankings.html', ranking=numbered_ranks,
     league_name=league_name, admin_status=admin_status, number_of_teams=number_of_teams,
-    teams=teams,data=final_stats_data, rankings_message=message,
-    title=title)
+    teams=teams, data=final_stats_data, information=final_information, rankings_message=message, title=title)
 
 @admin.route('/rankings/sendtext/<league_name>/<rankings_message>', methods=['GET', 'POST'])
 @login_required

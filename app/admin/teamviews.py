@@ -18,12 +18,15 @@ def list_teams(league_name):
     List all teams
     """
 
+
     admin_status = check_admin_user(league_name)
     teams = Team.query.filter_by(league_name=league_name).all()
+    ranking_criteria = enough_teams(league_name)
+    session['ranking_criteria'] = ranking_criteria
 
     return render_template('admin/teams/teams.html', league_name=league_name,
                            teams=teams, league=league_name, title="Teams",
-                           admin_status=admin_status)
+                           admin_status=admin_status, ranking_criteria=ranking_criteria)
 
 @admin.route('/teams/<league_name>/add', methods=['GET', 'POST'])
 @login_required
@@ -84,6 +87,7 @@ def edit_team(teamname, league_name):
     if form.validate_on_submit():
         if game_count == 0:
             team.name = form.name.data
+        #team.name = form.name.data
         team.division_name = form.division_name.data
         team.conference_name = form.conference_name.data
         team.league_name = league_name
@@ -97,6 +101,7 @@ def edit_team(teamname, league_name):
         team.name = form.name.data
     form.division_name.data = team.division_name
     form.conference_name.data = team.conference_name
+    #form.name.data = team.name
     #form.league_name.data = team.league_name
     return render_template('admin/teams/team.html', action="Edit",
     league_name=league_name, add_team=add_team, admin_status=admin_status,

@@ -6,7 +6,6 @@ from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
 from sqlalchemy import func, distinct
-import math as math
 
 def check_admin():
     """
@@ -29,9 +28,7 @@ def get_count(q):
     count_x = q.session.execute(count_q).scalar()
     return count_x
 
-
 def enough_teams(league_name):
-
     teamcount = get_count(Team.query.filter_by(league_name=league_name))
     team_requirement = League.query.filter_by(league_name=league_name).first().number_of_total_teams
 

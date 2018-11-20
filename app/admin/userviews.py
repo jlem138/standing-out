@@ -70,7 +70,7 @@ def add_user(league_name):
         else:
             current_is_admin = '0'
         user_entry = User.query.filter_by(username=form.username.data).first()
-        updated_entries = Update.query.filter_by(username=form.username.data).first()
+        updated_entries = Update.query.filter_by(username=form.username.data, league_name=league_name).first()
         if user_entry is None:
             flash('The entered username must belong to a registered user.')
         elif updated_entries is not None:

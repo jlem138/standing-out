@@ -56,13 +56,18 @@ def add_event(league_name):
         winning_team_entry.wins = (str(int(winning_team_entry.wins)+1))
         losing_team_entry.losses = (str(int(losing_team_entry.losses)+1))
 
-        try:
-            db.session.add(event)
-            db.session.commit()
-            flash('You have successfully added a new event.')
-        except:
-            # in case event name already exists
-            flash('Error: event name already exists.')
+        if (event.winner == event.loser):
+            flash('The winner and loser must be different teams.')
+        elif (int(event.winning_score) <= int(event.losing_score)):
+            flash('The winning score must be greater than the losing score.')
+        else:
+            try:
+                db.session.add(event)
+                db.session.commit()
+                flash('You have successfully added a new event.')
+            except:
+                # in case event name already exists
+                flash('The data you have entered is incorrect.')
 
         # redirect to the events page
         return redirect(url_for('admin.list_events', league_name=league_name))
