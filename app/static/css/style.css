@@ -10,15 +10,32 @@ body, h1, h2, h3 {
     font-weight: 700;
 }
 
-/* texts in the navbar, links in tables
-*/
 a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
 /* Color of section titles at top of navigation bar*/
-  color: #009ACD;
+  color: black;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus {
+    /* Deep Skye Blue */
+    background-color: black;
+    color: orange;
 }
 
 a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
-  color: #687430;
+  /* hover for navigation bar */
+  color: #3CB371;
+}
+
+
+/* color of button when mouse hovers over button */
+.btn-default:hover {
+    background-color: mediumseagreen;
+    color: black;
+}
+
+.btn-default {
+    border-color: black;
+    color: #3CB371;
 }
 
 footer {
@@ -26,8 +43,76 @@ footer {
     background-color: #f8f8f8;
 }
 
-p.copyright {
-    margin: 15px 0 0;
+table.team-table {
+  width: 700px;
+  border-spacing: 4px;
+  margin: 0px auto;
+  border-color: 4px solid green;
+}
+
+table.user-table {
+  width: 800px;
+  border-spacing: 4px;
+  margin: 0px auto;
+  border-color: 4px solid green;
+}
+
+table.league-table {
+  width: 1000px;
+  border-spacing: 4px;
+  margin: 0px auto;
+  border-color: 4px solid green;
+}
+
+table.ranking-table {
+  width: 700px;
+  border-spacing: 4px;
+  margin: 0px auto;
+  border-color: 4px solid green;
+}
+
+table.event-table {
+  width: 800px;
+  border-spacing: 4px;
+  margin: 0px auto;
+  border-color: 4px solid green;
+}
+
+th {
+  text-align: center;
+  /* sea green */
+  background-color: #3CB371;
+  color: black;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+}
+
+tr {
+  text-align: center;
+}
+
+tr:nth-child(even) {
+  background-color: #D3D3D3;
+}
+
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+.content-section {
+    padding: 50px 0;
+    border-top: 1px solid #e7e7e7;
+}
+
+.topnav {
+    font-size: 14px;
 }
 
 .alert-info {
@@ -36,35 +121,6 @@ p.copyright {
     color: #687430;
     background-color: #e6ecca;
     border-color: #aec251;
-}
-
-/* "add" button for each page
-*/
-.btn-default {
-    border-color: black;
-    color: #104E8B;
-}
-
-/* "add" button for each page when hovered over
-*/
-.btn-default:hover {
-    background-color: #00BFFF;
-}
-
-.center {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-}
-
-.content-section {
-    padding: 50px 0;
-    border-top: 1px solid #e7e7e7;
-}
-
-.footer, .push {
-  clear: both;
-  height: 4em;
 }
 
 .intro-divider {
@@ -85,36 +141,73 @@ p.copyright {
     height: 100%;
 }
 
-.intro-message {
-    position: relative;
-    padding-top: 20%;
-    padding-bottom: 20%;
-}
+  /* DROP DOWN MENU */
 
-.intro-message > h1 {
+.dropdown .dropbtn {
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
     margin: 0;
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-    font-size: 5em;
 }
 
-.intro-message > h3 {
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+/*
+
+--> This misaligned tables to the right
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+
+*/
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+/*
+
+.wrapper {
+  margin: 0 auto -4em;
+}
+
+*/
+
+p.copyright {
+    margin: 15px 0 0;
+}
+
+.footer, .push {
+  clear: both;
+  height: 4em;
+}
+
+
+.footer, .push {
+  clear: both;
+  height: 4em;
+}
+
+p.copyright {
+    margin: 15px 0 0;
 }
 
 .lead {
     font-size: 18px;
     font-weight: 400;
 }
-
-.topnav {
-    font-size: 14px;
-}
-
-.wrapper {
-  margin: 0 auto -4em;
-}
-
-/* app/static/css/style.css */
 
 .outer {
     display: table;
@@ -132,50 +225,36 @@ p.copyright {
     margin-right: auto;
 }
 
-.dropdown {
-    float: left;
-    overflow: hidden;
+footer {
+    padding: 50px 0;
+    background-color: #f8f8f8;
 }
 
-.dropdown .dropbtn {
-    cursor: pointer;
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font-family: inherit;
+.intro-message {
+    position: relative;
+    padding-top: 20%;
+    padding-bottom: 20%;
+}
+
+.intro-message > h1 {
     margin: 0;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+    font-size: 5em;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus {
-    /* Deep Skye Blue */
-    background-color: orange;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: black;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    float: none;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-}
-
-.dropdown-content a:hover {
-    background-color: #ddd;
+.intro-message > h3 {
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
 }
 
 .show {
     display: block;
+}
+
+.color-link {
+  color: black;
+  text-shadow: 0 0 3px mediumseagreen;
+}
+
+.title-label {
+  color: mediumseagreen;
 }

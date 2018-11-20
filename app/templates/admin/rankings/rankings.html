@@ -14,31 +14,35 @@
         <h1 style="text-align:center;">{{league_name}} Rankings</h1>
         {% if data %}
           <hr class="intro-divider">
-          <div class="center">
-            <table class="table table-striped table-bordered">
+          <div>
+            <table align="center" class="ranking-table">
               <thead>
                 <tr>
                   <th width="5%"> Rank </th>
                   <th width="25%"> Team </th>
-                  <th width="10%"> W </th>
-                  <th width="10%"> L </th>
-                  <th width="15%"> Win % </th>
-                  <th width="10%"> GB </th>
-                  <th width="15%"> Magic Number </th>
-                  <th width="20%"> Playoff Eligible </th>
+                  <th width="5%"> W </th>
+                  <th width="5%"> L </th>
+                  <th width="7%"> Win PCT </th>
+                  {% if information == True %}
+                    <th width="8%"> GB </th>
+                    <th width="9%"> Magic Number </th>
+                    <th width="12%"> Playoff Status </th>
+                  {% endif %}
                 </tr>
               </thead>
               <tbody>
               {% for rank in data %}
                 <tr>
-                  <td> {{ data[rank]['place'] }} </td>
+                  <td>{{ data[rank]['place']}}</td>
                   <td> {{ data[rank]['name'] }} </td>
                   <td> {{ data[rank]['wins'] }}</td>
                   <td> {{ data[rank]['losses'] }}</td>
                   <td> {{ data[rank]['winning percentage'] }}
-                  <td> {{ data[rank]['GB'] }}</td>
-                  <td> {{ data[rank]['magic'] }} </td>
-                  <td> {{ data[rank]['eligible'] }}</td>
+                  {% if information == True %}
+                    <td> {{ data[rank]['GB']}}</td>
+                    <td> {{ data[rank]['magic']}} </td>
+                    <td> {{ data[rank]['status']}}</td>
+                  {% endif %}
                 </tr>
               {% endfor %}
               </tbody>
@@ -51,6 +55,7 @@
             <hr class="intro-divider">
         {% endif %}
         {% if admin_status == '1' %}
+        <br/>
             <a href="{{ url_for('admin.rankings_text', league_name=league_name,
             rankings_message=rankings_message) }}" class="btn btn-default btn-lg">
               <i class="fa fa-plus"></i>

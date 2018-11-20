@@ -18,7 +18,8 @@ def list_events(league_name):
     """
 
     admin_status=check_admin_user(league_name)
-    events = Event.query.filter_by(league_name=league_name)
+    events = Event.query.filter_by(league_name=league_name).all()
+
     return render_template('admin/events/events.html', league_name = league_name,
                            admin_status=admin_status,
                            events=events, title='Game Results')
@@ -33,6 +34,11 @@ def add_event(league_name):
     add_event = True
 
     form = EventForm()
+
+    entered_teams = [(team.name, team.name) for team in Team.query.filter_by(league_name=league_name).all()]
+    form.winner.choices = entered_teams
+    form.loser.choices = entered_teams
+
     if form.validate_on_submit():
         event = Event(
         #id = form.id.data,
@@ -50,13 +56,18 @@ def add_event(league_name):
         winning_team_entry.wins = (str(int(winning_team_entry.wins)+1))
         losing_team_entry.losses = (str(int(losing_team_entry.losses)+1))
 
-        try:
-            db.session.add(event)
-            db.session.commit()
-            flash('You have successfully added a new event.')
-        except:
-            # in case event name already exists
-            flash('Error: event name already exists.')
+        if (event.winner == event.loser):
+            flash('The winner and loser must be different teams.')
+        elif (int(event.winning_score) <= int(event.losing_score)):
+            flash('The winning score must be greater than the losing score.')
+        else:
+            try:
+                db.session.add(event)
+                db.session.commit()
+                flash('You have successfully added a new event.')
+            except:
+                # in case event name already exists
+                flash('The data you have entered is incorrect.')
 
         # redirect to the events page
         return redirect(url_for('admin.list_events', league_name=league_name))
@@ -76,9 +87,13 @@ def edit_event(league_name, id):
 
     event = Event.query.get_or_404(id)
     form = EventForm(obj=event)
+
+    entered_teams = [(team.name, team.name) for team in Team.query.filter_by(league_name=league_name).all()]
+    form.winner.choices = entered_teams
+    form.loser.choices = entered_teams
+
     if form.validate_on_submit():
         #event.id = form.id.data
-
 
         previous_winning_team_entry=Team.query.filter_by(name=event.winner).first()
         previous_losing_team_entry=Team.query.filter_by(name=event.loser).first()
@@ -139,7 +154,7 @@ def delete_event(league_name, id):
     """
     Delete a event from the database
     """
-    check_admin()
+    #check_admin()
 
     event = Event.query.get_or_404(id)
 

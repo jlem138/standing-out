@@ -12,20 +12,20 @@
         {{ utils.flashed_messages() }}
         <br/>
         <h1 style="text-align:center;">{{league_name}} Game Results</h1>
+        <hr class="intro-divider"></hr>
         {% if events %}
-          <hr class="intro-divider">
-          <div class="center">
-            <table class="table table-striped table-bordered">
+          <div>
+            <table align="center" class="event-table">
               <thead>
                 <tr>
-                  <th width="15%"> Date </th>
+                  <th width="14%"> Date </th>
                   <th width="25%"> Winner </th>
                   <th width="25%"> Loser </th>
                   <th width="10%"> Winning Score </th>
                   <th width="10%"> Losing Score </th>
                   {% if admin_status == '1' %}
-                    <th width="10%"></th>
-                    <th width="10%"></th>
+                    <th width="8%"></th>
+                    <th width="8%"></th>
                   {% endif %}
                 </tr>
               </thead>
@@ -58,9 +58,9 @@
         {% else %}
           <div style="text-align: center">
             <h3> No game results have been added. </h3>
-            <hr class="intro-divider">
         {% endif %}
         {% if admin_status == '1' %}
+        <br/>
           <a href="{{ url_for('admin.add_event', league_name=league_name) }}" class="btn btn-default btn-lg">
             <i class="fa fa-plus"></i>
             Add Game Result

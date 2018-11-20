@@ -19,15 +19,18 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand topnav" href="{{ url_for('home.homepage') }}">
-              League Tracker</a>
+              <a class="navbar-brand topnav">
+                League Tracker
+                {% if league_name %}
+                  - {{league_name}}
+                {% endif %}
+              </a>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                   {% if league_name %}
-                    <li><a href="{{ url_for('admin.list_leagues') }}">{{league_name}}</a></li>
-                    {% if session['ranking_criteria'] %}
+                    {% if session['ranking_criteria'] or 1==1 %}
                       <li><a href="{{ url_for('admin.list_rankings', league_name=league_name)  }}">Rankings</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('admin.list_teams', league_name=league_name) }}">Teams</a></li>
