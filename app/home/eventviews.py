@@ -3,14 +3,13 @@
 from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
-from . import admin
+from . import home
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking
-from sqlalchemy import func, distinct
 from .helper import check_admin_user, check_admin, get_count
 
-@admin.route('/events/<league_name>')
+@home.route('/<league_name>/events')
 @login_required
 def list_events(league_name):
     """
@@ -20,11 +19,11 @@ def list_events(league_name):
     admin_status=check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
 
-    return render_template('admin/events/events.html', league_name = league_name,
+    return render_template('home/events/events.html', league_name = league_name,
                            admin_status=admin_status,
                            events=events, title='Game Results')
 
-@admin.route('events/add/<league_name>', methods=['GET', 'POST'])
+@home.route('/<league_name>/events/add', methods=['GET', 'POST'])
 @login_required
 def add_event(league_name):
     """
@@ -70,13 +69,13 @@ def add_event(league_name):
                 flash('The data you have entered is incorrect.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_events', league_name=league_name))
+        return redirect(url_for('home.list_events', league_name=league_name))
 
     # load event template
-    return render_template('admin/events/event.html', add_event=add_event,
+    return render_template('home/events/event.html', add_event=add_event,
                            form=form, title='Add Game Result', league_name=league_name)
 
-@admin.route('/events/edit/<league_name>/<int:id>', methods=['GET', 'POST'])
+@home.route('/<league_name>/events/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_event(league_name, id):
     """
@@ -126,14 +125,14 @@ def edit_event(league_name, id):
             except:
                 flash('The information you have entered is not correct')
 
-            return redirect(url_for('admin.list_events', league_name=league_name))
+            return redirect(url_for('home.list_events', league_name=league_name))
 
         else:
             #flash('The winning and losing team you entered were the same')
             #return redirect(url_for('admin.edit_event', id=id, league_name=league_name))
 
         # redirect to the events page
-            return render_template('admin/events/event.html', action="Edit",
+            return render_template('home/events/event.html', action="Edit",
                                add_event=add_event, form=form, league_name=league_name,
                                event=event, title="Edit Game Result")
     #form.id.data = event.id
@@ -143,12 +142,12 @@ def edit_event(league_name, id):
     form.winning_score.data = event.winning_score
     form.losing_score.data = event.losing_score
 
-    return render_template('admin/events/event.html', action="Edit",
+    return render_template('home/events/event.html', action="Edit",
                            add_event=add_event, form=form, league_name=league_name,
                            event=event, title="Edit Game Result")
 
 
-@admin.route('/events/delete/<league_name>/<int:id>', methods=['GET', 'POST'])
+@home.route('/<league_name>/events/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_event(league_name, id):
     """
@@ -169,6 +168,6 @@ def delete_event(league_name, id):
     flash('You have successfully deleted the event.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_events', league_name=league_name))
+    return redirect(url_for('home.list_events', league_name=league_name))
 
     return render_template(title="Delete Game Result")

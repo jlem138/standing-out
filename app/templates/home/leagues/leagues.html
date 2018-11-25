@@ -36,7 +36,7 @@ Leagues
               {% for league in leagues %}
                 <tr>
                     <td>
-                      <a href="{{ url_for('admin.list_teams', league_name=league.league_name) }}" class="color-link">
+                      <a href="{{ url_for('home.list_teams', league_name=league.league_name) }}" class="color-link">
                         {{ league.league_name }}
                       </a>
                     </td>
@@ -48,7 +48,7 @@ Leagues
                   <td> {{ league.is_byes }} </td>
                   <td>
                     {% if overall_statuses[league.league_name] == "1" %}
-                      <a href="{{ url_for('admin.edit_league', league_name=league.league_name) }}">
+                      <a href="{{ url_for('home.edit_league', league_name=league.league_name) }}">
                         <i class="fa fa-pencil"></i> Edit
                       </a>
                     {% endif %}

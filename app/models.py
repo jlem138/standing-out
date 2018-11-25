@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(60), index=True, unique=True)
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
-    phone_number = db.Column(db.String(10), index=True, unique=True)
+    phone_number = db.Column(db.String(10), nullable=True)
     password_hash = db.Column(db.String(128))
 
     @property
