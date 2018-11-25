@@ -1,0 +1,77 @@
+
+
+<!-- app/templates/admin/Teams/team.html -->
+
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}Teams{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
+        <h1 style="text-align:center;"> {{league}} Teams</h1>
+        <hr class="intro-divider"></hr>
+        {% if teams %}
+          <div>
+            <table align="center" class="team-table">
+              <thead>
+                <tr>
+                  <th width="25%"> Name </th>
+                  <th width="15%"> Division </th>
+                  <th width="15%"> Conference </th>
+                  {% if admin_status == '1' %}
+                    <th width="8%"> </th>
+                    <th width="8%"> </th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for team in teams %}
+                  {% if team.league_name == league %}
+                    <tr>
+                      <td> {{ team.name }} </td>
+                      <td> {{ team.division_name }} </td>
+                      <td> {{ team.conference_name }} </td>
+                      {% if admin_status == '1' %}
+                        <td>
+                          <a href="{{ url_for('home.edit_team', teamname=team.name, league_name=team.league_name) }}">
+                            <i class="fa fa-pencil"></i> Edit
+                          </a>
+                        </td>
+                        <td>
+                          {% if (team.wins + team.losses) == 0 %}
+                            <a href="{{ url_for('home.delete_team', teamname=team.name, league_name=team.league_name) }}">
+                              <i class="fa fa-trash"></i> Delete
+                            </a>
+                          {% endif %}
+                        </td>
+                      {% endif %}
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div style="text-align: center">
+            <h3> No teams have been added. </h3>
+          </div>
+        {% endif %}
+        {% if admin_status == '1' %}
+          <br/>
+          <div style="text-align: center">
+            <a href="{{ url_for('home.add_team', league_name=league_name) }}" class="btn btn-default btn-lg">
+              <i class="fa fa-plus"></i>
+                Add Team
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
