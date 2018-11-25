@@ -41,12 +41,12 @@
                   {% endif %}
                   {% if admin_status == '1' and (current_username != user.username ) %}
                     <td>
-                      <a href="{{ url_for('admin.edit_user', username=user.username, league_name=league_name) }}">
+                      <a href="{{ url_for('home.edit_user', username=user.username, league_name=league_name) }}">
                         <i class="fa fa-pencil"></i> Edit
                       </a>
                     </td>
                     <td>
-                      <a href="{{ url_for('admin.delete_user', username=user.username, league_name=league_name) }}">
+                      <a href="{{ url_for('home.delete_user', username=user.username, league_name=league_name) }}">
                         <i class="fa fa-trash"></i> Delete
                       </a>
                     </td>
@@ -69,7 +69,7 @@
         {% endif %}
         {% if admin_status == '1' %}
         <br/>
-          <a href="{{ url_for('admin.add_user', league_name=league_name) }}" class="btn btn-default btn-lg">
+          <a href="{{ url_for('home.add_user', league_name=league_name) }}" class="btn btn-default btn-lg">
             <i class="fa fa-plus"></i>
               Invite user to {{league_name}}
           </a>

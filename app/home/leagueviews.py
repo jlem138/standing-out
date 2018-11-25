@@ -4,16 +4,15 @@
 from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
-from . import admin
+from . import home
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
-from sqlalchemy import func, distinct
 from .helper import check_admin, check_admin_user
 
 # League Views
 
-@admin.route('/leagues/add', methods=['GET', 'POST'])
+@home.route('/leagues/add', methods=['GET', 'POST'])
 @login_required
 def add_league():
     """
@@ -45,18 +44,20 @@ def add_league():
             flash('Error: league already exists.')
 
         # redirect to teams page
-        return redirect(url_for('admin.list_leagues'))
+        return redirect(url_for('home.list_leagues'))
 
     # load team template
-    return render_template('admin/leagues/league.html', action="Add",add_league=add_league, form=form, title="Addx League")
+    return render_template('home/leagues/league.html', action="Add",add_league=add_league, form=form, title="Addx League")
 
 
-@admin.route('/leagues', methods=['GET', 'POST'])
+@home.route('/leagues', methods=['GET', 'POST'])
 @login_required
 def list_leagues():
     """
     List all leagues
     """
+
+
 
     current_username = current_user.username
     leagues_held_by_user_entries = Update.query.filter_by(username=current_username).all()
@@ -72,12 +73,12 @@ def list_leagues():
             at_least_one_admin = True
     leagues = League.query.filter(League.league_name.in_(user_league_list)).all()
 
-    return render_template('admin/leagues/leagues.html', title="Leagues",
+    return render_template('home/leagues/leagues.html', title="Leagues",
                             overall_statuses=overall_statuses, leagues=leagues,
                             at_least_one_admin=at_least_one_admin)
 
 
-@admin.route('/leagues/delete/<league_name>', methods=['GET', 'POST'])
+@home.route('/leagues/<league_name>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_league(league_name):
     """
@@ -91,12 +92,12 @@ def delete_league(league_name):
     flash('You have successfully deleted the league.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_leagues'))
+    return redirect(url_for('home.list_leagues'))
 
     return render_template(title="Delete League")
 
 
-@admin.route('/leagues/edit/<league_name>', methods=['GET', 'POST'])
+@home.route('/leagues/<league_name>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_league(league_name):
     """
@@ -117,7 +118,7 @@ def edit_league(league_name):
         flash('You have successfully edited the league.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_leagues'))
+        return redirect(url_for('home.list_leagues'))
 
     form.number_of_conferences.data = league.number_of_conferences
     form.number_of_games.data = league.number_of_games
@@ -126,5 +127,5 @@ def edit_league(league_name):
     form.number_of_qualifiers.data = league.number_of_qualifiers
     form.is_byes.data = league.is_byes
 
-    return render_template('admin/leagues/league.html', action="Edit", add_league=add_league, form=form,
+    return render_template('home/leagues/league.html', action="Edit", add_league=add_league, form=form,
     league_name=league_name, title="Edit League")

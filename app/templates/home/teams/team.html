@@ -18,7 +18,7 @@
             {% if add_team %}
                 <h1>Add Team</h1>
             {% else %}
-                <h1>Edit Team</h1>
+                <h1>Edit {{teamname}} </h1>
             {% endif %}
             <br/>
             {{ wtf.quick_form(form) }}
