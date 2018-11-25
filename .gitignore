@@ -5,6 +5,7 @@ database.py
 *.pyc
 venv
 tests.py
+newusers.py
 
 # Ignore instance folder
 instance/

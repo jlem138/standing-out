@@ -3,15 +3,14 @@
 from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
-from . import admin
+from . import home
 from .. import db
 from . forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm, TeamNoNameForm
 from ..models import Team, Event, League, User, Ranking, Update
-from sqlalchemy import func, distinct
 from .helper import get_count, enough_teams, check_admin_user, check_admin
 
 
-@admin.route('/teams/<league_name>', methods=['GET', 'POST'])
+@home.route('/<league_name>/teams', methods=['GET', 'POST'])
 @login_required
 def list_teams(league_name):
     """
@@ -24,11 +23,11 @@ def list_teams(league_name):
     ranking_criteria = enough_teams(league_name)
     session['ranking_criteria'] = ranking_criteria
 
-    return render_template('admin/teams/teams.html', league_name=league_name,
+    return render_template('home/teams/teams.html', league_name=league_name,
                            teams=teams, league=league_name, title="Teams",
                            admin_status=admin_status, ranking_criteria=ranking_criteria)
 
-@admin.route('/teams/<league_name>/add', methods=['GET', 'POST'])
+@home.route('/<league_name>/teams/add', methods=['GET', 'POST'])
 @login_required
 def add_team(league_name):
     """
@@ -56,17 +55,17 @@ def add_team(league_name):
         except:
             # in case team name already exists
             flash('Team has already been registered for this league.')
-            return redirect(url_for('admin.list_teams', league_name=league_name))
+            return redirect(url_for('home.list_teams', league_name=league_name))
 
         # redirect to teams page
-        return redirect(url_for('admin.list_teams', league_name=league_name, ranking_criteria=ranking_criteria))
+        return redirect(url_for('home.list_teams', league_name=league_name, ranking_criteria=ranking_criteria))
 
     # load team template
-    return render_template('admin/teams/team.html', action="Add",
+    return render_template('home/teams/team.html', action="Add",
                            add_team=add_team, form=form, league_name=league_name,
                            title="Add Team")
 
-@admin.route('/teams/<league_name>/edit/<teamname>', methods=['GET', 'POST'])
+@home.route('/<league_name>/teams/edit/<teamname>', methods=['GET', 'POST'])
 @login_required
 def edit_team(teamname, league_name):
     """
@@ -95,7 +94,7 @@ def edit_team(teamname, league_name):
         flash('You have successfully edited the team.')
 
         # redirect to the teams page
-        return redirect(url_for('admin.list_teams', league_name=league_name))
+        return redirect(url_for('home.list_teams', league_name=league_name))
 
     if game_count == 0:
         team.name = form.name.data
@@ -103,12 +102,12 @@ def edit_team(teamname, league_name):
     form.conference_name.data = team.conference_name
     #form.name.data = team.name
     #form.league_name.data = team.league_name
-    return render_template('admin/teams/team.html', action="Edit",
+    return render_template('home/teams/team.html', action="Edit",
     league_name=league_name, add_team=add_team, admin_status=admin_status,
     form=form,teamname=teamname, title="Edit Team")
 
 
-@admin.route('/teams/<league_name>/delete/<teamname>', methods=['GET', 'POST'])
+@home.route('/<league_name>/teams/delete/<teamname>', methods=['GET', 'POST'])
 @login_required
 def delete_team(teamname, league_name):
     """
@@ -126,6 +125,6 @@ def delete_team(teamname, league_name):
     session['ranking_criteria'] = ranking_criteria
 
     # redirect to the teams page
-    return redirect(url_for('admin.list_teams', league_name=league_name, ranking_criteria=ranking_criteria))
+    return redirect(url_for('home.list_teams', league_name=league_name, ranking_criteria=ranking_criteria))
 
     return render_template(title="Delete Team")

@@ -23,7 +23,7 @@ a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
 
 a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
   /* hover for navigation bar */
-  color: #3CB371;
+  color: mediumseagreen;
 }
 
 
@@ -35,7 +35,7 @@ a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:h
 
 .btn-default {
     border-color: black;
-    color: #3CB371;
+    color: mediumseagreen;
 }
 
 footer {
@@ -78,10 +78,10 @@ table.event-table {
   border-color: 4px solid green;
 }
 
+/* Table headers */
 th {
   text-align: center;
-  /* sea green */
-  background-color: #3CB371;
+  background-color: mediumseagreen;
   color: black;
 }
 
@@ -255,6 +255,8 @@ footer {
   text-shadow: 0 0 3px mediumseagreen;
 }
 
+/*
 .title-label {
   color: mediumseagreen;
 }
+*/
