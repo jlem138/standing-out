@@ -46,13 +46,15 @@ Leagues
                   <td> {{ league.number_of_rounds }} </td>
                   <td> {{ league.number_of_qualifiers }} </td>
                   <td> {{ league.is_byes }} </td>
-                  <td>
-                    {% if overall_statuses[league.league_name] == "1" %}
-                      <a href="{{ url_for('home.edit_league', league_name=league.league_name) }}">
-                        <i class="fa fa-pencil"></i> Edit
-                      </a>
-                    {% endif %}
-                  </td>
+                  {% if at_least_one_admin %}
+                    <td>
+                      {% if overall_statuses[league.league_name] == "1" %}
+                        <a href="{{ url_for('home.edit_league', league_name=league.league_name) }}">
+                          <i class="fa fa-pencil"></i> Edit
+                        </a>
+                      {% endif %}
+                    </td>
+                  {% endif %}                    
                 </tr>
               {% endfor %}
               </tbody>
