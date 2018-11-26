@@ -5,6 +5,8 @@ from flask import redirect, render_template, url_for
 from flask_login import login_required
 
 from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
+
 from . import home
 from ..models import Team, Event, League, Update
 from .helper import get_count, check_admin_user, round_to_three
@@ -195,6 +197,8 @@ def playoff_information(qualifiers, games, number_of_registered_teams, total_tea
         return False
     if number_of_registered_teams != total_teams:
         return False
+    if number_of_registered_teams <= qualifiers:
+        return False
     return True
 
 @home.route('/rankings/sendtext/<league_name>/<rankings_message>', methods=['GET', 'POST'])
@@ -219,9 +223,11 @@ def rankings_text(league_name, rankings_message):
     # registered then send that person a text with the standings
 
     for user in league_users:
+        print("USAH", user.username, user.phone_number)
         phone = user.phone_number
         if phone is not None and phone != '':
             to_number = "1"+phone
+            print("TONUM", user.phone_number, user.username, to_number)
 
             client.messages.create(
                 to=to_number,
