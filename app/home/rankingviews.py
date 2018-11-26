@@ -23,6 +23,7 @@ def list_rankings(league_name):
     # Retrieve data on the number of games, number of teams, and qualifiers for the league
     number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
     teams = Team.query.filter_by(league_name=league_name)
+    total_teams = League.query.filter_by(league_name=league_name).first().number_of_total_teams
 
     # Determine the initial rankings based upon the wins and losses
     # First gets wins, losses, and W-L differentials for each team
@@ -80,7 +81,7 @@ def list_rankings(league_name):
         leader_differential = ranking_data[differentials[0]]['differential']
         season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
-        information = playoff_information(number_of_qualifiers, season_games, number_of_teams)
+        information = playoff_information(number_of_qualifiers, season_games, number_of_teams, total_teams)
 
         if information is True:
             first_out_least_possible_losses = ordered_losses[number_of_teams - number_of_qualifiers - 1]
@@ -190,9 +191,11 @@ def list_rankings(league_name):
         teams=teams, data=final_stats_data, information=final_information,
         rankings_message=message, title=title)
 
-def playoff_information(qualifiers, games, number_of_registered_teams):
+def playoff_information(qualifiers, games, number_of_registered_teams, total_teams):
     """ This function determines if enough details have been entered to determine playoff information for a league. """
-    if qualifiers is None or games is None:
+    if qualifiers is None or games is None or total_teams is None:
+        return False
+    if number_of_registered_teams != total_teams:
         return False
     if number_of_registered_teams <= qualifiers:
         return False
