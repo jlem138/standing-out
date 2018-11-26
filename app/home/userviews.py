@@ -65,7 +65,7 @@ def add_user(league_name):
 
     form = UpdateForm()
     if form.validate_on_submit():
-        if form.is_admin.data == '1':
+        if form.is_admin.data == 'True':
             current_is_admin = '1'
         else:
             current_is_admin = '0'

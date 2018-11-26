@@ -5,6 +5,8 @@ from flask import redirect, render_template, url_for
 from flask_login import login_required
 
 from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
+
 from . import home
 from ..models import Team, Event, League, Update
 from .helper import get_count, check_admin_user, round_to_three
@@ -78,7 +80,7 @@ def list_rankings(league_name):
         leader_differential = ranking_data[differentials[0]]['differential']
         season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
-        information = playoff_information(number_of_qualifiers, season_games)
+        information = playoff_information(number_of_qualifiers, season_games, number_of_teams)
 
         if information is True:
             first_out_least_possible_losses = ordered_losses[number_of_teams - number_of_qualifiers - 1]
@@ -188,9 +190,11 @@ def list_rankings(league_name):
         teams=teams, data=final_stats_data, information=final_information,
         rankings_message=message, title=title)
 
-def playoff_information(qualifiers, games):
+def playoff_information(qualifiers, games, number_of_registered_teams):
     """ This function determines if enough details have been entered to determine playoff information for a league. """
     if qualifiers is None or games is None:
+        return False
+    if number_of_registered_teams <= qualifiers:
         return False
     return True
 
@@ -202,23 +206,28 @@ def rankings_text(league_name, rankings_message):
     # get league users
     league_users = Update.query.filter_by(league_name=league_name).all()
 
+    proxy_client = TwilioHttpClient()
+    proxy_client.session.proxies = {'https': os.environ['https_proxy']}
+
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     #personal_number = os.environ['PERSONAL_NUMBER']
     twilio_number = os.environ['TWILIO_NUMBER']
 
-    client = Client(account_sid, auth_token)
+    client = Client(account_sid, auth_token, http_client=proxy_client)
 
     # for every user in the updates for the league, if their phone number is
     # registered then send that person a text with the standings
 
     for user in league_users:
+        print("USAH", user.username, user.phone_number)
         phone = user.phone_number
-        if phone is not None:
+        if phone is not None and phone != '':
             to_number = "1"+phone
+            print("TONUM", user.phone_number, user.username, to_number)
 
             client.messages.create(
-                to="1"+to_number,
+                to=to_number,
                 from_=twilio_number,
                 body=rankings_message
                 )
