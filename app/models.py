@@ -159,7 +159,7 @@ class Update(db.Model):
     last_name = db.Column(db.String(60), index=True)
     #username_constraint = relationship("User", foreign_keys=[username])
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
-    league_constraint = relationship("League", foreign_keys=[league_name])
+    #league_constraint = relationship("League", foreign_keys=[league_name])
     phone_number = db.Column(db.String(10))
     is_admin = db.Column(db.String(200))
 
