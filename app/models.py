@@ -118,8 +118,8 @@ class Event(db.Model):
     loser = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
 
     # Must be in child table for foreign_keys to reference parent table
-    event_winner = db.relationship('Team', foreign_keys=[winner], backref='event_winner', lazy=True)
-    event_loser = db.relationship('Team', foreign_keys=[loser], backref='event_loser', lazy=True)
+    event_winner = db.relationship('Team', foreign_keys=[winner], backref='winning_team', lazy=True)
+    event_loser = db.relationship('Team', foreign_keys=[loser], backref='losing_team', lazy=True)
 
     winning_score = db.Column(db.Integer)
     losing_score = db.Column(db.Integer)
