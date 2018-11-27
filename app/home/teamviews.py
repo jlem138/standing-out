@@ -86,7 +86,7 @@ def edit_team(teamname, league_name):
     if form.validate_on_submit():
         if game_count == 0:
             team.name = form.name.data
-        #team.name = form.name.data
+        team.name = form.name.data
         team.division_name = form.division_name.data
         team.conference_name = form.conference_name.data
         team.league_name = league_name
@@ -100,7 +100,7 @@ def edit_team(teamname, league_name):
         team.name = form.name.data
     form.division_name.data = team.division_name
     form.conference_name.data = team.conference_name
-    #form.name.data = team.name
+    form.name.data = team.name
     #form.league_name.data = team.league_name
     return render_template('home/teams/team.html', action="Edit",
     league_name=league_name, add_team=add_team, admin_status=admin_status,
