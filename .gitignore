@@ -8,6 +8,7 @@ tests.py
 newusers.py
 *.sql
 .env
+.DS_Store
 
 # Ignore instance folder
 instance/
