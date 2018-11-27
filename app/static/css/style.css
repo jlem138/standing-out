@@ -10,10 +10,18 @@ body, h1, h2, h3 {
     font-weight: 700;
 }
 
-a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
+a {
 /* Color of section titles at top of navigation bar*/
   color: black;
+  font-size: 14px;
 }
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
+/* Color of section titles at top of navigation bar*/
+  color: black;
+  font-size: 18px;
+}
+
 
 .navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus {
     /* Deep Skye Blue */
@@ -23,9 +31,8 @@ a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
 
 a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
   /* hover for navigation bar */
-  color: #3CB371;
+  color: mediumseagreen;
 }
-
 
 /* color of button when mouse hovers over button */
 .btn-default:hover {
@@ -35,7 +42,8 @@ a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:h
 
 .btn-default {
     border-color: black;
-    color: #3CB371;
+    color: mediumseagreen;
+    font-weight: bold;
 }
 
 footer {
@@ -78,10 +86,10 @@ table.event-table {
   border-color: 4px solid green;
 }
 
+/* Table headers */
 th {
   text-align: center;
-  /* sea green */
-  background-color: #3CB371;
+  background-color: mediumseagreen;
   color: black;
 }
 
@@ -135,9 +143,12 @@ tr:nth-child(odd) {
     padding-bottom: 50px;
     text-align: center;
     /* color of text on dashboard */
-    color: #00E5FF;
+    color: mediumseagreen;
+    /*
     background: url(../img/intro-bg.jpg) no-repeat center center;
+    */
     background-size: cover;
+    background-color: black;
     height: 100%;
 }
 
@@ -255,6 +266,8 @@ footer {
   text-shadow: 0 0 3px mediumseagreen;
 }
 
+/*
 .title-label {
   color: mediumseagreen;
 }
+*/

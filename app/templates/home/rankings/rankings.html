@@ -23,8 +23,8 @@
                   <th width="5%"> W </th>
                   <th width="5%"> L </th>
                   <th width="7%"> Win PCT </th>
+                  <th width="8%"> GB </th>
                   {% if information == True %}
-                    <th width="8%"> GB </th>
                     <th width="9%"> Magic Number </th>
                     <th width="12%"> Playoff Status </th>
                   {% endif %}
@@ -38,8 +38,8 @@
                   <td> {{ data[rank]['wins'] }}</td>
                   <td> {{ data[rank]['losses'] }}</td>
                   <td> {{ data[rank]['winning percentage'] }}
+                  <td> {{ data[rank]['GB']}}</td>
                   {% if information == True %}
-                    <td> {{ data[rank]['GB']}}</td>
                     <td> {{ data[rank]['magic']}} </td>
                     <td> {{ data[rank]['status']}}</td>
                   {% endif %}
@@ -56,7 +56,7 @@
         {% endif %}
         {% if admin_status == '1' %}
         <br/>
-            <a href="{{ url_for('admin.rankings_text', league_name=league_name,
+            <a href="{{ url_for('home.rankings_text', league_name=league_name,
             rankings_message=rankings_message) }}" class="btn btn-default btn-lg">
               <i class="fa fa-plus"></i>
               Send Rankings Update

@@ -1,15 +1,14 @@
 from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
-from . import admin
+from . import home
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
-from sqlalchemy import func, distinct
 from .helper import check_admin_user, check_admin, get_count
 
 
-@admin.route('/users/<league_name>')
+@home.route('/<league_name>/users')
 @login_required
 def list_users(league_name):
     """
@@ -22,14 +21,15 @@ def list_users(league_name):
     updated_entries = Update.query.filter_by(league_name=league_name).all()
 
     # Check the admin status to be passed to html page
+    # Admin status to be used to denote ability to edit another user
     admin_status = check_admin_user(league_name)
 
-    return render_template('admin/users/users.html', league_name=league_name,
+    return render_template('home/users/users.html', league_name=league_name,
     admin_status=admin_status, updates=updates, users_updated=updated_entries,
     current_username = current_username, title='Users')
 
 
-@admin.route('/users/delete/<league_name>/<username>', methods=['GET', 'POST'])
+@home.route('/<league_name>/users/delete/<username>', methods=['GET', 'POST'])
 @login_required
 def delete_user(username, league_name):
     """
@@ -50,11 +50,11 @@ def delete_user(username, league_name):
     flash('You have successfully deleted the update.')
 
     # redirect to the events page
-    return redirect(url_for('admin.list_users', league_name=league_name))
+    return redirect(url_for('home.list_users', league_name=league_name))
 
     return render_template(title="Delete users")
 
-@admin.route('user/add/<league_name>', methods=['GET', 'POST'])
+@home.route('/<league_name>/user/add', methods=['GET', 'POST'])
 @login_required
 def add_user(league_name):
     """
@@ -65,7 +65,7 @@ def add_user(league_name):
 
     form = UpdateForm()
     if form.validate_on_submit():
-        if form.is_admin.data == '1':
+        if form.is_admin.data == 'True':
             current_is_admin = '1'
         else:
             current_is_admin = '0'
@@ -97,13 +97,13 @@ def add_user(league_name):
                 flash('Error: user name already exists.')
 
         # redirect to the events page
-        return redirect(url_for('admin.list_users', league_name=league_name))
+        return redirect(url_for('home.list_users', league_name=league_name))
 
     # load event template
-    return render_template('admin/users/user.html', add_user=add_user, form=form,
+    return render_template('home/users/user.html', add_user=add_user, form=form,
     title='Add User', league_name=league_name)
 
-@admin.route('/users/edit/<league_name>/<username>', methods=['GET', 'POST'])
+@home.route('/<league_name>/users/edit/<username>', methods=['GET', 'POST'])
 @login_required
 def edit_user(username, league_name):
     """
@@ -123,15 +123,15 @@ def edit_user(username, league_name):
             update_entry.is_admin = '0'
         db.session.commit()
         flash('You have successfully edited the user.')
-    #     # redirect to the events page
-        return redirect(url_for('admin.list_users', league_name=league_name))
-    #
+        # redirect to the events page
+        return redirect(url_for('home.list_users', league_name=league_name))
+
     form.username.data = update_entry.username
     if update_entry.is_admin == '1':
         form.is_admin.data = '1'
     elif update_entry.is_admin == '0':
         form.is_admin.data = '0'
 
-    return render_template('admin/users/user.html', action="Edit",
+    return render_template('home/users/user.html', action="Edit",
                            add_user=add_user, form=form,league_name=league_name,
                            users_updated=update_entry, title="Edit User")

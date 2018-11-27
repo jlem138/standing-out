@@ -39,12 +39,12 @@
                   <td> {{ event.losing_score }} </td>
                   {% if admin_status == '1' %}
                   <td>
-                    <a href="{{ url_for('admin.edit_event', league_name=league_name, id=event.id) }}">
+                    <a href="{{ url_for('home.edit_event', league_name=league_name, id=event.id) }}">
                       <i class="fa fa-pencil"></i> Edit
                     </a>
                   </td>
                   <td>
-                    <a href="{{ url_for('admin.delete_event', league_name=league_name, id=event.id) }}">
+                    <a href="{{ url_for('home.delete_event', league_name=league_name, id=event.id) }}">
                       <i class="fa fa-trash"></i> Delete
                     </a>
                   </td>
@@ -61,7 +61,7 @@
         {% endif %}
         {% if admin_status == '1' %}
         <br/>
-          <a href="{{ url_for('admin.add_event', league_name=league_name) }}" class="btn btn-default btn-lg">
+          <a href="{{ url_for('home.add_event', league_name=league_name) }}" class="btn btn-default btn-lg">
             <i class="fa fa-plus"></i>
             Add Game Result
           </a>

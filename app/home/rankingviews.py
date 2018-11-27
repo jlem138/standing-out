@@ -1,20 +1,17 @@
 # app/admin/rankings.py
 import os
 
-from flask import abort, flash, redirect, render_template, url_for, session
-from flask_login import current_user, login_required
+from flask import redirect, render_template, url_for
+from flask_login import login_required
 
-from . import admin
-from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
-from ..models import Team, Event, League, User, Ranking, Update
-from sqlalchemy import func, distinct, MetaData, engine, Table, create_engine, select
-#from .database import database_engine
-from .helper import get_count, enough_teams, check_admin_user, check_admin, round_to_three
 from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
 
+from . import home
+from ..models import Team, Event, League, Update
+from .helper import get_count, check_admin_user, round_to_three
 
-@admin.route('/rankings/<league_name>', methods=['GET', 'POST'])
+@home.route('/<league_name>/rankings', methods=['GET', 'POST'])
 @login_required
 def list_rankings(league_name):
     """
@@ -26,6 +23,7 @@ def list_rankings(league_name):
     # Retrieve data on the number of games, number of teams, and qualifiers for the league
     number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
     teams = Team.query.filter_by(league_name=league_name)
+    total_teams = League.query.filter_by(league_name=league_name).first().number_of_total_teams
 
     # Determine the initial rankings based upon the wins and losses
     # First gets wins, losses, and W-L differentials for each team
@@ -34,7 +32,6 @@ def list_rankings(league_name):
         differentials = []
         winsall = []
         lossesall = []
-        place = 0
         for team in list_of_teams:
             team_data = {}
             wins = get_count(Event.query.filter_by(winner=team.name))
@@ -58,17 +55,18 @@ def list_rankings(league_name):
         return[ranking_data, differentials, winsall, lossesall]
 
     # Determine the ranking of the teams based upon their season results
-    def order_rankings(list_of_teams, ranking_data, differentials, winsall, lossesall):
+    def order_rankings(list_of_teams, ranking_data, differentials):
         not_stored = True
         ranking = {}
         for team in list_of_teams:
             # For the team in question, gets the W-L differential
             team_diff = ranking_data[team.name]['differential']
             not_stored = True
-            # For each team available, checks to see if jth best differential matches team differential
+            # For each team available, checks to see if jth best differential
+            # matches team differential
             for j in range(number_of_teams):
                 current_diff = differentials[j]
-                if (current_diff == team_diff) and (not_stored == True):
+                if (current_diff == team_diff) and (not_stored is True):
                     # Gives the matching team that ran
                     differentials[j] = team.name
                     # Creates list of rankings
@@ -77,18 +75,13 @@ def list_rankings(league_name):
         return([differentials, ranking])
 
     # Determine the advanced statistics for each team's season and playoff status
-    def determine_ranking_statistics(number_of_qualifiers, differentials, ranking_data, number_of_teams, ordered_wins, ordered_losses, ranking):
+    def determine_ranking_statistics(number_of_qualifiers, differentials,
+        ranking_data, number_of_teams, ordered_wins, ordered_losses, ranking):
 
         leader_differential = ranking_data[differentials[0]]['differential']
         season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
-        def playoff_information(qualifiers, games):
-            if qualifiers is None or games is None:
-                return False
-            else:
-                return True
-
-        information = playoff_information(number_of_qualifiers, season_games)
+        information = playoff_information(number_of_qualifiers, season_games, number_of_teams, total_teams)
 
         if information is True:
             first_out_least_possible_losses = ordered_losses[number_of_teams - number_of_qualifiers - 1]
@@ -112,46 +105,39 @@ def list_rankings(league_name):
 
             # Add games behind to team dictionary
             final_team['GB'] = games_behind(leader_differential, team_wins, team_losses)
-                # games_behind_leader = (leader_differential - (team_wins - team_losses)) / 2.0
-                # if games_behind_leader == 0:
-                #     games_behind_leader = '-'
-                # final_team['GB'] = games_behind_leader
 
             # Add team's rank to each team dictionary -- allows for ties between teams with the same record
             if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
-               final_team['place'] = current_ranking
+                final_team['place'] = current_ranking
             else:
-               current_ranking = ranking[rank]+1
-               final_team['place'] = current_ranking
+                current_ranking = ranking[rank]+1
+                final_team['place'] = current_ranking
 
             if information:
                 # Determines 'Magic Number' for teams to qualify
                 final_team['magic'] = magic_number_with_losses - team_wins
 
                 # Determine team playoff status
-                final_team['status'] = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, 0)
+                final_team['status'] = determine_magic_status(team_wins, first_out_max_wins,
+                    team_losses, last_in_max_losses, 0)
 
-                playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses)
-                #final_data['status'] =
-                #print("ONE", playoff_stats[0])
-                #print("TWO", playoff_stats[1])#final_team['magic'] = playoff_stats[1]
+                playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses,
+                    last_in_max_losses, magic_number_with_losses)
 
                 final_team['status'] = playoff_stats[0]
                 final_team['magic'] = playoff_stats[1]
 
-                # Determine team playoff status
-                #final_team['status']
-
             final_data[rank] = final_team
         results = [final_data, ranking, information]
-        return(results)
+        return results
 
-    def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses,  magic_number_with_losses):
-        # Determine team playoff status
-        if (team_wins > first_out_max_wins):
+    def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses):
+        """ This function determines the magic number and the playoff eligibility status for a team. """
+
+        if team_wins > first_out_max_wins:
             status = 'IN'
             magic = '-'
-        elif (team_losses > last_in_max_losses):
+        elif team_losses > last_in_max_losses:
             status = 'OUT'
             magic = '-'
         else:
@@ -159,10 +145,10 @@ def list_rankings(league_name):
             # Determines 'Magic Number' for teams to qualify
             magic = magic_number_with_losses - team_wins
 
-        return([status,magic])
+        return([status, magic])
 
     def create_standings_message(number_of_teams, team_order):
-        #Create standings string:
+        """ This function takes in the order of the teams and creates the message to send the users. """
         message = []
         for rank in range(number_of_teams):
             # add Rank
@@ -171,14 +157,15 @@ def list_rankings(league_name):
             message.append(team_order[rank])
             if (rank+1) != number_of_teams:
                 message.append('\n')
-        rankings_message=''.join(message)
-        return(rankings_message)
+        rankings_message = ''.join(message)
+        return rankings_message
 
     def games_behind(leader_differential, team_wins, team_losses):
+        """ This function takes in a team's wins & losses and the leader's differential and determines the team's games behind. """
         games_behind_leader = (leader_differential - (team_wins - team_losses)) / 2.0
         if games_behind_leader == 0:
             games_behind_leader = '-'
-        return(games_behind_leader)
+        return games_behind_leader
 
     returned_data = collect_ranking_data(teams)
     returned_ranking_data = returned_data[0]
@@ -186,58 +173,66 @@ def list_rankings(league_name):
     returned_winsall = returned_data[2]
     returned_lossesall = returned_data[3]
 
-    order_results = order_rankings(teams, returned_ranking_data, returned_differentials, returned_winsall, returned_lossesall)
+    order_results = order_rankings(teams, returned_ranking_data, returned_differentials)
     team_names_ranked = order_results[0]
     numbered_ranks = order_results[1]
     message = create_standings_message(number_of_teams, team_names_ranked)
 
-    print("ORDER1", numbered_ranks)
-    print("ORDER2", team_names_ranked)
-    print("ORDER3", returned_ranking_data)
-
     number_of_qualifiers = League.query.filter_by(league_name=league_name).first().number_of_qualifiers
-    final_stats = determine_ranking_statistics(number_of_qualifiers, team_names_ranked, returned_ranking_data, number_of_teams, returned_winsall, returned_lossesall, numbered_ranks)
+    final_stats = determine_ranking_statistics(number_of_qualifiers, team_names_ranked,
+        returned_ranking_data, number_of_teams, returned_winsall, returned_lossesall, numbered_ranks)
     final_stats_data = final_stats[0]
-    final_stats_ranking = final_stats[1]
     final_information = final_stats[2]
 
     title = league_name + " Rankings"
 
-    return render_template('admin/rankings/rankings.html', ranking=numbered_ranks,
-    league_name=league_name, admin_status=admin_status, number_of_teams=number_of_teams,
-    teams=teams, data=final_stats_data, information=final_information, rankings_message=message, title=title)
+    return render_template('home/rankings/rankings.html', ranking=numbered_ranks,
+        league_name=league_name, admin_status=admin_status, number_of_teams=number_of_teams,
+        teams=teams, data=final_stats_data, information=final_information,
+        rankings_message=message, title=title)
 
-@admin.route('/rankings/sendtext/<league_name>/<rankings_message>', methods=['GET', 'POST'])
+def playoff_information(qualifiers, games, number_of_registered_teams, total_teams):
+    """ This function determines if enough details have been entered to determine playoff information for a league. """
+    if qualifiers is None or games is None or total_teams is None:
+        return False
+    if number_of_registered_teams != total_teams:
+        return False
+    if number_of_registered_teams <= qualifiers:
+        return False
+    return True
+
+@home.route('/rankings/sendtext/<league_name>/<rankings_message>', methods=['GET', 'POST'])
 @login_required
 def rankings_text(league_name, rankings_message):
+    """ This function takes in a league and its message, sending designated league users the message. """
 
     # get league users
-
     league_users = Update.query.filter_by(league_name=league_name).all()
 
-    admin_status = check_admin_user(league_name)
+    proxy_client = TwilioHttpClient()
+    proxy_client.session.proxies = {'https': os.environ['https_proxy']}
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
-    personal_number = os.environ['PERSONAL_NUMBER']
+    #personal_number = os.environ['PERSONAL_NUMBER']
     twilio_number = os.environ['TWILIO_NUMBER']
 
-    client = Client(account_sid, auth_token)
+    client = Client(account_sid, auth_token, http_client=proxy_client)
 
     # for every user in the updates for the league, if their phone number is
     # registered then send that person a text with the standings
 
     for user in league_users:
+        print("USAH", user.username, user.phone_number)
         phone = user.phone_number
-        if phone is not None:
-            to_number="1"+phone
+        if phone is not None and phone != '':
+            to_number = "1"+phone
+            print("TONUM", user.phone_number, user.username, to_number)
 
             client.messages.create(
-                to="1"+to_number,
+                to=to_number,
                 from_=twilio_number,
                 body=rankings_message
                 )
 
-    title="FINISHED"
-
-    return redirect(url_for('admin.list_rankings', league_name=league_name))
+    return redirect(url_for('home.list_rankings', league_name=league_name))

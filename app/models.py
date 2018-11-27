@@ -44,7 +44,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(60), index=True, unique=True)
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
-    phone_number = db.Column(db.String(10), index=True, unique=True)
+    phone_number = db.Column(db.String(10), nullable=True)
     password_hash = db.Column(db.String(128))
 
     # one user to many updates
@@ -159,8 +159,8 @@ class Update(db.Model):
     last_name = db.Column(db.String(60), index=True)
     #username_constraint = relationship("User", foreign_keys=[username])
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
-    #league_constraint = relationship("League", foreign_keys=[league_name])
-    phone_number = db.Column(db.String(10), index=True, unique=True)
+    league_constraint = relationship("League", foreign_keys=[league_name])
+    phone_number = db.Column(db.String(10))
     is_admin = db.Column(db.String(200))
 
     def __repr__(self):
