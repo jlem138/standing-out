@@ -57,8 +57,6 @@ def list_leagues():
     List all leagues
     """
 
-
-
     current_username = current_user.username
     leagues_held_by_user_entries = Update.query.filter_by(username=current_username).all()
 

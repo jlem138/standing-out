@@ -6,60 +6,25 @@
     <title> {{ title }} | League Tracker </title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    test
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top topnav">
-        <div class="container topnav">
-          <div class="navbar-header" role="navigation">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-              </button>
-          </div>
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_authenticated %}
-                  {% if league_name %}
-                    <li><a href="{{ url_for('home.list_rankings', league_name=league_name)  }}">Rankings</a></li>
-                    <li><a href="{{ url_for('home.list_teams', league_name=league_name) }}">Teams</a></li>
-                    <li><a href="{{ url_for('home.list_events', league_name=league_name) }}">Game Results</a></li>
-                    <li><a href="{{ url_for('home.list_users', league_name=league_name) }}">Users</a></li>
-                  {% endif %}
-                  <li><a href="{{ url_for('home.list_leagues') }}">Leagues</a></li>
-                  <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                {% else %}
-                  <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-                  <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                  <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                {% endif %}
-            </ul>
-          </div>
-        </div>
-    </nav>
-    <div class="wrapper">
-      {% block body %}
-      {% endblock %}
-      <div class="push"></div>
-    </div>
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                  <ul class="list-inline">
-                      <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-                      <li class="footer-menu-divider">⋅</li>
-                      <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                      <li class="footer-menu-divider">⋅</li>
-                      <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                  </ul>
-                    <p class="copyright text-muted small">Copyright © 2018. All Rights Reserved</p>
-                </div>
-            </div>
-        </div>
-        <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
-    </footer>
+  start of body with dev two
+    <ul class="nav navbar-nav navbar-right">
+        {% if current_user.is_authenticated %}
+          {% if league_name %}
+            <li><a href="{{ url_for('home.list_rankings', league_name=league_name)  }}">Rankings</a></li>
+            <li><a href="{{ url_for('home.list_teams', league_name=league_name) }}">Teams</a></li>
+            <li><a href="{{ url_for('home.list_events', league_name=league_name) }}">Game Results</a></li>
+            <li><a href="{{ url_for('home.list_users', league_name=league_name) }}">Users</a></li>
+          {% endif %}
+          <li><a href="{{ url_for('home.list_leagues') }}">Leagues</a></li>
+          <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+        {% else %}
+          <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
+          <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+        {% endif %}
+    </ul>
 </body>
 </html>
