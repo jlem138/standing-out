@@ -1,20 +1,18 @@
-
-
 <!-- app/templates/admin/Teams/team.html -->
 
 {% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
 {% block title %}Teams{% endblock %}
 {% block body %}
-<div class="content-section">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
+<div>
+  <div>
+    <div>
+      <div>
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;"> {{league}} Teams</h1>
-        <hr class="intro-divider"></hr>
+        <h1 style="text-align:center;"> << {{league}} Teams >></h1>
+        <br>
         {% if teams %}
           <div>
             <table align="center" class="team-table">

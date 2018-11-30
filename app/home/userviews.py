@@ -5,7 +5,7 @@ from . import home
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
-from .helper import check_admin_user, check_admin, get_count
+from .helper import check_admin_user, check_admin, get_count, admin_and_user_leagues
 
 
 @home.route('/<league_name>/users')
@@ -24,7 +24,12 @@ def list_users(league_name):
     # Admin status to be used to denote ability to edit another user
     admin_status = check_admin_user(league_name)
 
-    return render_template('home/users/users.html', league_name=league_name,
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
+
+    return render_template('home/users/users.html', league_name=league_name, user_leagues=user_leagues, admin_leagues=admin_leagues,
     admin_status=admin_status, updates=updates, users_updated=updated_entries,
     current_username = current_username, title='Users')
 

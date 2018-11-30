@@ -8,7 +8,7 @@ from . import home
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update
-from .helper import check_admin, check_admin_user
+from .helper import check_admin, check_admin_user, admin_and_user_leagues
 
 # League Views
 
@@ -69,10 +69,18 @@ def list_leagues():
         overall_statuses[entry.league_name]=status
         if status == "1":
             at_least_one_admin = True
+
+
+
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
     leagues = League.query.filter(League.league_name.in_(user_league_list)).all()
 
-    return render_template('home/leagues/leagues.html', title="Leagues",
-                            overall_statuses=overall_statuses, leagues=leagues,
+
+    return render_template('home/leagues/leagues.html', title="Leagues", user_leagues=user_leagues,
+                            admin_leagues=admin_leagues, overall_statuses=overall_statuses, leagues=leagues,
                             at_least_one_admin=at_least_one_admin)
 
 

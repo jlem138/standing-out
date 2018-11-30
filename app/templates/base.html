@@ -6,25 +6,96 @@
     <title> {{ title }} | League Tracker </title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    test
 </head>
 <body>
-  start of body with dev two
-    <ul class="nav navbar-nav navbar-right">
-        {% if current_user.is_authenticated %}
-          {% if league_name %}
-            <li><a href="{{ url_for('home.list_rankings', league_name=league_name)  }}">Rankings</a></li>
-            <li><a href="{{ url_for('home.list_teams', league_name=league_name) }}">Teams</a></li>
-            <li><a href="{{ url_for('home.list_events', league_name=league_name) }}">Game Results</a></li>
-            <li><a href="{{ url_for('home.list_users', league_name=league_name) }}">Users</a></li>
-          {% endif %}
-          <li><a href="{{ url_for('home.list_leagues') }}">Leagues</a></li>
-          <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+  <div class="wrapper-two">
+    <div class="main-panel">
+      <div class="title-panel"> League Tracker
+        <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+      </div>
+      <div class="panel-divider"></div>
+      <br>
+      {% if current_user.is_authenticated %}
+        <div class="current-user"> CURRENT USER
+          <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+          {{current_user.username}}
+        </div>
+        <br>
+        <div class="panel-divider"></div>
+        <br>
+      <div>
+        <button class="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
+          <li><a href="{{ url_for('home.list_leagues') }}" class="action-item">League Information</a></li>
+        </button>
+        <br>
+        <div class="panel-divider"></div>
+        <br>
+        <div class="league-list"> ADMIN LEAGUES
+          <br>
+          {% for league in admin_leagues %}
+          <div class="dropdown">
+            <button class="title-panel-league-button" type="button" aria-haspopup="true" aria-expanded="true">
+              {{league}}
+              <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+            </button>
+            <div class="dropdown-content" class="title-panel-button">
+              <a href="{{ url_for('home.list_rankings', league_name=league) }}">Rankings</a>
+              <a href="{{ url_for('home.list_teams', league_name=league) }}">Teams</a>
+              <a href="{{ url_for('home.list_events', league_name=league) }}">Game Results</a>
+              <a href="{{ url_for('home.list_users', league_name=league) }}">Users</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <br>
+        <div class="panel-divider"></div>
+        <br>
+        <div class="league-list"> USER LEAGUES
+          {% for league in user_leagues %}
+          <div class="dropdown">
+            <button class="title-panel-league-button" type="button" aria-haspopup="true" aria-expanded="true">
+              {{league}}
+              <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+            </button>
+            <div class="dropdown-content" class="title-panel-button">
+              <a href="{{ url_for('home.list_rankings', league_name=league) }}">Rankings</a>
+              <a href="{{ url_for('home.list_teams', league_name=league) }}">Teams</a>
+              <a href="{{ url_for('home.list_events', league_name=league) }}">Game Results</a>
+              <a href="{{ url_for('home.list_users', league_name=league) }}">Users</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <br>
+        <div class="panel-divider"></div>
+        <br>
+      </div>
+      <br><br>
+        <div class="action-item" text-align="right">
+          <button class="title-panel-button" aria-haspopup="true" aria-expanded="true">
+            <li><a href="{{ url_for('auth.logout') }}" class="logout" >LOGOUT</a></li>
+          </button>
+        </div>
         {% else %}
-          <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-          <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+          <div class="action-item">
+            <button class="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
+              <li><a href="{{ url_for('auth.register') }}" class="action-item">Register</a></li>
+            </button>
+            <br>
+            <button class="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
+              <li><a href="{{ url_for('auth.login') }}" class="action-item">Login</a></li>
+            </button>
+          </div>
         {% endif %}
-    </ul>
+        </div>
+    <div class="table-panel">
+      <div>
+        {% block body %}
+        {% endblock %}
+        <br>
+        <div class="push"></div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

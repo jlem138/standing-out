@@ -7,7 +7,7 @@ from . import home
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
 from ..models import Team, Event, League, User, Ranking
-from .helper import check_admin_user, check_admin, get_count
+from .helper import check_admin_user, check_admin, get_count, admin_and_user_leagues
 
 @home.route('/<league_name>/events')
 @login_required
@@ -19,8 +19,14 @@ def list_events(league_name):
     admin_status=check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
 
+    league_list = session['user_leagues']
+
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
     return render_template('home/events/events.html', league_name = league_name,
-                           admin_status=admin_status,
+                           admin_status=admin_status, user_leagues=user_leagues, admin_leagues=admin_leagues,
                            events=events, title='Game Results')
 
 @home.route('/<league_name>/events/add', methods=['GET', 'POST'])

@@ -10,21 +10,13 @@
     {% endif %}
 {% endblock %}
 {% block body %}
-<div class="content-section">
- <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <div class="center">
-            {% if add_event %}
-                <h1>Add Event</h1>
-            {% else %}
-                <h1>Edit Event</h1>
-            {% endif %}
-            <br/>
-            {{ wtf.quick_form(form) }}
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="form-format">
+  {% if add_event %}
+      <h1>Add Event</h1>
+  {% else %}
+      <h1>Edit Event</h1>
+  {% endif %}
+  <br/>
+  {{ wtf.quick_form(form) }}
 </div>
 {% endblock %}

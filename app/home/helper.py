@@ -42,3 +42,15 @@ def enough_teams(league_name):
 def round_to_three(wins, losses):
     games = (1.0 * wins) + losses
     return(format(wins/games, '0.3f'))
+
+def admin_and_user_leagues(username):
+    updates = Update.query.filter_by(username=username).all()
+    user_leagues = []
+    admin_leagues = []
+    for update in updates:
+        admin_status = check_admin_user(update.league_name)
+        if admin_status is True:
+            admin_leagues.append(update.league_name)
+        else:
+            user_leagues.append(update.league_name)
+    return(admin_leagues, user_leagues)
