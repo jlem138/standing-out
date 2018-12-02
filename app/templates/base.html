@@ -24,7 +24,7 @@
         <div class="panel-divider"></div>
         <br>
       <div>
-        <button class="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
+        <button id="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
           <li><a href="{{ url_for('home.list_leagues') }}" class="action-item">League Information</a></li>
         </button>
         <br>
@@ -39,10 +39,10 @@
               <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
             </button>
             <div class="dropdown-content" class="title-panel-button">
-              <a href="{{ url_for('home.list_rankings', league_name=league) }}">Rankings</a>
-              <a href="{{ url_for('home.list_teams', league_name=league) }}">Teams</a>
-              <a href="{{ url_for('home.list_events', league_name=league) }}">Game Results</a>
-              <a href="{{ url_for('home.list_users', league_name=league) }}">Users</a>
+              <a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a>
+              <a href="{{ url_for('home.list_teams', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Teams</a>
+              <a href="{{ url_for('home.list_events', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Game Results</a>
+              <a href="{{ url_for('home.list_users', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Users</a>
             </div>
           </div>
           {% endfor %}
@@ -58,10 +58,10 @@
               <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
             </button>
             <div class="dropdown-content" class="title-panel-button">
-              <a href="{{ url_for('home.list_rankings', league_name=league) }}">Rankings</a>
-              <a href="{{ url_for('home.list_teams', league_name=league) }}">Teams</a>
-              <a href="{{ url_for('home.list_events', league_name=league) }}">Game Results</a>
-              <a href="{{ url_for('home.list_users', league_name=league) }}">Users</a>
+              <a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a>
+              <a href="{{ url_for('home.list_teams', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Teams</a>
+              <a href="{{ url_for('home.list_events', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Game Results</a>
+              <a href="{{ url_for('home.list_users', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Users</a>
             </div>
           </div>
           {% endfor %}
@@ -72,7 +72,7 @@
       </div>
       <br><br>
         <div class="action-item" text-align="right">
-          <button class="title-panel-button" aria-haspopup="true" aria-expanded="true">
+          <button id="title-panel-button" aria-haspopup="true" aria-expanded="true">
             <li><a href="{{ url_for('auth.logout') }}" class="logout" >LOGOUT</a></li>
           </button>
         </div>

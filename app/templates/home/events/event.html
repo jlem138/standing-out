@@ -10,13 +10,15 @@
     {% endif %}
 {% endblock %}
 {% block body %}
-<div class="form-format">
+<div>
   {% if add_event %}
-      <h1>Add Event</h1>
+    <div class="add-edit-title">Add Event</div>
   {% else %}
-      <h1>Edit Event</h1>
+    <div class="add-edit-title">Edit Event</div>
   {% endif %}
   <br/>
-  {{ wtf.quick_form(form) }}
+  <div class="add-edit-format">
+    {{ wtf.quick_form(form) }}
+  </div>
 </div>
 {% endblock %}

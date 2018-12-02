@@ -36,6 +36,10 @@ def add_event(league_name):
     Add a event to the database
     """
 
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
     add_event = True
 
     form = EventForm()
@@ -78,8 +82,8 @@ def add_event(league_name):
         return redirect(url_for('home.list_events', league_name=league_name))
 
     # load event template
-    return render_template('home/events/event.html', add_event=add_event,
-                           form=form, title='Add Game Result', league_name=league_name)
+    return render_template('home/events/event.html', add_event=add_event,user_leagues=user_leagues,
+                            admin_leagues=admin_leagues, form=form, title='Add Game Result', league_name=league_name)
 
 @home.route('/<league_name>/events/edit/<int:id>', methods=['GET', 'POST'])
 @login_required

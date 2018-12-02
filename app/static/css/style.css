@@ -67,7 +67,7 @@ table, th, td {
 }
 
 th, td {
-  padding: 10px;
+  padding: 6px;
 }
 
 tr {
@@ -113,6 +113,7 @@ tr:nth-child(odd) {
   top: 0;
   bottom: 0;
   width: 200px;
+  border: black solid 3px;
 }
 
 .table-panel {
@@ -149,14 +150,14 @@ tr:nth-child(odd) {
     min-width: 120px;
     left: 160px;
     top: 0px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     font-weight: bold;
 }
 
 .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    padding: 6px 12px;
     text-decoration: none;
     display: block;
     font-size: 12px;
@@ -189,6 +190,7 @@ tr:nth-child(odd) {
 
 .league-list {
   color: orange;
+  font-weight: bold;
   font-family: sans-serif;
   font-size: 20px;
   list-style-type: none;
@@ -235,10 +237,10 @@ tr:nth-child(odd) {
   background-color: orange;
 }
 
-.title-panel-button {
+#title-panel-button {
   font-family: sans-serif;
   font-weight: bold;
-  color: black;
+  font: green;
   list-style-type: none;
   min-width: 160px;
   text-decoration: none;
@@ -267,7 +269,9 @@ tr:nth-child(odd) {
   min-width: 120px;
   background-color: lightgray;
   padding: 6px;
-  border: black solid 2px;
+  border-top: black solid 2px;
+  border-bottom: black solid 2px;
+
 
 }
 .title-panel-league-button:hover {
@@ -282,14 +286,34 @@ tr:nth-child(odd) {
   width: 900px;
   padding-left: 140px;
   padding-right: 140px;
-  font-size: 18px;
+  font-size: 16px;
+}
+
+.add-edit-format {
+  width: 900px;
+  padding-left: 230px;
+  padding-right: 140px;
+  font-size: 12px;
+}
+
+.add-edit-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: blue;
+  text-align: center;
 }
 
 .btn {
   background-color: lightgray;
-}
-.btn-default:hover {
-  background-color: orange;
   color: black;
-  border: black;
+}
+
+.btn-default:hover {
+  background-color: darkorange;
+  color: white;
+  text-decoration: none;
+}
+
+#submit {
+  font-size: 14px;
 }

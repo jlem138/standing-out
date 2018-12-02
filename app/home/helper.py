@@ -1,7 +1,6 @@
 from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
-#from . import admin
 from .. import db
 from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
 from ..models import Team, Event, League, User, Ranking, Update

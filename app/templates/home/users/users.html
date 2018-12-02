@@ -15,7 +15,7 @@
         <br>
           <div>
             <table align="center" class="user-table">
-        {% if users or updates %}
+        {% if updates %}
             <thead>
               <tr>
                 <th width="22%"> First Name </th>
@@ -29,7 +29,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for user in users_updated %}
+              {% for user in updates %}
                 <tr>
                   <td> {{ user.first_name }}</td>
                   <td> {{ user.last_name}}</td>

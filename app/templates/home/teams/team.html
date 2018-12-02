@@ -3,18 +3,19 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}
-    {% if add_team %}
+    {% if team_add %}
         Add Team
     {% else %}
         Edit Team
     {% endif %}
 {% endblock %}
 {% block body %}
-<div class="form-format">
-  {% if add_team %}
-      <h1>Add Team</h1>
+<br>
+<div class="add-edit-format">
+  {% if add_event %}
+      <div class="add-edit-title">Add Team</div>
   {% else %}
-      <h1>Edit {{teamname}} </h1>
+      <div class="add-edit-title">Edit Team</div>
   {% endif %}
   <br/>
   {{ wtf.quick_form(form) }}
