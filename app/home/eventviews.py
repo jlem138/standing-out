@@ -1,13 +1,13 @@
 # Event Views
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from . import home
 from .. import db
 from .forms import EventForm
 from ..models import Team, Event
-from .helper import check_admin_user
+from .helper import check_admin_user, admin_and_user_leagues
 
 @home.route('/<league_name>/events')
 @login_required
@@ -18,8 +18,6 @@ def list_events(league_name):
 
     admin_status = check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
-
-    league_list = session['user_leagues']
 
     league_lists = admin_and_user_leagues(current_user.username)
     user_leagues = league_lists[0]

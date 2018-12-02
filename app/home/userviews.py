@@ -16,7 +16,7 @@ def list_users(league_name):
     """
 
     # All update entries for the particular league
-    league = League.get.query(league_name)
+    league = League.query.get(league_name)
     updates = league.updates_for_league
     current_username = current_user.username
 
