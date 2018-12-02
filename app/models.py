@@ -26,9 +26,12 @@ class League(db.Model):
     number_of_qualifiers = db.Column(db.Integer)
     is_byes = db.Column(db.String(200))
 
-    # one league to many teams, events, and updates
+    # one league to many teams and events
     teams = db.relationship('Team', backref='team_league', lazy=True)
     events = db.relationship('Event', backref='event_league', lazy=True)
+
+    # Many to Many Relationship
+    # One user can be a part of many leagues, one league can have many users
     updates = db.relationship('Update', backref='update_league', lazy=True)
     updates_for_league = db.relationship('Update', secondary=ups_leagues, backref=db.backref('leagues_for_update', lazy='dynamic'))
 
@@ -54,7 +57,7 @@ class User(UserMixin, db.Model):
     phone_number = db.Column(db.String(10), nullable=True)
     password_hash = db.Column(db.String(128))
 
-    # one user to many updates
+    # One user to many updates
     updates = db.relationship('Update', backref='update_user', lazy=True)
 
 
@@ -97,9 +100,6 @@ class Team(db.Model):
     division_name = db.Column(db.String(60))
     conference_name = db.Column(db.String(60))
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
-    #league_constraint = relationship("League", foreign_keys=[league_name])
-    #event_winner = relationship("Event", cascade="save-update", foreign_keys=[winner])
-    #event_loser = relationship("Event", cascade="save-update")
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
 
@@ -125,6 +125,7 @@ class Event(db.Model):
     loser = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
 
     # Must be in child table for foreign_keys to reference parent table
+    # One event to many teams (for both event 'winner' and 'loser')
     event_winner = db.relationship('Team', foreign_keys=[winner], backref='winning_team', lazy=True)
     event_loser = db.relationship('Team', foreign_keys=[loser], backref='losing_team', lazy=True)
 
@@ -133,25 +134,6 @@ class Event(db.Model):
 
     def __repr__(self):
         return '<Event: {}>'.format(self.id)
-
-class Ranking(db.Model):
-    """
-    Create a Ranking table
-    """
-
-    __tablename__ = 'rankings'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    team = db.Column(db.String(200), db.ForeignKey('teams.name'), nullable=False)
-    team_constraint = relationship("Team", foreign_keys=[team])
-    wins = db.Column(db.Integer)
-    losses = db.Column(db.Integer)
-    games_played = db.Column(db.Integer)
-    gb = db.Column(db.Integer)
-    mnumber = db.Column(db.Integer)
-
-    def __repr__(self):
-        return '<Ranking: {}>'.format(self.name)
 
 class Update(db.Model):
     """

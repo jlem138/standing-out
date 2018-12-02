@@ -1,9 +1,8 @@
 # app/home/views.py
 
-from flask import abort, render_template, session
+from flask import render_template, session
 from flask_login import current_user, login_required
-from ..models import Team, Event, League, User, Ranking, Update
-from sqlalchemy import func, distinct
+from ..models import Team, Event, League, User, Update
 
 from . import home
 

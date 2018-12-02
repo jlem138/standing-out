@@ -2,8 +2,8 @@ from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
 from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm, UpdateForm
-from ..models import Team, Event, League, User, Ranking, Update
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, UpdateForm
+from ..models import Team, Event, League, User, Update
 from sqlalchemy import func, distinct
 
 def check_admin():
