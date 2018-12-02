@@ -24,8 +24,11 @@
         <div class="panel-divider"></div>
         <br>
       <div>
-        <button id="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
-          <li><a href="{{ url_for('home.list_leagues') }}" class="action-item">League Information</a></li>
+        <button id="title-panel-button" type="button">
+          <li><a href="{{ url_for('home.list_leagues') }}" class="action-item">
+            <div>LEAGUE</div>
+            <div>INFORMATION</div>
+          </a></li>
         </button>
         <br>
         <div class="panel-divider"></div>
@@ -34,9 +37,9 @@
           <br>
           {% for league in admin_leagues %}
           <div class="dropdown">
-            <button class="title-panel-league-button" type="button" aria-haspopup="true" aria-expanded="true">
+            <button id="title-panel-league-button">
               {{league}}
-              <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+              <span class="glyphicon glyphicon-triangle-right"></span>
             </button>
             <div class="dropdown-content" class="title-panel-button">
               <a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a>
@@ -46,6 +49,11 @@
             </div>
           </div>
           {% endfor %}
+        </div>
+        <div>
+          {% if admin_leagues|length == 0 %}
+            <div class="none"> NONE </div>
+          {% endif %}
         </div>
         <br>
         <div class="panel-divider"></div>
@@ -66,24 +74,29 @@
           </div>
           {% endfor %}
         </div>
+        <div>
+          {% if user_leagues|length == 0 %}
+            <div class="none"> NONE </div>
+          {% endif %}
+        </div>
         <br>
         <div class="panel-divider"></div>
         <br>
       </div>
       <br><br>
-        <div class="action-item" text-align="right">
-          <button id="title-panel-button" aria-haspopup="true" aria-expanded="true">
-            <li><a href="{{ url_for('auth.logout') }}" class="logout" >LOGOUT</a></li>
+        <div class="action-item">
+          <button id="title-panel-button">
+            <li><a href="{{ url_for('auth.logout') }}" >LOGOUT</a></li>
           </button>
         </div>
         {% else %}
           <div class="action-item">
-            <button class="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
+            <button id="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
               <li><a href="{{ url_for('auth.register') }}" class="action-item">Register</a></li>
             </button>
             <br>
-            <button class="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
-              <li><a href="{{ url_for('auth.login') }}" class="action-item">Login</a></li>
+            <button id="title-panel-button" type="button" aria-haspopup="true" aria-expanded="true">
+              <li><a href="{{ url_for('auth.login') }}" class="action-item" >Login</a></li>
             </button>
           </div>
         {% endif %}

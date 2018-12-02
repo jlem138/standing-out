@@ -88,11 +88,13 @@ tr:nth-child(odd) {
 }
 
 .alert-info {
-    width: 50%;
+    width: 300px;
     margin: auto;
-    color: #687430;
-    background-color: #e6ecca;
-    border-color: #aec251;
+    color: black;
+    background-color: #f2cf9b;
+    border-color: black;
+    text-align: center;
+    left: 0px;
 }
 
 .show {
@@ -128,15 +130,6 @@ tr:nth-child(odd) {
   background-color: orange;
 }
 
-.dropbtn {
-    background-color: grey;
-    color: white;
-    padding: 16px;
-    font-size: 20px;
-    border: none;
-    min-width: 900px;
-
-}
 .dropdown {
     position: relative;
     display: inline-block;
@@ -167,15 +160,12 @@ tr:nth-child(odd) {
 .dropdown-content a:hover {
   background-color: orange;
   text-decoration: none;
+  color: black;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
     text-decoration: none;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: green;
 }
 
 .current-user {
@@ -198,6 +188,7 @@ tr:nth-child(odd) {
   text-align: center;
 }
 
+
 .title-panel {
   font-family: sans-serif;
   font-weight: bold;
@@ -209,16 +200,11 @@ tr:nth-child(odd) {
   bottom: 0;
 }
 
-.table-title {
-
-}
-
 .action-item {
   font-family: sans-serif;
   font-weight: bold;
   color: black;
-  padding: 18px;
-  font-size: 12px;
+  font-size: 14px;
   list-style-type: none;
   min-width: 200px;
   min-height: 40px;
@@ -240,7 +226,7 @@ tr:nth-child(odd) {
 #title-panel-button {
   font-family: sans-serif;
   font-weight: bold;
-  font: green;
+  color: purple;
   list-style-type: none;
   min-width: 160px;
   text-decoration: none;
@@ -248,21 +234,25 @@ tr:nth-child(odd) {
   border-radius: 6px;
   display: block;
   margin: 0 auto;
+  text-align: center;
 }
 
 
-.title-panel-league-button {
+/* ADMIN & USER league buttons */
+#title-panel-league-button {
   font-family: sans-serif;
   font-weight: bold;
   color: black;
-  font-size: 20px;
   list-style-type: none;
   min-width: 160px;
   text-decoration: none;
   font-size: 14px;
   border-radius: 6px;
   display: block;
-  margin: 0 auto;
+}
+
+#title-panel-league-button:hover {
+  background: #f2cf9b;
 }
 
 .panel-divider {
@@ -271,12 +261,8 @@ tr:nth-child(odd) {
   padding: 6px;
   border-top: black solid 2px;
   border-bottom: black solid 2px;
-
-
 }
-.title-panel-league-button:hover {
-  background-color: darkorange;
-}
+
 
 .table-title {
   text-align: center;
@@ -316,4 +302,22 @@ tr:nth-child(odd) {
 
 #submit {
   font-size: 14px;
+}
+
+
+/* to override bootstrap color of logout button */
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: orange;
+  text-decoration: none;
+}
+
+.none {
+  text-align: center;
+  color: white;
+  font-weight: bold;
 }
