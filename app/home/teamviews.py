@@ -104,8 +104,15 @@ def edit_team(teamname, league_name):
     form.conference_name.data = team.conference_name
     form.name.data = team.name
 
-    return render_template('home/teams/team.html', action="Edit",
-                           league_name=league_name, team_add=team_add,
+
+    # Leagues for which current user is an admin or standard user
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
+
+    return render_template('home/teams/team.html', action="Edit", user_leagues=user_leagues,
+                           admin_leagues=admin_leagues, league_name=league_name, team_add=team_add,
                            admin_status=admin_status, form=form, teamname=teamname,
                            title="Edit Team")
 

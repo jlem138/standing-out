@@ -28,18 +28,19 @@ table.league-table {
 }
 
 table.ranking-table {
-  width: 800px;
+  width: 700px;
   border-spacing: 4px;
   margin: 0px auto;
   border-color: 4px solid green;
 }
 
 table.event-table {
-  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  width: 900px;
   border-spacing: 4px;
-  margin: 0px auto;
   border-color: 4px solid green;
-  right: 2200px;
 }
 
 /* Table headers */
@@ -104,7 +105,6 @@ tr:nth-child(odd) {
 .wrapper-two {
   display: grid;
   grid-template-columns: 1fr;
-  background: pink;
   grid-gap: 3em;
   grid-auto-columns: 30px;
 }
@@ -121,6 +121,9 @@ tr:nth-child(odd) {
 .table-panel {
   background-color: white;
   padding-left: 200px;
+  height: 1565px;
+  padding-right: 00px;
+  width: 1300px;
 }
 
 .btn {
@@ -268,6 +271,7 @@ tr:nth-child(odd) {
   text-align: center;
 }
 
+/* login & register */
 .form-format {
   width: 900px;
   padding-left: 140px;
@@ -275,17 +279,25 @@ tr:nth-child(odd) {
   font-size: 16px;
 }
 
+/* panel is 1100 px */
+/* total width = 900px
+/* width - padding-right = end right point */
 .add-edit-format {
-  width: 900px;
-  padding-left: 230px;
-  padding-right: 140px;
-  font-size: 12px;
+  position: relative;
+  width: 1100px;
+  padding-left: 300px;
+  font-size: 16px;
+  padding-right: 300px;
+  color: black;
 }
 
 .add-edit-title {
-  font-size: 20px;
+  width: 500px;
+  font-size: 30px;
   font-weight: bold;
-  color: blue;
+  color: white;
+  background: darkgray;
+  border: orange solid 3px;
   text-align: center;
 }
 

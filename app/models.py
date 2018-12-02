@@ -6,10 +6,10 @@ from sqlalchemy.orm import relationship
 
 from app import db, login_manager
 
-ups_leagues = db.Table('update_leagues',
-    db.Column('league_type', db.String(200), db.ForeignKey('leagues.league_name')),
-    db.Column('update_type', db.String(60), db.ForeignKey('updates.username'))
-    )
+# ups_leagues = db.Table('update_leagues',
+#     db.Column('league_type', db.String(200), db.ForeignKey('leagues.league_name')),
+#     db.Column('update_type', db.String(60), db.ForeignKey('updates.username'))
+#     )
 
 class League(db.Model):
     """
@@ -32,8 +32,8 @@ class League(db.Model):
 
     # Many to Many Relationship
     # One user can be a part of many leagues, one league can have many users
-    updates = db.relationship('Update', backref='update_league', lazy=True)
-    updates_for_league = db.relationship('Update', secondary=ups_leagues, backref=db.backref('leagues_for_update', lazy='dynamic'))
+    # updates = db.relationship('Update', backref='update_league', lazy=True)
+    # updates_for_league = db.relationship('Update', secondary=ups_leagues, backref=db.backref('leagues_for_update', lazy='dynamic'))
 
 
     def __repr__(self):
@@ -143,9 +143,9 @@ class Update(db.Model):
     __tablename__ = 'updates'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(60), db.ForeignKey('users.username'), nullable=False, unique=True)
-    first_name = db.Column(db.String(60), index=True)
-    last_name = db.Column(db.String(60), index=True)
+    username = db.Column(db.String(60), db.ForeignKey('users.username'))
+    first_name = db.Column(db.String(60))
+    last_name = db.Column(db.String(60))
     #username_constraint = relationship("User", foreign_keys=[username])
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
     #league_constraint = relationship("League", foreign_keys=[league_name])
