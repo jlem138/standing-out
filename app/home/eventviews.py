@@ -1,13 +1,13 @@
 # Event Views
 
-from flask import abort, flash, redirect, render_template, url_for, session
-from flask_login import current_user, login_required
+from flask import flash, redirect, render_template, url_for
+from flask_login import login_required
 
 from . import home
 from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
-from ..models import Team, Event, League, User, Ranking
-from .helper import check_admin_user, check_admin, get_count, admin_and_user_leagues
+from .forms import EventForm
+from ..models import Team, Event
+from .helper import check_admin_user
 
 @home.route('/<league_name>/events')
 @login_required
@@ -16,7 +16,7 @@ def list_events(league_name):
     List all events
     """
 
-    admin_status=check_admin_user(league_name)
+    admin_status = check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
 
     league_list = session['user_leagues']
@@ -44,30 +44,31 @@ def add_event(league_name):
 
     form = EventForm()
 
-    entered_teams = [(team.name, team.name) for team in Team.query.filter_by(league_name=league_name).all()]
+    entered_teams = [(team.name, team.name) for
+                     team in Team.query.filter_by(league_name=league_name).all()]
     form.winner.choices = entered_teams
     form.loser.choices = entered_teams
 
     if form.validate_on_submit():
         event = Event(
-        #id = form.id.data,
-            day = form.day.data,
-            winner = form.winner.data,
-            loser = form.loser.data,
+            day=form.day.data,
+            winner=form.winner.data,
+            loser=form.loser.data,
             league_name=league_name,
-            winning_score = form.winning_score.data,
-            losing_score = form.losing_score.data
+            winning_score=form.winning_score.data,
+            losing_score=form.losing_score.data
             )
 
-        winning_team_entry=Team.query.filter_by(name=event.winner).first()
-        losing_team_entry=Team.query.filter_by(name=event.loser).first()
+        winning_team_entry = Team.query.filter_by(name=event.winner).first()
+        losing_team_entry = Team.query.filter_by(name=event.loser).first()
 
+        # Update wins and losses for the winning and losing teams
         winning_team_entry.wins = (str(int(winning_team_entry.wins)+1))
         losing_team_entry.losses = (str(int(losing_team_entry.losses)+1))
 
-        if (event.winner == event.loser):
+        if event.winner == event.loser:
             flash('The winner and loser must be different teams.')
-        elif (int(event.winning_score) <= int(event.losing_score)):
+        elif int(event.winning_score) <= int(event.losing_score):
             flash('The winning score must be greater than the losing score.')
         else:
             try:
@@ -97,18 +98,15 @@ def edit_event(league_name, id):
     event = Event.query.get_or_404(id)
     form = EventForm(obj=event)
 
-    entered_teams = [(team.name, team.name) for team in Team.query.filter_by(league_name=league_name).all()]
+    entered_teams = [(team.name, team.name) for team in
+                     Team.query.filter_by(league_name=league_name).all()]
     form.winner.choices = entered_teams
     form.loser.choices = entered_teams
 
     if form.validate_on_submit():
-        #event.id = form.id.data
 
-        previous_winning_team_entry=Team.query.filter_by(name=event.winner).first()
-        previous_losing_team_entry=Team.query.filter_by(name=event.loser).first()
-
-        #previous_winning_team_entry.wins = (str(int(previous_winning_team_entry.wins)-1))
-        #previous_losing_team_entry.losses = (str(int(previous_losing_team_entry.losses)-1))
+        previous_winning_team_entry = Team.query.filter_by(name=event.winner).first()
+        previous_losing_team_entry = Team.query.filter_by(name=event.loser).first()
 
         event.day = form.day.data
         event.winner = form.winner.data
@@ -116,11 +114,8 @@ def edit_event(league_name, id):
         event.winning_score = form.winning_score.data
         event.losing_score = form.losing_score.data
 
-        new_winning_team_entry=Team.query.filter_by(name=event.winner).first()
-        new_losing_team_entry=Team.query.filter_by(name=event.loser).first()
-
-        #new_winning_team_entry.wins = (str(int(new_winning_team_entry.wins)+1))
-        #new_losing_team_entry.losses = (str(int(new_losing_team_entry.losses)+1))
+        new_winning_team_entry = Team.query.filter_by(name=event.winner).first()
+        new_losing_team_entry = Team.query.filter_by(name=event.loser).first()
 
         # If winner and loser are different teams, and score isn't the same
         if (event.winner != event.loser and int(event.winning_score) > int(event.losing_score)):
@@ -137,15 +132,6 @@ def edit_event(league_name, id):
 
             return redirect(url_for('home.list_events', league_name=league_name))
 
-        else:
-            #flash('The winning and losing team you entered were the same')
-            #return redirect(url_for('admin.edit_event', id=id, league_name=league_name))
-
-        # redirect to the events page
-            return render_template('home/events/event.html', action="Edit",
-                               add_event=add_event, form=form, league_name=league_name,
-                               event=event, title="Edit Game Result")
-    #form.id.data = event.id
     form.day.data = event.day
     form.winner.data = event.winner
     form.loser.data = event.loser
@@ -167,8 +153,8 @@ def delete_event(league_name, id):
 
     event = Event.query.get_or_404(id)
 
-    winning_team_entry=Team.query.filter_by(name=event.winner).first()
-    losing_team_entry=Team.query.filter_by(name=event.loser).first()
+    winning_team_entry = Team.query.filter_by(name=event.winner).first()
+    losing_team_entry = Team.query.filter_by(name=event.loser).first()
 
     winning_team_entry.wins = (str(int(winning_team_entry.wins)-1))
     losing_team_entry.losses = (str(int(losing_team_entry.losses)-1))
@@ -179,5 +165,3 @@ def delete_event(league_name, id):
 
     # redirect to the events page
     return redirect(url_for('home.list_events', league_name=league_name))
-
-    return render_template(title="Delete Game Result")
