@@ -4,18 +4,18 @@
 {% extends "base.html" %}
 {% block title %}XRankings{% endblock %}
 {% block body %}
-<div class="content-section">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
+<div>
+  <div>
+    <div>
+      <div>
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">{{league_name}} Rankings</h1>
+        <h1 style="text-align:center;"> << {{league_name}} Rankings >> </h1>
+        <br>
         {% if data %}
-          <hr class="intro-divider">
           <div>
-            <table align="center" class="ranking-table">
+            <table class="ranking-table">
               <thead>
                 <tr>
                   <th width="5%"> Rank </th>
@@ -52,13 +52,12 @@
         {% else %}
           <div style="text-align: center">
             <h3> No teams have been added. </h3>
-            <hr class="intro-divider">
+            <hr>
         {% endif %}
         {% if admin_status == '1' %}
         <br/>
             <a href="{{ url_for('home.rankings_text', league_name=league_name,
             rankings_message=rankings_message) }}" class="btn btn-default btn-lg">
-              <i class="fa fa-plus"></i>
               Send Rankings Update
             </a>
         {% endif %}

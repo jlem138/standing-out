@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 
 from . import admin
 from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, RankingForm
-from ..models import Team, Event, League, User, Ranking
+from .forms import TeamForm, EventForm, LeagueForm, UserForm
+from ..models import Team, Event, League, User
 from sqlalchemy import func, distinct
 
 def check_admin():

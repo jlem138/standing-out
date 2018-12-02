@@ -4,25 +4,25 @@
 {% extends "base.html" %}
 {% block title %}Game Results{% endblock %}
 {% block body %}
-<div class="content-section">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
+<div>
+  <div>
+    <div>
+      <div>
         <br/>
         {{ utils.flashed_messages() }}
-        <br/>
-        <h1 style="text-align:center;">{{league_name}} Game Results</h1>
-        <hr class="intro-divider"></hr>
+        <br>
+        <h1 style="text-align:center;"> << {{league_name}} Game Results >></h1>
+        <br>
         {% if events %}
           <div>
-            <table align="center" class="event-table">
+            <table class="event-table">
               <thead>
                 <tr>
                   <th width="14%"> Date </th>
-                  <th width="25%"> Winner </th>
-                  <th width="25%"> Loser </th>
-                  <th width="10%"> Winning Score </th>
-                  <th width="10%"> Losing Score </th>
+                  <th width="22%"> Winner </th>
+                  <th width="22%"> Loser </th>
+                  <th width="13%"> Winning Score </th>
+                  <th width="13%"> Losing Score </th>
                   {% if admin_status == '1' %}
                     <th width="8%"></th>
                     <th width="8%"></th>

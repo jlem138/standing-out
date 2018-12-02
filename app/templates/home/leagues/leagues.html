@@ -6,69 +6,58 @@
 Leagues
 {% endblock %}
 {% block body %}
-<div class="content-section">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <br/>
-        {{ utils.flashed_messages() }}
-        <br/>
-        <h1 style="text-align:center;" class="title-label">Leagues</h1>
-        {% if leagues %}
-          <hr class="intro-divider">
-          <div>
-            <table align="center" class="league-table">
-              <thead>
-                <tr>
-                  <th width="12%"> Name </th>
-                  <th width="8%"> Number of Conferences </th>
-                  <th width="8%"> Number of Teams </th>
-                  <th width="12%"> Number of Games in Season </th>
-                  <th width="11%"> Number of Playoff Rounds </th>
-                  <th width="12%"> Number of Playoff Qualifiers  </th>
-                  <th width="10%"> Byes Awarded in Playoffs</th>
-                  {% if at_least_one_admin %}
-                    <th width="7%"> </th>
-                  {% endif %}
-                </tr>
-              </thead>
-              <tbody>
-              {% for league in leagues %}
-                <tr>
-                    <td>
-                      <a href="{{ url_for('home.list_teams', league_name=league.league_name) }}" class="color-link">
-                        {{ league.league_name }}
-                      </a>
-                    </td>
-                  <td> {{ league.number_of_conferences }} </td>
-                  <td> {{ league.number_of_total_teams }} </td>
-                  <td> {{ league.number_of_games }} </td>
-                  <td> {{ league.number_of_rounds }} </td>
-                  <td> {{ league.number_of_qualifiers }} </td>
-                  <td> {{ league.is_byes }} </td>
-                  {% if at_least_one_admin %}
-                    <td>
-                      {% if overall_statuses[league.league_name] == "1" %}
-                        <a href="{{ url_for('home.edit_league', league_name=league.league_name) }}">
-                          <i class="fa fa-pencil"></i> Edit
-                        </a>
-                      {% endif %}
-                    </td>
-                  {% endif %}                    
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <div style="text-align: center">
-        {% else %}
-          <div style="text-align: center">
-            <h3> No leagues have been added </h3>
-            <hr class="intro-divider">
-      {% endif %}
-        </div>
-      </div>
+<div>
+  {{ utils.flashed_messages() }}
+  <br>
+  <h1 class="table-title"> League Information</h1>
+  {% if leagues %}
+    <div>
+      <table align="center" class="league-table">
+        <thead>
+          <tr>
+            <th width="12%"> Name </th>
+            <th width="8%"> Number of Conferences </th>
+            <th width="8%"> Number of Teams </th>
+            <th width="12%"> Number of Games in Season </th>
+            <th width="11%"> Number of Playoff Rounds </th>
+            <th width="12%"> Number of Playoff Qualifiers  </th>
+            <th width="10%"> Byes Awarded in Playoffs</th>
+            {% if at_least_one_admin %}
+              <th width="7%"> </th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for league in leagues %}
+          <tr>
+              <td>
+                {{ league.league_name }}
+              </td>
+            <td> {{ league.number_of_conferences }} </td>
+            <td> {{ league.number_of_total_teams }} </td>
+            <td> {{ league.number_of_games }} </td>
+            <td> {{ league.number_of_rounds }} </td>
+            <td> {{ league.number_of_qualifiers }} </td>
+            <td> {{ league.is_byes }} </td>
+            {% if at_least_one_admin %}
+              <td>
+                {% if overall_statuses[league.league_name] == "1" %}
+                  <a href="{{ url_for('home.edit_league', league_name=league.league_name) }}">
+                    <i class="fa fa-pencil"></i> Edit
+                  </a>
+                {% endif %}
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
+    <div style="text-align: center">
+  {% else %}
+    <div style="text-align: center">
+      <h3> No leagues have been added </h3>
+  {% endif %}
   </div>
 </div>
 {% endblock %}

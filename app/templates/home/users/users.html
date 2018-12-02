@@ -4,18 +4,18 @@
 {% extends "base.html" %}
 {% block title %}Users{% endblock %}
 {% block body %}
-<div class="content-section">
-  <div class="outer">
+<div>
+  <div>
     <div>
-      <div class="inner">
+      <div>
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
-        <h1 style="text-align:center;">{{league_name}} Users</h1>
-          <hr class="intro-divider">
+        <h1 style="text-align:center;"> << {{league_name}} Users >></h1>
+        <br>
           <div>
             <table align="center" class="user-table">
-        {% if users or updates %}
+        {% if updates %}
             <thead>
               <tr>
                 <th width="22%"> First Name </th>
@@ -29,7 +29,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for user in users_updated %}
+              {% for user in updates %}
                 <tr>
                   <td> {{ user.first_name }}</td>
                   <td> {{ user.last_name}}</td>
