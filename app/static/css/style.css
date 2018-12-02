@@ -1,61 +1,16 @@
 /* app/static/css/style.css */
 
-body, html {
-    width: 100%;
-    height: 100%;
-}
 
-body, h1, h2, h3 {
+h1, h2, h3 {
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
-}
-
-a {
-/* Color of section titles at top of navigation bar*/
-  color: black;
-  font-size: 14px;
-}
-
-.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
-/* Color of section titles at top of navigation bar*/
-  color: black;
-  font-size: 18px;
-}
-
-
-.navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus {
-    /* Deep Skye Blue */
-    background-color: black;
-    color: orange;
-}
-
-a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
-  /* hover for navigation bar */
-  color: mediumseagreen;
-}
-
-/* color of button when mouse hovers over button */
-.btn-default:hover {
-    background-color: mediumseagreen;
-    color: black;
-}
-
-.btn-default {
-    border-color: black;
-    color: mediumseagreen;
-    font-weight: bold;
-}
-
-footer {
-    padding: 50px 0;
-    background-color: #f8f8f8;
 }
 
 table.team-table {
   width: 700px;
   border-spacing: 4px;
   margin: 0px auto;
-  border-color: 4px solid green;
+  border-color: 4px solid gray;
 }
 
 table.user-table {
@@ -68,12 +23,12 @@ table.user-table {
 table.league-table {
   width: 1000px;
   border-spacing: 4px;
-  margin: 0px auto;
-  border-color: 4px solid green;
+  border-color: 4px solid blue;
+  margin: auto;
 }
 
 table.ranking-table {
-  width: 700px;
+  width: 800px;
   border-spacing: 4px;
   margin: 0px auto;
   border-color: 4px solid green;
@@ -84,13 +39,26 @@ table.event-table {
   border-spacing: 4px;
   margin: 0px auto;
   border-color: 4px solid green;
+  right: 2200px;
 }
 
 /* Table headers */
 th {
   text-align: center;
-  background-color: mediumseagreen;
+  background-color: orange;
   color: black;
+  font-size: 12px;
+}
+
+table.league-table th {
+  text-align: center;
+  background-color: orange;
+  color: black;
+  font-size: 14px;
+}
+
+td {
+  font-size: 12px;
 }
 
 table, th, td {
@@ -99,7 +67,7 @@ table, th, td {
 }
 
 th, td {
-  padding: 10px;
+  padding: 6px;
 }
 
 tr {
@@ -119,10 +87,6 @@ tr:nth-child(odd) {
     border-top: 1px solid #e7e7e7;
 }
 
-.topnav {
-    font-size: 14px;
-}
-
 .alert-info {
     width: 50%;
     margin: auto;
@@ -131,143 +95,225 @@ tr:nth-child(odd) {
     border-color: #aec251;
 }
 
-.intro-divider {
-  /* border-top color = line underneath title */
-    width: 400px;
-    border-top: 1px solid #009ACD;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-}
-
-.intro-header {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    text-align: center;
-    /* color of text on dashboard */
-    color: mediumseagreen;
-    /*
-    background: url(../img/intro-bg.jpg) no-repeat center center;
-    */
-    background-size: cover;
-    background-color: black;
-    height: 100%;
-}
-
-  /* DROP DOWN MENU */
-
-.dropdown .dropbtn {
-    cursor: pointer;
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font-family: inherit;
-    margin: 0;
-}
-
-.dropdown {
-    float: left;
-    overflow: hidden;
-}
-
-/*
-
---> This misaligned tables to the right
-
-.center {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-
-*/
-
-.center {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-}
-
-/*
-
-.wrapper {
-  margin: 0 auto -4em;
-}
-
-*/
-
-p.copyright {
-    margin: 15px 0 0;
-}
-
-.footer, .push {
-  clear: both;
-  height: 4em;
-}
-
-
-.footer, .push {
-  clear: both;
-  height: 4em;
-}
-
-p.copyright {
-    margin: 15px 0 0;
-}
-
-.lead {
-    font-size: 18px;
-    font-weight: 400;
-}
-
-.outer {
-    display: table;
-    height: 70%;
-    width: 100%;
-}
-
-.middle {
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.inner {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-footer {
-    padding: 50px 0;
-    background-color: #f8f8f8;
-}
-
-.intro-message {
-    position: relative;
-    padding-top: 20%;
-    padding-bottom: 20%;
-}
-
-.intro-message > h1 {
-    margin: 0;
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-    font-size: 5em;
-}
-
-.intro-message > h3 {
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-}
-
 .show {
     display: block;
 }
 
-.color-link {
-  color: black;
-  text-shadow: 0 0 3px mediumseagreen;
+.wrapper-two {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: pink;
+  grid-gap: 3em;
+  grid-auto-columns: 30px;
 }
 
-/*
-.title-label {
-  color: mediumseagreen;
+.main-panel {
+  position: fixed;
+  background-color: gray;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  border: black solid 3px;
 }
-*/
+
+.table-panel {
+  background-color: white;
+  padding-left: 200px;
+}
+
+.btn {
+  min-width: 160px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: orange;
+}
+
+.dropbtn {
+    background-color: grey;
+    color: white;
+    padding: 16px;
+    font-size: 20px;
+    border: none;
+    min-width: 900px;
+
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 160px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: darkorange;
+    min-width: 120px;
+    left: 160px;
+    top: 0px;
+    box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    font-weight: bold;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 6px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 12px;
+    border: black;
+}
+
+.dropdown-content a:hover {
+  background-color: orange;
+  text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: green;
+}
+
+.current-user {
+  color: white;
+  font-family: sans-serif;
+  font-size: 14px;
+  list-style-type: none;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+}
+
+.league-list {
+  color: orange;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 20px;
+  list-style-type: none;
+  min-width: 160px;
+  text-align: center;
+}
+
+.title-panel {
+  font-family: sans-serif;
+  font-weight: bold;
+  color: black;
+  font-size: 16px;
+  background-color: orange;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+}
+
+.table-title {
+
+}
+
+.action-item {
+  font-family: sans-serif;
+  font-weight: bold;
+  color: black;
+  padding: 18px;
+  font-size: 12px;
+  list-style-type: none;
+  min-width: 200px;
+  min-height: 40px;
+  text-decoration: none;
+}
+
+.user-item {
+  font-family: sans-serif;
+  font-weight: bold;
+  padding: 4px;
+  color: black;
+  font-size: 12px;
+  list-style-type: none;
+  min-width: 160px;
+  text-decoration: none;
+  background-color: orange;
+}
+
+#title-panel-button {
+  font-family: sans-serif;
+  font-weight: bold;
+  font: green;
+  list-style-type: none;
+  min-width: 160px;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.title-panel-league-button {
+  font-family: sans-serif;
+  font-weight: bold;
+  color: black;
+  font-size: 20px;
+  list-style-type: none;
+  min-width: 160px;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+
+.panel-divider {
+  min-width: 120px;
+  background-color: lightgray;
+  padding: 6px;
+  border-top: black solid 2px;
+  border-bottom: black solid 2px;
+
+
+}
+.title-panel-league-button:hover {
+  background-color: darkorange;
+}
+
+.table-title {
+  text-align: center;
+}
+
+.form-format {
+  width: 900px;
+  padding-left: 140px;
+  padding-right: 140px;
+  font-size: 16px;
+}
+
+.add-edit-format {
+  width: 900px;
+  padding-left: 230px;
+  padding-right: 140px;
+  font-size: 12px;
+}
+
+.add-edit-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: blue;
+  text-align: center;
+}
+
+.btn {
+  background-color: lightgray;
+  color: black;
+}
+
+.btn-default:hover {
+  background-color: darkorange;
+  color: white;
+  text-decoration: none;
+}
+
+#submit {
+  font-size: 14px;
+}

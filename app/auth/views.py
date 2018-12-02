@@ -1,7 +1,7 @@
 # app/auth/views.py
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 
 from . import auth
 from .forms import LoginForm, RegistrationForm
@@ -76,8 +76,12 @@ def logout():
     Handle requests to the /logout route
     Log a user out through the logout link
     """
+    print("CUSAH1", current_user.is_authenticated)
     logout_user()
+    print("CUSAH2", current_user.is_authenticated)
+
     flash('You have successfully been logged out.')
+
 
     # redirect to the login page
     return redirect(url_for('auth.login'))

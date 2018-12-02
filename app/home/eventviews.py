@@ -19,8 +19,15 @@ def list_events(league_name):
     admin_status = check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
 
-    return render_template('home/events/events.html', league_name=league_name,
-                           admin_status=admin_status, events=events, title='Game Results')
+    league_list = session['user_leagues']
+
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
+    return render_template('home/events/events.html', league_name = league_name,
+                           admin_status=admin_status, user_leagues=user_leagues, admin_leagues=admin_leagues,
+                           events=events, title='Game Results')
 
 @home.route('/<league_name>/events/add', methods=['GET', 'POST'])
 @login_required
@@ -28,6 +35,10 @@ def add_event(league_name):
     """
     Add a event to the database
     """
+
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
 
     add_event = True
 
@@ -72,8 +83,8 @@ def add_event(league_name):
         return redirect(url_for('home.list_events', league_name=league_name))
 
     # load event template
-    return render_template('home/events/event.html', add_event=add_event,
-                           form=form, title='Add Game Result', league_name=league_name)
+    return render_template('home/events/event.html', add_event=add_event,user_leagues=user_leagues,
+                            admin_leagues=admin_leagues, form=form, title='Add Game Result', league_name=league_name)
 
 @home.route('/<league_name>/events/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
