@@ -16,8 +16,7 @@ def list_users(league_name):
     """
 
     # All update entries for the particular league
-    league = League.query.get(league_name)
-    updates = league.updates_for_league
+    updates = Update.query.filter_by(league_name=league_name).all()
     current_username = current_user.username
 
     # Check the admin status to be passed to html page
@@ -94,9 +93,9 @@ def add_user(league_name):
                 )
             try:
                 # Add Update to the database
-                league = League.query.get(league_name)
-                league.updates_for_league.append(update)
-                #db.session.add(update)
+                #league = League.query.get(league_name)
+                #league.updates_for_league.append(update)
+                db.session.add(update)
                 db.session.commit()
                 flash('You have successfully added a new user to this league')
             except:
@@ -107,9 +106,9 @@ def add_user(league_name):
         return redirect(url_for('home.list_users', league_name=league_name))
 
     # load event template
-    return render_template('home/users/user.html', user_add=user_add, form=form,
+    return render_template('home/users/user.html', add_user=user_add, form=form,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
-                           title='Add User', league_name=league_name)
+                           title="Invite User", league_name=league_name)
 
 @home.route('/<league_name>/users/edit/<username>', methods=['GET', 'POST'])
 @login_required
@@ -140,6 +139,13 @@ def edit_user(username, league_name):
     elif update_entry.is_admin == '0':
         form.is_admin.data = '0'
 
-    return render_template('home/users/user.html', action="Edit",
-                           user_add=user_add, form=form, league_name=league_name,
-                           users_updated=update_entry, title="Edit User")
+
+    # Leagues for which current user is an admin or standard user
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
+
+    return render_template('home/users/user.html', action="Edit", user_leagues=user_leagues,
+                           admin_leagues=admin_leagues, user_add=user_add, form=form,
+                           league_name=league_name, users_updated=update_entry, title="Edit User")

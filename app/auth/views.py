@@ -23,13 +23,6 @@ def register():
                         phone_number=form.phone_number.data,
                         password=form.password.data)
 
-        #update = Update(
-        #                username=form.username.data,
-        #                league_name="WNBA",
-        #                first_name=form.first_name.data,
-        #                last_name=form.last_name.data,
-        #                is_admin=False)
-
         # add user to the database
         db.session.add(user)
         db.session.commit()
@@ -76,9 +69,7 @@ def logout():
     Handle requests to the /logout route
     Log a user out through the logout link
     """
-    print("CUSAH1", current_user.is_authenticated)
     logout_user()
-    print("CUSAH2", current_user.is_authenticated)
 
     flash('You have successfully been logged out.')
 

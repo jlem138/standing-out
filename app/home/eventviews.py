@@ -136,9 +136,16 @@ def edit_event(league_name, id):
     form.winning_score.data = event.winning_score
     form.losing_score.data = event.losing_score
 
-    return render_template('home/events/event.html', action="Edit",
-                           add_event=add_event, form=form, league_name=league_name,
-                           event=event, title="Edit Game Result")
+    # Leagues for which current user is an admin or standard user
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
+
+    return render_template('home/events/event.html', action="Edit", user_leagues=user_leagues,
+                           admin_leagues=admin_leagues, add_event=add_event,
+                           form=form, league_name=league_name, event=event,
+                           title="Edit Game Result")
 
 
 @home.route('/<league_name>/events/delete/<int:id>', methods=['GET', 'POST'])
