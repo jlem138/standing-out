@@ -140,6 +140,11 @@ def edit_league(league_name):
     form.number_of_qualifiers.data = league.number_of_qualifiers
     form.is_byes.data = league.is_byes
 
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
     return render_template('home/leagues/league.html', action="Edit",
+                           user_leagues=user_leagues, admin_leagues=admin_leagues,
                            add_league=add_league, form=form, league_name=league_name,
                            title="Edit League")
