@@ -65,7 +65,7 @@ def add_team(league_name):
 
     # load team template
     return render_template('home/teams/team.html', action="Add", admin_leagues=admin_leagues,
-                           user_leagues=user_leagues, team_add=team_add, form=form,
+                           user_leagues=user_leagues, add_team=team_add, form=form,
                            league_name=league_name, title="Add Team")
 
 @home.route('/<league_name>/teams/edit/<teamname>', methods=['GET', 'POST'])

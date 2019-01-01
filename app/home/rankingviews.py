@@ -5,6 +5,7 @@ from flask import redirect, render_template, url_for
 from flask_login import login_required, current_user
 
 from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
 from . import home
 from ..models import Team, Event, League, Update
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
@@ -209,15 +210,16 @@ def rankings_text(league_name, rankings_message):
     # get league users
     league_users = Update.query.filter_by(league_name=league_name).all()
 
-    proxy_client = TwilioHttpClient()
-    proxy_client.session.proxies = {'https': os.environ['https_proxy']}
+    #proxy_client = TwilioHttpClient()
+    #proxy_client.session.proxies = {'https': os.environ['https_proxy']}
+    #client = Client(account_sid, auth_token, http_client=proxy_client)
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     #personal_number = os.environ['PERSONAL_NUMBER']
     twilio_number = os.environ['TWILIO_NUMBER']
 
-    client = Client(account_sid, auth_token, http_client=proxy_client)
+    client = Client(account_sid, auth_token)
 
     # for every user in the updates for the league, if their phone number is
     # registered then send that person a text with the standings

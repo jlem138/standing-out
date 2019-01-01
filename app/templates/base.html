@@ -8,7 +8,8 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-  <div class="wrapper-two">
+  <div class="wrapper-one">
+    <div>
     <div class="main-panel">
       <div class="title-panel"> League Tracker
         <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
@@ -18,6 +19,7 @@
       {% if current_user.is_authenticated %}
         <div class="current-user"> CURRENT USER
           <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+          <br>
           {{current_user.username}}
         </div>
         <br>
@@ -35,6 +37,7 @@
         <br>
         <div class="league-list"> ADMIN LEAGUES
           <br>
+
           {% for league in admin_leagues %}
           <div class="dropdown">
             <button id="title-panel-league-button">
@@ -65,12 +68,14 @@
               {{league}}
               <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
             </button>
+            <div class = "wrapper-two">
             <div class="dropdown-content" class="title-panel-button">
-              <a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a>
-              <a href="{{ url_for('home.list_teams', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Teams</a>
-              <a href="{{ url_for('home.list_events', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Game Results</a>
-              <a href="{{ url_for('home.list_users', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Users</a>
+              <li><a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a></li>
+              <li><a href="{{ url_for('home.list_teams', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Teams</a></li>
+              <li><a href="{{ url_for('home.list_events', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Game Results</a></li>
+              <li><a href="{{ url_for('home.list_users', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Users</a></li>
             </div>
+          </div>
           </div>
           {% endfor %}
         </div>
@@ -81,9 +86,8 @@
         </div>
         <br>
         <div class="panel-divider"></div>
-        <br>
       </div>
-      <br><br>
+      <br>
         <div class="action-item">
           <button id="title-panel-button">
             <li><a href="{{ url_for('auth.logout') }}" >LOGOUT</a></li>
@@ -110,5 +114,6 @@
       </div>
     </div>
   </div>
+</div>
 </body>
 </html>

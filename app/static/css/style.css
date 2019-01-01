@@ -7,10 +7,14 @@ h1, h2, h3 {
 }
 
 table.team-table {
-  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  width: 900px;
   border-spacing: 4px;
-  margin: 0px auto;
-  border-color: 4px solid gray;
+  border-style: solid;
+  border-color: green;
+  color: black;
 }
 
 table.user-table {
@@ -48,7 +52,7 @@ th {
   text-align: center;
   background-color: orange;
   color: black;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 table.league-table th {
@@ -62,9 +66,16 @@ td {
   font-size: 12px;
 }
 
-table, th, td {
-  border: 1px solid black;
+td {
+  border: 2px solid black;
   border-collapse: collapse;
+  font-weight: bold;
+}
+
+table, th {
+  border: 2px solid black;
+  border-collapse: collapse;
+  font-weight: bold;
 }
 
 th, td {
@@ -102,13 +113,6 @@ tr:nth-child(odd) {
     display: block;
 }
 
-.wrapper-two {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 3em;
-  grid-auto-columns: 30px;
-}
-
 .main-panel {
   position: fixed;
   background-color: gray;
@@ -116,12 +120,18 @@ tr:nth-child(odd) {
   bottom: 0;
   width: 200px;
   border: black solid 3px;
+  z-index: 2;
+}
+
+
+.wrapper-two {
+  position: relative;
 }
 
 .table-panel {
   background-color: white;
   padding-left: 200px;
-  height: 1565px;
+  height: 600px;
   padding-right: 00px;
   width: 1300px;
 }
@@ -147,7 +157,6 @@ tr:nth-child(odd) {
     left: 160px;
     top: 0px;
     box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
     font-weight: bold;
 }
 
@@ -214,6 +223,15 @@ tr:nth-child(odd) {
   text-decoration: none;
 }
 
+
+.wrapper-one {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 3em;
+  grid-auto-columns: 30px;
+  overflow-y: auto;
+}
+
 .user-item {
   font-family: sans-serif;
   font-weight: bold;
@@ -267,23 +285,23 @@ tr:nth-child(odd) {
 }
 
 
-.table-title {
+.welcome-title {
   text-align: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* login & register */
 .form-format {
-  width: 900px;
-  padding-left: 140px;
-  padding-right: 140px;
-  font-size: 16px;
+  width: 800px;
+  font-size: 12px;
+  padding-left: 300px;
 }
 
 /* panel is 1100 px */
 /* total width = 900px
 /* width - padding-right = end right point */
 .add-edit-format {
-  position: relative;
   width: 1100px;
   padding-left: 300px;
   font-size: 16px;
@@ -292,29 +310,55 @@ tr:nth-child(odd) {
 }
 
 .add-edit-title {
-  width: 500px;
+  width: 1100px;
   font-size: 30px;
   font-weight: bold;
   color: white;
   background: darkgray;
-  border: orange solid 3px;
+  border-top: orange solid 3px;
+  border-bottom: orange solid 3px;
   text-align: center;
 }
 
 .btn {
   background-color: lightgray;
+  border: black 3px solid;
   color: black;
+  left: 100px;
+  font-size: 16px;
 }
 
 .btn-default:hover {
-  background-color: darkorange;
-  color: white;
+  background-color: #fff5e6;
+  color: darkorange;
+  border: darkorange 3px solid;
   text-decoration: none;
+  font-size: 16px;
 }
 
-#submit {
-  font-size: 14px;
+.wrapper-two {
+  position: relative;
 }
+
+ul {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+li {
+  position: static;
+
+  .wrapper-two {
+    position: absolute;
+    z-index: 10;
+    display: none;
+  }
+
+  &.hover > .wrapper-two {
+    display: block;
+  }
+}
+
 
 
 /* to override bootstrap color of logout button */
