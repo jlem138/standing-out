@@ -75,12 +75,14 @@ def list_rankings(league_name):
 
     # Determine the advanced statistics for each team's season and playoff status
     def determine_ranking_statistics(number_of_qualifiers, differentials,
-        ranking_data, number_of_teams, ordered_wins, ordered_losses, ranking):
+                                     ranking_data, number_of_teams, ordered_wins,
+                                     ordered_losses, ranking):
 
         leader_differential = ranking_data[differentials[0]]['differential']
         season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
-        information = playoff_information(number_of_qualifiers, season_games, number_of_teams, total_teams)
+        information = playoff_information(number_of_qualifiers, season_games, number_of_teams,
+                                          total_teams)
 
         if information is True:
             first_out_least_possible_losses = ordered_losses[number_of_teams - number_of_qualifiers - 1]
@@ -118,10 +120,10 @@ def list_rankings(league_name):
 
                 # Determine team playoff status
                 final_team['status'] = determine_magic_status(team_wins, first_out_max_wins,
-                    team_losses, last_in_max_losses, 0)
+                                team_losses, last_in_max_losses, 0)
 
                 playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses,
-                    last_in_max_losses, magic_number_with_losses)
+                                last_in_max_losses, magic_number_with_losses)
 
                 final_team['status'] = playoff_stats[0]
                 final_team['magic'] = playoff_stats[1]
@@ -189,10 +191,11 @@ def list_rankings(league_name):
     user_leagues = league_lists[0]
     admin_leagues = league_lists[1]
 
-    return render_template('home/rankings/rankings.html', ranking=numbered_ranks, user_leagues=user_leagues, admin_leagues=admin_leagues,
-        league_name=league_name, admin_status=admin_status, number_of_teams=number_of_teams,
-        teams=teams, data=final_stats_data, information=final_information,
-        rankings_message=message, title=title)
+    return render_template('home/rankings/rankings.html', ranking=numbered_ranks,
+                           user_leagues=user_leagues, admin_leagues=admin_leagues,
+                           league_name=league_name, admin_status=admin_status, number_of_teams=number_of_teams,
+                           teams=teams, data=final_stats_data, information=final_information,
+                           rankings_message=message, title=title)
 
 def playoff_information(qualifiers, games, number_of_registered_teams, total_teams):
     """ This function determines if enough details have been entered to determine playoff information for a league. """
