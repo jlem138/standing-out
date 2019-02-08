@@ -181,7 +181,9 @@ def list_rankings(league_name):
 
     number_of_qualifiers = League.query.filter_by(league_name=league_name).first().number_of_qualifiers
     final_stats = determine_ranking_statistics(number_of_qualifiers, team_names_ranked,
-        returned_ranking_data, number_of_teams, returned_winsall, returned_lossesall, numbered_ranks)
+                                               returned_ranking_data, number_of_teams,
+                                               returned_winsall, returned_lossesall,
+                                               numbered_ranks)
     final_stats_data = final_stats[0]
     final_information = final_stats[2]
 
