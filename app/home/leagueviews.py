@@ -10,49 +10,49 @@ from ..models import League, Update
 from .helper import check_admin_user, admin_and_user_leagues
 
 # League Views
-#
-# @home.route('/leagues/add', methods=['GET', 'POST'])
-# @login_required
-# def add_league():
-#     """
-#     Add a league to the database
-#     """
-#     check_admin()
-#
-#     add_league = True
-#
-#     league_lists = admin_and_user_leagues(current_user.username)
-#     user_leagues = league_lists[0]
-#     admin_leagues = league_lists[1]
-#
-#     form = LeagueForm()
-#     if form.validate_on_submit():
-#         league = League(
-#             name = form.name.data,
-#             number_of_games = form.number_of_games.data,
-#             number_of_conferences=form.number_of_conferences.data,
-#             number_of_total_teams = form.number_of_total_teams.data,
-#             number_of_rounds = form.number_of_rounds.data,
-#             number_of_qualifiers = form.number_of_qualifiers.data,
-#             is_byes = form.is_byes.data
-#             )
-#
-#         try:
-#             # Add league to the database
-#             db.session.add(league)
-#             db.session.commit()
-#             flash('You have successfully added a new league.')
-#         except:
-#             # in case league name already exists
-#             flash('Error: league already exists.')
-#
-#         # redirect to League page
-#         return redirect(url_for('home.list_leagues'))
-#
-#     # load team template
-#     return render_template('home/leagues/league.html', action="Add",add_league=add_league,
-#                             user_leagues=user_leagues, admin_leagues=admin_leagues,
-#                             form=form, title="Add League")
+
+@home.route('/leagues/add', methods=['GET', 'POST'])
+@login_required
+def add_league():
+    """
+    Add a league to the database
+    """
+    check_admin()
+
+    add_league = True
+
+    league_lists = admin_and_user_leagues(current_user.username)
+    user_leagues = league_lists[0]
+    admin_leagues = league_lists[1]
+
+    form = LeagueForm()
+    if form.validate_on_submit():
+        league = League(
+            name = form.name.data,
+            number_of_games = form.number_of_games.data,
+            number_of_conferences=form.number_of_conferences.data,
+            number_of_total_teams = form.number_of_total_teams.data,
+            number_of_rounds = form.number_of_rounds.data,
+            number_of_qualifiers = form.number_of_qualifiers.data,
+            is_byes = form.is_byes.data
+            )
+
+        try:
+            # Add league to the database
+            db.session.add(league)
+            db.session.commit()
+            flash('You have successfully added a new league.')
+        except:
+            # in case league name already exists
+            flash('Error: league already exists.')
+
+        # redirect to League page
+        return redirect(url_for('home.list_leagues'))
+
+    # load team template
+    return render_template('home/leagues/league.html', action="Add",add_league=add_league,
+                            user_leagues=user_leagues, admin_leagues=admin_leagues,
+                            form=form, title="Add League")
 
 
 @home.route('/leagues', methods=['GET', 'POST'])

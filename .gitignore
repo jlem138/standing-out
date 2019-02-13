@@ -13,3 +13,4 @@ newusers.py
 # Ignore instance folder
 instance/
 many/
+migrations/
