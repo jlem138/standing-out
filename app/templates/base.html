@@ -37,7 +37,6 @@
         <br>
         <div class="league-list"> ADMIN LEAGUES
           <br>
-
           {% for league in admin_leagues %}
           <div class="dropdown">
             <button id="title-panel-league-button">
@@ -64,18 +63,16 @@
         <div class="league-list"> USER LEAGUES
           {% for league in user_leagues %}
           <div class="dropdown">
-            <button class="title-panel-league-button" type="button" aria-haspopup="true" aria-expanded="true">
+            <button id="title-panel-league-button">
               {{league}}
-              <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+              <span class="glyphicon glyphicon-triangle-right"></span>
             </button>
-            <div class = "wrapper-two">
             <div class="dropdown-content" class="title-panel-button">
-              <li><a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a></li>
-              <li><a href="{{ url_for('home.list_teams', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Teams</a></li>
-              <li><a href="{{ url_for('home.list_events', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Game Results</a></li>
-              <li><a href="{{ url_for('home.list_users', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Users</a></li>
+              <a href="{{ url_for('home.list_rankings', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Rankings</a>
+              <a href="{{ url_for('home.list_teams', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Teams</a>
+              <a href="{{ url_for('home.list_events', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Game Results</a>
+              <a href="{{ url_for('home.list_users', league_name=league, admin_leagues=admin_leagues, user_leagues=user_leagues) }}">Users</a>
             </div>
-          </div>
           </div>
           {% endfor %}
         </div>

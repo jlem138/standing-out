@@ -74,8 +74,8 @@ def list_leagues():
         overall_statuses[entry.league_name] = status
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     # Determine if admin's edit/delete column needs to be displayed
     at_least_one_admin = (len(admin_leagues) >= 1)

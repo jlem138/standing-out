@@ -47,8 +47,8 @@ def admin_and_user_leagues(username):
     user_leagues = []
     admin_leagues = []
     for update in updates:
-        admin_status = check_admin_user(update.league_name)
-        if admin_status is True:
+        admin_status = update.is_admin
+        if admin_status == '1':
             admin_leagues.append(update.league_name)
         else:
             user_leagues.append(update.league_name)
