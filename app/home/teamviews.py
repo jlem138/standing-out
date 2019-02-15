@@ -21,8 +21,8 @@ def list_teams(league_name):
     teams = Team.query.filter_by(league_name=league_name).all()
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     return render_template('home/teams/teams.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -37,8 +37,8 @@ def add_team(league_name):
     """
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     team_add = True
     form = TeamForm()
@@ -107,8 +107,8 @@ def edit_team(teamname, league_name):
 
     # Leagues for which current user is an admin or standard user
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
 
     return render_template('home/teams/team.html', action="Edit", user_leagues=user_leagues,

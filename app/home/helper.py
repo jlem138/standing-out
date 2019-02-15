@@ -40,7 +40,11 @@ def enough_teams(league_name):
 
 def round_to_three(wins, losses):
     games = (1.0 * wins) + losses
-    return(format(wins/games, '0.3f'))
+    if wins == 0:
+        pct = 0
+    else:
+        pct = wins/games
+    return(format(pct, '0.3f'))
 
 def admin_and_user_leagues(username):
     updates = Update.query.filter_by(username=username).all()
