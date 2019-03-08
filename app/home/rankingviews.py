@@ -1,13 +1,14 @@
 # app/admin/rankings.py
 import os
 
-from flask import redirect, render_template, url_for, request
+from flask import redirect, render_template, url_for, request, flash
 from flask_login import login_required, current_user
 
 from twilio.rest import Client
+from .. import db
 from twilio.http.http_client import TwilioHttpClient
 from . import home
-from ..models import Team, Event, League, Update
+from ..models import Team, Event, League, Update, Ranking
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
 
 @home.route('/<league_name>/tiebreakers', methods=['GET', 'POST'])
@@ -153,10 +154,10 @@ def list_tie_breakers(league_name):
             final_team['winning percentage'] = round_to_three(team_wins, team_losses)
 
             # Add games behind to team dictionary
-            final_team['GB'] = games_behind(leader_differential, team_wins, team_losses)
+            final_team['games_behind'] = games_behind(leader_differential, team_wins, team_losses)
 
             # Add team's rank to each team dictionary -- allows for ties between teams with the same record
-            if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
+            if ((rank != 0) and (final_data[rank-1]['games_behind'] == final_team['games_behind'])):
                 final_team['place'] = current_ranking
             else:
                 current_ranking = ranking[rank]+1
@@ -322,6 +323,7 @@ def list_rankings(league_name):
                     # Creates list of rankings
                     ranking[j] = j
                     not_stored = False
+        print("RJ1", differentials, ranking)
         return([differentials, ranking])
 
     # Determine the advanced statistics for each team's season and playoff status
@@ -351,20 +353,23 @@ def list_rankings(league_name):
             final_team = ranking_data[name]
             team_wins = (ranking_data[name]['wins'])
             team_losses = (ranking_data[name]['losses'])
+            final_team['wins'] = team_wins
+            final_team['losses'] = team_losses
             final_team['name'] = name
             # Add winning percentage to team dictionary
             final_team['winning percentage'] = round_to_three(team_wins, team_losses)
 
             # Add games behind to team dictionary
-            final_team['GB'] = games_behind(leader_differential, team_wins, team_losses)
+            final_team['games_behind'] = games_behind(leader_differential, team_wins, team_losses)
 
             # Add team's rank to each team dictionary -- allows for ties between teams with the same record
-            if ((rank != 0) and (final_data[rank-1]['GB'] == final_team['GB'])):
+            if ((rank != 0) and (final_data[rank-1]['games_behind'] == final_team['games_behind'])):
                 final_team['place'] = current_ranking
             else:
                 current_ranking = ranking[rank]+1
                 final_team['place'] = current_ranking
 
+            # True Holder for time being
             if information:
                 # Determines 'Magic Number' for teams to qualify
                 final_team['magic'] = magic_number_with_losses - team_wins
@@ -415,8 +420,8 @@ def list_rankings(league_name):
     def games_behind(leader_differential, team_wins, team_losses):
         """ This function takes in a team's wins & losses and the leader's differential and determines the team's games behind. """
         games_behind_leader = (leader_differential - (team_wins - team_losses)) / 2.0
-        if games_behind_leader == 0:
-            games_behind_leader = '-'
+        #if games_behind_leader == 0:
+        #    games_behind_leader = '-'
         return games_behind_leader
 
     returned_data = collect_ranking_data(teams)
@@ -443,6 +448,30 @@ def list_rankings(league_name):
     league_lists = admin_and_user_leagues(current_user.username)
     admin_leagues = league_lists[0]
     user_leagues = league_lists[1]
+
+    teamindex = 0
+    while teamindex < number_of_teams:
+        current_team = final_stats_data[teamindex]
+        ranking_entry = Ranking(
+            league=league_name,
+            team = current_team['name'],
+            wins = current_team['wins'],
+            losses = current_team['losses'],
+            percent = current_team['winning percentage'],
+            games_behind = current_team['games_behind'],
+            magic_number = current_team['magic'],
+            status = current_team['status']
+            )
+
+        try:
+            # Add league to the database
+            db.session.add(ranking_entry)
+            db.session.commit()
+            flash('You have successfully added a new rankings entry.')
+        except:
+            # in case league name already exists
+            flash('Error: entry not added')
+        teamindex += 1
 
     return render_template('home/rankings/rankings.html', ranking=numbered_ranks,
                            user_leagues=user_leagues, admin_leagues=admin_leagues, tiebreakers=True,

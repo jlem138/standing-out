@@ -8,6 +8,7 @@ from .. import db
 from .forms import EventForm
 from ..models import Team, Event
 from .helper import check_admin_user, admin_and_user_leagues
+from .helperrankings import ranking_table
 
 @home.route('/<league_name>/events')
 @login_required
@@ -73,11 +74,13 @@ def add_event(league_name):
                 db.session.add(event)
                 db.session.commit()
                 flash('You have successfully added a new event.')
+
             except:
                 # in case event name already exists
                 flash('The data you have entered is incorrect.')
 
         # redirect to the events page
+        ranking_table(league_name)
         return redirect(url_for('home.list_events', league_name=league_name))
 
     # load event template
@@ -125,6 +128,8 @@ def edit_event(league_name, id):
                 db.session.commit()
                 flash('You have successfully edited the event.')
 
+                ranking_table(league_name)
+
             except:
                 flash('The information you have entered is not correct')
 
@@ -167,6 +172,8 @@ def delete_event(league_name, id):
     db.session.delete(event)
     db.session.commit()
     flash('You have successfully deleted the event.')
+
+    ranking_table(league_name)
 
     # redirect to the events page
     return redirect(url_for('home.list_events', league_name=league_name))

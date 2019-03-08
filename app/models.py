@@ -167,12 +167,13 @@ class Ranking(db.Model):
     __tablename__ = 'rankings'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    team = db.Column(db.String(60), db.ForeignKey('teams.name'))
+    league = db.Column(db.String(60))
+    team = db.Column(db.String(60))
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
-    percent = db.Column(db.Float)
-    games_behind = db.Column(db.Integer)
-    magic_number = db.Column(db.Integer)
+    percent = db.Column(db.Float(precision='4,3'))
+    games_behind = db.Column(db.Float(precision='4,1'))
+    magic_number = db.Column(db.String(60))
     status = db.Column(db.String(60))
     #username_constraint = relationship("User", foreign_keys=[username])
     #league_constraint = relationship("League", foreign_keys=[league_name])
@@ -180,4 +181,4 @@ class Ranking(db.Model):
     #is_admin = db.Column(db.String(200))
 
     def __repr__(self):
-        return '<Ranking: {}>'.format(self.username)
+        return '<Ranking: {}>'.format(self.team)
