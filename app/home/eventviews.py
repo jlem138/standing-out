@@ -7,7 +7,8 @@ from . import home
 from .. import db
 from .forms import EventForm
 from ..models import Team, Event
-from .helper import check_admin_user, admin_and_user_leagues
+from .helper import check_admin_user, admin_and_user_leagues, get_count, enough_teams, ranking_table
+#from .helperrankigns
 from .helperrankings import ranking_table
 
 @home.route('/<league_name>/events')
@@ -19,6 +20,9 @@ def list_events(league_name):
 
     admin_status = check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
+
+    #number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
+
 
     league_lists = admin_and_user_leagues(current_user.username)
     admin_leagues = league_lists[0]
@@ -42,6 +46,8 @@ def add_event(league_name):
     add_event = True
 
     form = EventForm()
+
+    this = enough_teams(league_name)
 
     entered_teams = [(team.name, team.name) for
                      team in Team.query.filter_by(league_name=league_name).all()]
@@ -146,6 +152,7 @@ def edit_event(league_name, id):
     admin_leagues = league_lists[0]
     user_leagues = league_lists[1]
 
+    ranking_table(league_name)
 
     return render_template('home/events/event.html', action="Edit", user_leagues=user_leagues,
                            admin_leagues=admin_leagues, add_event=add_event,

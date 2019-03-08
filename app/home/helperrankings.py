@@ -3,19 +3,18 @@ import os
 
 from flask import redirect, render_template, url_for, request, flash
 from flask_login import login_required, current_user
-
 from twilio.rest import Client
 from .. import db
 from . import home
-from ..models import Team, Event, League, Update, Ranking
+from .. models import League, Update, Team, Event, Ranking
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
 
 def ranking_table(league_name):
 
     # Retrieve data on the number of games, number of teams, and qualifiers for the league
+    total_teams = League.query.filter_by(league_name=league_name).first().number_of_total_teams
     number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
     teams = Team.query.filter_by(league_name=league_name)
-    total_teams = League.query.filter_by(league_name=league_name).first().number_of_total_teams
 
     returned_data = collect_ranking_data(teams)
     returned_ranking_data = returned_data[0]
@@ -35,30 +34,56 @@ def ranking_table(league_name):
     final_stats_data = final_stats[0]
     final_information = final_stats[2]
 
+    # check if ranking entry is already in table
+    # create or update the entry
+
     teamindex = 0
     while teamindex < number_of_teams:
         current_team = final_stats_data[teamindex]
-        ranking_entry = Ranking(
-            league=league_name,
-            team = current_team['name'],
-            wins = current_team['wins'],
-            losses = current_team['losses'],
-            percent = current_team['winning percentage'],
-            games_behind = current_team['games_behind'],
-            magic_number = current_team['magic'],
-            status = current_team['status']
-            )
+        ranking_entry = Ranking.query.filter_by(league=league_name, team=current_team['name']).first()
 
-        try:
-            # Add league to the database
-            db.session.add(ranking_entry)
-            db.session.commit()
-            flash('You have successfully added a new rankings entry.')
-        except:
-            # in case league name already exists
-            flash('Error: entry not added')
+        # If ranking does not exit
+        if ranking_entry is None:
+            newranking = Ranking(
+                league=league_name,
+                team = current_team['name'],
+                wins = current_team['wins'],
+                losses = current_team['losses'],
+                percent = current_team['winning percentage'],
+                games_behind = current_team['games_behind'],
+                magic_number = current_team['magic'],
+                status = current_team['status']
+                )
+
+            try:
+                # Add league to the database
+                db.session.add(newranking)
+                db.session.commit()
+                flash('You have successfully added a new rankings entry.')
+            except:
+                # in case league name already exists
+                flash('Error: entry not added')
+
+        else:
+            # If ranking does exist
+            ranking_entry.league=league_name,
+            ranking_entry.team = current_team['name'],
+            ranking_entry.wins = current_team['wins'],
+            ranking_entry.losses = current_team['losses'],
+            ranking_entry.percent = current_team['winning percentage'],
+            ranking_entry.games_behind = current_team['games_behind'],
+            ranking_entry.magic_number = current_team['magic'],
+            ranking_entry.status = current_team['status']
+
+            try:
+                # Add league to the database
+                db.session.commit()
+                flash('You have successfully updated an old ranking entry.')
+            except:
+                # in case league name already exists
+                flash('Error: entry not added')
         teamindex += 1
-        return
+    return
 
 
 def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses):
