@@ -76,6 +76,7 @@ def list_leagues():
     league_lists = admin_and_user_leagues(current_user.username)
     admin_leagues = league_lists[0]
     user_leagues = league_lists[1]
+    print("AUS", admin_leagues, user_leagues)
 
     # Determine if admin's edit/delete column needs to be displayed
     at_least_one_admin = (len(admin_leagues) >= 1)

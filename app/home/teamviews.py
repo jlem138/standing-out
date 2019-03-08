@@ -21,8 +21,8 @@ def list_teams(league_name):
     teams = Team.query.filter_by(league_name=league_name).all()
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     return render_template('home/teams/teams.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -37,14 +37,17 @@ def add_team(league_name):
     """
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     team_add = True
     form = TeamForm()
     #entered_teams = Team.query.filter_by(league)
     if form.validate_on_submit():
-        team = Team(name=form.name.data,
+        team = Team(select="false",
+                    tie_rank="null",
+                    tie_rank_reason = "null",
+                    name=form.name.data,
                     division_name=form.division_name.data,
                     conference_name=form.conference_name.data,
                     wins=0,
@@ -88,6 +91,9 @@ def edit_team(teamname, league_name):
     if form.validate_on_submit():
         if game_count == 0:
             team.name = form.name.data
+        team.select="false"
+        team.tie_rank="null"
+        team.tie_rank_reason = "null"    
         team.name = form.name.data
         team.division_name = form.division_name.data
         team.conference_name = form.conference_name.data
@@ -107,8 +113,8 @@ def edit_team(teamname, league_name):
 
     # Leagues for which current user is an admin or standard user
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
 
     return render_template('home/teams/team.html', action="Edit", user_leagues=user_leagues,

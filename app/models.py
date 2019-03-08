@@ -102,6 +102,10 @@ class Team(db.Model):
     league_name = db.Column(db.String(60), db.ForeignKey('leagues.league_name'), nullable=False)
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
+    select = db.Column(db.String(200))
+    tie_rank = db.Column(db.String(200))
+    tie_rank_reason = db.Column(db.String(200))
+
 
     # 1 team to many events
     #event_winner = db.relationship('Event', foreign_key=[Event.winner], backref='event_winner', lazy=True)
@@ -154,3 +158,26 @@ class Update(db.Model):
 
     def __repr__(self):
         return '<Update: {}>'.format(self.username)
+
+class Ranking(db.Model):
+    """
+    Create a table with the rankings information
+    """
+
+    __tablename__ = 'rankings'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    team = db.Column(db.String(60), db.ForeignKey('teams.name'))
+    wins = db.Column(db.Integer)
+    losses = db.Column(db.Integer)
+    percent = db.Column(db.Float)
+    games_behind = db.Column(db.Integer)
+    magic_number = db.Column(db.Integer)
+    status = db.Column(db.String(60))
+    #username_constraint = relationship("User", foreign_keys=[username])
+    #league_constraint = relationship("League", foreign_keys=[league_name])
+    #phone_number = db.Column(db.String(10))
+    #is_admin = db.Column(db.String(200))
+
+    def __repr__(self):
+        return '<Ranking: {}>'.format(self.username)

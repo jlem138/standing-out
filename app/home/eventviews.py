@@ -20,8 +20,8 @@ def list_events(league_name):
     events = Event.query.filter_by(league_name=league_name).all()
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     return render_template('home/events/events.html', league_name = league_name,
                            admin_status=admin_status, user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -35,8 +35,8 @@ def add_event(league_name):
     """
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     add_event = True
 
@@ -138,8 +138,8 @@ def edit_event(league_name, id):
 
     # Leagues for which current user is an admin or standard user
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
 
     return render_template('home/events/event.html', action="Edit", user_leagues=user_leagues,

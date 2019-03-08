@@ -25,8 +25,8 @@ def list_users(league_name):
 
     # Leagues for which current user is an admin or standard user
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
     return render_template('home/users/users.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -142,8 +142,8 @@ def edit_user(username, league_name):
 
     # Leagues for which current user is an admin or standard user
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
 
 
     return render_template('home/users/user.html', action="Edit", user_leagues=user_leagues,
