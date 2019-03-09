@@ -101,7 +101,7 @@ def list_rankings(league_name):
         number_of_ranked_teams += 1
         #rank.percent = format(rank.percent, '0.3f')
 
-    message = create_standings_message(number_of_ranked_teams, ranked_teams)
+    message = create_standings_message(league_name)
 
     return render_template('home/rankings/rankings.html', rankings=rankings, data=True,
                            information=True, percents=percents,
@@ -146,15 +146,23 @@ def rankings_text(league_name, rankings_message):
     return redirect(url_for('home.list_rankings', league_name=league_name))
 
 
-def create_standings_message(number_of_teams, team_order):
+def create_standings_message(league_name):
     """ This function takes in the order of the teams and creates the message to send the users. """
     message = []
-    for rank in range(number_of_teams):
+
+    rankings = Ranking.query.filter_by(league=league_name).order_by(Ranking.games_behind)
+    number_of_teams = get_count(rankings)
+
+    team_number = 0
+    for ranking_entry in rankings:
         # add Rank
-        message.append(str(rank+1))
+        message.append(str(ranking_entry.place))
         message.append(". ")
-        message.append(team_order[rank])
-        if (rank+1) != number_of_teams:
+        message.append(str(ranking_entry.team))
+        team_number += 1
+        # if not last team
+        if team_number != number_of_teams:
             message.append('\n')
+
     rankings_message = ''.join(message)
     return rankings_message
