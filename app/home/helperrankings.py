@@ -37,15 +37,21 @@ def ranking_table(league_name):
     # check if ranking entry is already in table
     # create or update the entry
 
+    #Team = Teams.query.filter_by(league_name=league_name, )
+
     teamindex = 0
     while teamindex < number_of_teams:
         current_team = final_stats_data[teamindex]
+
+        print("Rankinfo", league_name, current_team['name'])
         ranking_entry = Ranking.query.filter_by(league=league_name, team=current_team['name']).first()
+        #ranking_entry = Ranking.query.filter_by(league=league_name, team='San Jose Sharks').first()
 
         # If ranking does not exit
         if ranking_entry is None:
             newranking = Ranking(
-                league=league_name,
+                place = current_team['place'],
+                league = league_name,
                 team = current_team['name'],
                 wins = current_team['wins'],
                 losses = current_team['losses'],
@@ -66,7 +72,8 @@ def ranking_table(league_name):
 
         else:
             # If ranking does exist
-            ranking_entry.league=league_name,
+            ranking_entry.league = league_name,
+            ranking_entry.place = current_team['place'],
             ranking_entry.team = current_team['name'],
             ranking_entry.wins = current_team['wins'],
             ranking_entry.losses = current_team['losses'],
@@ -83,6 +90,7 @@ def ranking_table(league_name):
                 # in case league name already exists
                 flash('Error: entry not added')
         teamindex += 1
+    # Indented
     return
 
 

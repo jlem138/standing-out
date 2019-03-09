@@ -31,17 +31,17 @@
                 </tr>
               </thead>
               <tbody>
-              {% for rank in data %}
+              {% for rank in rankings %}
                 <tr>
-                  <td>{{ data[rank]['place']}}</td>
-                  <td> {{ data[rank]['name'] }} </td>
-                  <td> {{ data[rank]['wins'] }}</td>
-                  <td> {{ data[rank]['losses'] }}</td>
-                  <td> {{ data[rank]['winning percentage'] }}
-                  <td> {{ data[rank]['games_behind']}}</td>
-                  {% if information == True %}
-                    <td> {{ data[rank]['magic']}} </td>
-                    <td> {{ data[rank]['status']}}</td>
+                  <td> {{ rank.place }} </td>
+                  <td> {{ rank.team }} </td>
+                  <td> {{ rank.wins }}</td>
+                  <td> {{ rank.losses }}</td>
+                  <td> {{ percents[rank.team] }} </td>
+                  <td> {{ rank.games_behind }}</td>
+                  {% if information %}
+                    <td> {{ rank.magic_number }} </td>
+                    <td> {{ rank.status }} </td>
                   {% endif %}
                 </tr>
               {% endfor %}

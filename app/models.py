@@ -167,6 +167,7 @@ class Ranking(db.Model):
     __tablename__ = 'rankings'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    place = db.Column(db.Integer)
     league = db.Column(db.String(60))
     team = db.Column(db.String(60))
     wins = db.Column(db.Integer)
