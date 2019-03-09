@@ -61,8 +61,8 @@ def add_user(league_name):
     user_add = True
 
     league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues = league_lists[0]
+    user_leagues  = league_lists[1]
 
     form = UpdateForm()
     if form.validate_on_submit():
