@@ -1,7 +1,7 @@
 # app/auth/views.py
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, login_user, logout_user, current_user, fresh_login_required
 
 from . import auth
 from .forms import LoginForm, RegistrationForm
@@ -64,6 +64,7 @@ def login():
 
 @auth.route('/logout')
 @login_required
+@fresh_login_required
 def logout():
     """
     Handle requests to the /logout route

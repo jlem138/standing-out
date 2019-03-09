@@ -2,7 +2,7 @@
 import os
 
 from flask import redirect, render_template, url_for, request, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, fresh_login_required
 
 from twilio.rest import Client
 from .. import db
@@ -77,6 +77,8 @@ def list_tie_breakers(league_name):
 
 @home.route('/<league_name>/rankings', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def list_rankings(league_name):
     """
     List all teams
@@ -155,7 +157,7 @@ def create_standings_message(league_name):
 
     team_number = 0
     for ranking_entry in rankings:
-        # add Rank
+        # Concatenate Place with Team to create single line of message
         message.append(str(ranking_entry.place))
         message.append(". ")
         message.append(str(ranking_entry.team))

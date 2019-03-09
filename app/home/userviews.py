@@ -1,5 +1,5 @@
 from flask import flash, redirect, render_template, url_for
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from . import home
 from .. import db
@@ -9,7 +9,7 @@ from .helper import check_admin_user, admin_and_user_leagues
 
 
 @home.route('/<league_name>/users')
-@login_required
+@fresh_login_required
 def list_users(league_name):
     """
     List all users for the given league
@@ -36,6 +36,7 @@ def list_users(league_name):
 
 @home.route('/<league_name>/users/delete/<username>', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
 def delete_user(username, league_name):
     """
     Delete an entry from the update table
@@ -53,6 +54,7 @@ def delete_user(username, league_name):
 
 @home.route('/<league_name>/user/add', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
 def add_user(league_name):
     """
     Add a user to the updated list of leagues
@@ -112,6 +114,8 @@ def add_user(league_name):
 
 @home.route('/<league_name>/users/edit/<username>', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def edit_user(username, league_name):
     """
     Edit a user

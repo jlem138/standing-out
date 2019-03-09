@@ -43,7 +43,7 @@ def ranking_table(league_name):
     while teamindex < number_of_teams:
         current_team = final_stats_data[teamindex]
 
-        print("Rankinfo", league_name, current_team['name'])
+        print("Rankinfo2", league_name, current_team['name'], current_team['magic'])
         ranking_entry = Ranking.query.filter_by(league=league_name, team=current_team['name']).first()
         #ranking_entry = Ranking.query.filter_by(league=league_name, team='San Jose Sharks').first()
 
@@ -65,7 +65,7 @@ def ranking_table(league_name):
                 # Add league to the database
                 db.session.add(newranking)
                 db.session.commit()
-                flash('You have successfully added a new rankings entry.')
+                #flash('You have successfully added a new rankings entry.')
             except:
                 # in case league name already exists
                 flash('Error: entry not added')
@@ -85,16 +85,16 @@ def ranking_table(league_name):
             try:
                 # Add league to the database
                 db.session.commit()
-                flash('You have successfully updated an old ranking entry.')
+                #flash('You have successfully updated an old ranking entry.')
             except:
                 # in case league name already exists
-                flash('Error: entry not added')
+                flash('Ranking entry not added')
         teamindex += 1
     # Indented
     return
 
 
-def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses):
+def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_max_losses, magic_number_with_losses, qualifiers, rank):
     """ This function determines the magic number and the playoff eligibility status for a team. """
 
     if team_wins > first_out_max_wins:
@@ -105,8 +105,11 @@ def determine_magic_status(team_wins, first_out_max_wins, team_losses, last_in_m
         magic = '-'
     else:
         status = 'ALIVE'
+        if rank > qualifiers:
+            magic = '-'
+        else:
         # Determines 'Magic Number' for teams to qualify
-        magic = magic_number_with_losses - team_wins
+            magic = magic_number_with_losses - team_wins
 
     return([status, magic])
 
@@ -181,6 +184,9 @@ def determine_ranking_statistics(number_of_qualifiers, differentials,
                                  ranking_data, number_of_teams, ordered_wins,
                                  ordered_losses, ranking, league_name, total_teams):
 
+    print("ALLIGATOR")
+
+
     leader_differential = ranking_data[differentials[0]]['differential']
     season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
@@ -219,17 +225,18 @@ def determine_ranking_statistics(number_of_qualifiers, differentials,
             current_ranking = ranking[rank]+1
             final_team['place'] = current_ranking
 
+        final_team['magic'] = "SEVEN"
+        final_team['status'] = "EIGHT"
+
         # True Holder for time being
-        if information:
+        if information is True:
             # Determines 'Magic Number' for teams to qualify
             final_team['magic'] = magic_number_with_losses - team_wins
 
-            # Determine team playoff status
-            final_team['status'] = determine_magic_status(team_wins, first_out_max_wins,
-                            team_losses, last_in_max_losses, 0)
+            print("OSTRICH")
 
             playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses,
-                            last_in_max_losses, magic_number_with_losses)
+                            last_in_max_losses, magic_number_with_losses, number_of_qualifiers, rank+1)
 
             final_team['status'] = playoff_stats[0]
             final_team['magic'] = playoff_stats[1]

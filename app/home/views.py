@@ -1,8 +1,10 @@
 # app/home/views.py
 
 from flask import render_template, session
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 from ..models import Team, Event, League, User, Update
+from .helper import admin_and_user_leagues
+from .helperrankings import ranking_table
 
 from . import home
 
@@ -11,7 +13,19 @@ def homepage():
     """
     Render the homepage template on the / route
     """
-    return render_template('home/index.html', title="Welcome")
+
+    league_lists = admin_and_user_leagues(current_user.username)
+    admin_leagues = league_lists[0]
+    user_leagues = league_lists[1]
+
+    for league in admin_leagues:
+        ranking_table(league)
+
+    for league in user_leagues:
+        ranking_table(league)
+
+    return render_template('home/index.html', title="W2elcome",
+                           admin_leagues=admin_leagues, user_leagues=user_leagues)
 
 @home.route('/dashboard')
 @login_required

@@ -1,7 +1,7 @@
 # Event Views
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, fresh_login_required
 
 from . import home
 from .. import db
@@ -13,6 +13,8 @@ from .helperrankings import ranking_table
 
 @home.route('/<league_name>/events')
 @login_required
+@fresh_login_required
+
 def list_events(league_name):
     """
     List all events
@@ -23,6 +25,7 @@ def list_events(league_name):
 
     #number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
 
+    ranking_table(league_name)
 
     league_lists = admin_and_user_leagues(current_user.username)
     admin_leagues = league_lists[0]
@@ -34,6 +37,8 @@ def list_events(league_name):
 
 @home.route('/<league_name>/events/add', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def add_event(league_name):
     """
     Add a event to the database
@@ -46,8 +51,6 @@ def add_event(league_name):
     add_event = True
 
     form = EventForm()
-
-    this = enough_teams(league_name)
 
     entered_teams = [(team.name, team.name) for
                      team in Team.query.filter_by(league_name=league_name).all()]
@@ -95,6 +98,8 @@ def add_event(league_name):
 
 @home.route('/<league_name>/events/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def edit_event(league_name, id):
     """
     Edit a event
@@ -162,6 +167,8 @@ def edit_event(league_name, id):
 
 @home.route('/<league_name>/events/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def delete_event(league_name, id):
     """
     Delete a event from the database
