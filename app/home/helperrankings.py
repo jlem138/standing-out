@@ -211,12 +211,8 @@ def determine_ranking_statistics(number_of_qualifiers, differentials,
 
         # Determine Magic & Status
         if information is True:
-            #playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses,
-            #                last_in_max_losses, magic_number_with_losses, number_of_qualifiers, rank+1)
-
             final_team['status'], final_team['magic'] = determine_magic_status(team_wins, first_out_max_wins, team_losses,
                                                         last_in_max_losses, magic_number_with_losses, number_of_qualifiers, rank+1)
-            #final_team['magic'] = playoff_stats[1]
         else:
             final_team['magic'] = False
             final_team['status'] = False
