@@ -24,7 +24,7 @@ def homepage():
     for league in user_leagues:
         ranking_table(league)
 
-    return render_template('home/index.html', title="W2elcome",
+    return render_template('home/index.html', title="Welcome",
                            admin_leagues=admin_leagues, user_leagues=user_leagues)
 
 @home.route('/dashboard')

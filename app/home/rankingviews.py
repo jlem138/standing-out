@@ -10,6 +10,7 @@ from twilio.http.http_client import TwilioHttpClient
 from . import home
 from ..models import Team, Event, League, Update, Ranking
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
+from .helperrankings import playoff_information
 
 @home.route('/<league_name>/tiebreakers', methods=['GET', 'POST'])
 @login_required
@@ -77,7 +78,6 @@ def list_tie_breakers(league_name):
 
 @home.route('/<league_name>/rankings', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
 
 def list_rankings(league_name):
     """
@@ -105,8 +105,16 @@ def list_rankings(league_name):
 
     message = create_standings_message(league_name)
 
+    total_teams = League.query.filter_by(league_name=league_name).first().number_of_total_teams
+    number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
+    number_of_qualifiers = League.query.filter_by(league_name=league_name).first().number_of_qualifiers
+    season_games = League.query.filter_by(league_name=league_name).first().number_of_games
+
+    information = playoff_information(number_of_qualifiers, season_games, number_of_teams,
+                                          total_teams)
+
     return render_template('home/rankings/rankings.html', rankings=rankings, data=True,
-                           information=True, percents=percents,
+                           information=information, percents=percents,
                            user_leagues=user_leagues, admin_leagues=admin_leagues, tiebreakers=True,
                            league_name=league_name, admin_status=admin_status,
                            rankings_message=message, title=title)

@@ -184,9 +184,6 @@ def determine_ranking_statistics(number_of_qualifiers, differentials,
                                  ranking_data, number_of_teams, ordered_wins,
                                  ordered_losses, ranking, league_name, total_teams):
 
-    print("ALLIGATOR")
-
-
     leader_differential = ranking_data[differentials[0]]['differential']
     season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
@@ -232,8 +229,6 @@ def determine_ranking_statistics(number_of_qualifiers, differentials,
         if information is True:
             # Determines 'Magic Number' for teams to qualify
             final_team['magic'] = magic_number_with_losses - team_wins
-
-            print("OSTRICH")
 
             playoff_stats = determine_magic_status(team_wins, first_out_max_wins, team_losses,
                             last_in_max_losses, magic_number_with_losses, number_of_qualifiers, rank+1)

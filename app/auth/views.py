@@ -64,7 +64,6 @@ def login():
 
 @auth.route('/logout')
 @login_required
-@fresh_login_required
 def logout():
     """
     Handle requests to the /logout route
