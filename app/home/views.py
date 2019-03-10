@@ -14,10 +14,10 @@ def homepage():
     Render the homepage template on the / route
     """
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    # Display user's admin leagues and user leagues
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
+    # Display rankings
     for league in admin_leagues:
         ranking_table(league)
 

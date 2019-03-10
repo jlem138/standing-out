@@ -23,9 +23,7 @@ def list_teams(league_name):
     admin_status = check_admin_user(league_name)
     teams = Team.query.filter_by(league_name=league_name).all()
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     ranking_table(league_name)
 
@@ -43,9 +41,7 @@ def add_team(league_name):
     Add a team to the database
     """
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     title = "NO IF"
     team_add = True
@@ -124,9 +120,7 @@ def edit_team(teamname, league_name):
     form.name.data = team.name
 
     # Leagues for which current user is an admin or standard user
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     return render_template('home/teams/team.html', action="Edit", user_leagues=user_leagues,
                            admin_leagues=admin_leagues, league_name=league_name, team_add=team_add,

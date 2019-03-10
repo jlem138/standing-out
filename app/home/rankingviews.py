@@ -10,7 +10,7 @@ from twilio.http.http_client import TwilioHttpClient
 from . import home
 from ..models import Team, Event, League, Update, Ranking
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
-from .helperrankings import playoff_information
+from .helperrankings import validate_playoff_information
 
 @home.route('/<league_name>/tiebreakers', methods=['GET', 'POST'])
 @login_required
@@ -88,9 +88,7 @@ def list_rankings(league_name):
 
     title = league_name + " Rankings"
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     percents = {}
     ranked_teams = []
@@ -110,7 +108,7 @@ def list_rankings(league_name):
     number_of_qualifiers = League.query.filter_by(league_name=league_name).first().number_of_qualifiers
     season_games = League.query.filter_by(league_name=league_name).first().number_of_games
 
-    information = playoff_information(number_of_qualifiers, season_games, number_of_teams,
+    information = validate_playoff_information(number_of_qualifiers, season_games, number_of_teams,
                                           total_teams)
 
     return render_template('home/rankings/rankings.html', rankings=rankings, data=True,
