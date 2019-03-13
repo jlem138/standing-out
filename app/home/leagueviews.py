@@ -21,9 +21,7 @@ def add_league():
 
     add_league = True
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     form = LeagueForm()
     if form.validate_on_submit():
@@ -73,9 +71,7 @@ def list_leagues():
         status = check_admin_user(entry.league_name)
         overall_statuses[entry.league_name] = status
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     # Determine if admin's edit/delete column needs to be displayed
     at_least_one_admin = (len(admin_leagues) >= 1)
@@ -87,27 +83,6 @@ def list_leagues():
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
                            overall_statuses=overall_statuses, leagues=leagues,
                            at_least_one_admin=at_least_one_admin)
-
-
-# @home.route('/leagues/<league_name>/delete', methods=['GET', 'POST'])
-# @login_required
-# def delete_league(league_name):
-#     """
-#     Delete a league from the database
-#     """
-#     check_admin()
-#
-#     league = League.query.get_or_404(league_name)
-#
-#     db.session.delete(league)
-#     db.session.commit()
-#
-#     flash('You have successfully deleted the league.')
-#
-#     # redirect to the leagues page
-#     return redirect(url_for('home.list_leagues'))
-#
-#     return render_template(title="Delete League")
 
 
 @home.route('/leagues/<league_name>/edit', methods=['GET', 'POST'])
@@ -140,9 +115,7 @@ def edit_league(league_name):
     form.number_of_qualifiers.data = league.number_of_qualifiers
     form.is_byes.data = league.is_byes
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    user_leagues = league_lists[0]
-    admin_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     return render_template('home/leagues/league.html', action="Edit",
                            user_leagues=user_leagues, admin_leagues=admin_leagues,

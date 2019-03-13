@@ -189,9 +189,7 @@ def list_rankings(league_name):
 
     title = league_name + " Rankings"
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     return render_template('home/rankings/rankings.html', ranking=numbered_ranks,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
