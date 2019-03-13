@@ -2,7 +2,7 @@
 
 from flask import render_template, session
 from flask_login import current_user, login_required
-from ..models import Team, Event, League, User, Update
+from ..models import Team, Event, League, User, Registration
 
 from . import home
 
