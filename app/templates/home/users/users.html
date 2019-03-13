@@ -18,8 +18,6 @@
         {% if updates %}
             <thead>
               <tr>
-                <th width="22%"> First Name </th>
-                <th width="22%"> Last Name </th>
                 <th width="22%"> Username </th>
                 <th width="18%"> Admin </th>
                 {% if admin_status == '1' %}
@@ -31,8 +29,6 @@
             <tbody>
               {% for user in updates %}
                 <tr>
-                  <td> {{ user.first_name }}</td>
-                  <td> {{ user.last_name}}</td>
                   <td> {{ user.username }} </td>
                   {% if user.is_admin == '1' %}
                     <td> Yes </td>
