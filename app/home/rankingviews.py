@@ -8,7 +8,7 @@ from twilio.rest import Client
 from .. import db
 from twilio.http.http_client import TwilioHttpClient
 from . import home
-from ..models import Team, Event, League, Update, Ranking
+from ..models import Team, Event, League, Registration, Ranking
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
 from .helperrankings import validate_playoff_information
 
@@ -124,7 +124,7 @@ def rankings_text(league_name, rankings_message):
     """ This function takes in a league and its message, sending designated league users the message. """
 
     # get league users
-    league_users = Update.query.filter_by(league_name=league_name).all()
+    league_users = Registration.query.filter_by(league_name=league_name).all()
 
     #proxy_client = TwilioHttpClient()
     #proxy_client.session.proxies = {'https': os.environ['https_proxy']}
@@ -137,7 +137,7 @@ def rankings_text(league_name, rankings_message):
 
     client = Client(account_sid, auth_token)
 
-    # for every user in the updates for the league, if their phone number is
+    # for every user in the registrations for the league, if their phone number is
     # registered then send that person a text with the standings
 
     for user in league_users:

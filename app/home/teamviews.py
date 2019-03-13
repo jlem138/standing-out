@@ -1,7 +1,7 @@
 # Team Views
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import current_user, login_required, fresh_login_required
+from flask_login import current_user, login_required
 
 from . import home
 from .. import db
@@ -13,8 +13,6 @@ from .helperrankings import ranking_table
 
 @home.route('/<league_name>/teams', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
-
 def list_teams(league_name):
     """
     List all teams
@@ -34,8 +32,6 @@ def list_teams(league_name):
 
 @home.route('/<league_name>/teams/add', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
-
 def add_team(league_name):
     """
     Add a team to the database
@@ -43,12 +39,10 @@ def add_team(league_name):
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
-    title = "NO IF"
     team_add = True
     form = TeamForm()
     #entered_teams = Team.query.filter_by(league)
     if form.validate_on_submit():
-        title = "YES IF"
         team = Team(select="false",
                     tie_rank="null",
                     tie_rank_reason = "null",
@@ -69,7 +63,7 @@ def add_team(league_name):
             return redirect(url_for('home.list_teams', league_name=league_name))
 
         # redirect to teams page
-        return redirect(url_for('home.list_teams', league_name=league_name, test="test"))
+        return redirect(url_for('home.list_teams', league_name=league_name))
 
     print("ADDTEST1")
 
@@ -80,8 +74,6 @@ def add_team(league_name):
 
 @home.route('/<league_name>/teams/edit/<teamname>', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
-
 def edit_team(teamname, league_name):
     """
     Edit a team
@@ -130,8 +122,6 @@ def edit_team(teamname, league_name):
 
 @home.route('/<league_name>/teams/delete/<teamname>', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
-
 def delete_team(teamname, league_name):
     """
     Delete a team from the database

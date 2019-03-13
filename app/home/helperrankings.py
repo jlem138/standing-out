@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from twilio.rest import Client
 from .. import db
 from . import home
-from .. models import League, Update, Team, Event, Ranking
+from .. models import League, Team, Event, Ranking
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
 
 def ranking_table(league_name):

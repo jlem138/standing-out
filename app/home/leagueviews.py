@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from . import home
 from .. import db
 from .forms import LeagueForm
-from ..models import League, Update
+from ..models import League, Registration
 from .helper import check_admin_user, admin_and_user_leagues
 
 # League Views
@@ -61,7 +61,7 @@ def list_leagues():
     """
 
     current_username = current_user.username
-    leagues_held_by_user_entries = Update.query.filter_by(username=current_username).all()
+    leagues_held_by_user_entries = Registration.query.filter_by(username=current_username).all()
 
     at_least_one_admin = False
     user_league_list = []
@@ -116,6 +116,8 @@ def edit_league(league_name):
     form.is_byes.data = league.is_byes
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+
+    ranking_table(league_name)
 
     return render_template('home/leagues/league.html', action="Edit",
                            user_leagues=user_leagues, admin_leagues=admin_leagues,

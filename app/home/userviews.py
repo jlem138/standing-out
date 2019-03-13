@@ -3,20 +3,19 @@ from flask_login import current_user, login_required, fresh_login_required
 
 from . import home
 from .. import db
-from .forms import UpdateForm
-from ..models import League, User, Update
+from .forms import RegistrationForm
+from ..models import League, User, Registration
 from .helper import check_admin_user, admin_and_user_leagues
 
 
 @home.route('/<league_name>/users')
-@fresh_login_required
 def list_users(league_name):
     """
     List all users for the given league
     """
 
     # All update entries for the particular league
-    updates = Update.query.filter_by(league_name=league_name).all()
+    registrations = Registration.query.filter_by(league_name=league_name).all()
     current_username = current_user.username
 
     # Check the admin status to be passed to html page
@@ -28,31 +27,29 @@ def list_users(league_name):
 
     return render_template('home/users/users.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
-                           admin_status=admin_status, updates=updates,
+                           admin_status=admin_status, registrations=registrations,
                            current_username=current_username, title='Users')
 
 
 @home.route('/<league_name>/users/delete/<username>', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
 def delete_user(username, league_name):
     """
-    Delete an entry from the update table
+    Delete an entry from the Registration table
     """
-    update_entry = Update.query.filter_by(league_name=league_name, username=username).first()
+    registration_entry = Registration.query.filter_by(league_name=league_name, username=username).first()
 
-    # Delete update from table
-    db.session.delete(update_entry)
+    # Delete registration from table
+    db.session.delete(registration_entry)
     db.session.commit()
 
-    flash('You have successfully deleted the update.')
+    flash('You have successfully deleted the registration.')
 
     # Redirect to the Users page page once the user is deleted from league
     return redirect(url_for('home.list_users', league_name=league_name))
 
 @home.route('/<league_name>/user/add', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
 def add_user(league_name):
     """
     Add a user to the updated list of leagues
@@ -62,7 +59,7 @@ def add_user(league_name):
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
-    form = UpdateForm()
+    form = RegistrationForm()
     if form.validate_on_submit():
         if form.is_admin.data == 'True':
             current_is_admin = '1'
@@ -70,7 +67,7 @@ def add_user(league_name):
             current_is_admin = '0'
 
         user_entry = User.query.filter_by(username=form.username.data).first()
-        updated_entries = Update.query.filter_by(username=form.username.data,
+        updated_entries = Registration.query.filter_by(username=form.username.data,
                                                  league_name=league_name).first()
 
         if user_entry is None:
@@ -81,19 +78,15 @@ def add_user(league_name):
             user_first_name = user_entry.first_name
             user_last_name = user_entry.last_name
             user_phone_number = user_entry.phone_number
-            update = Update(
+            registration = Registration(
                 username=form.username.data,
-                first_name=user_first_name,
-                last_name=user_last_name,
                 league_name=league_name,
                 phone_number=user_phone_number,
                 is_admin=current_is_admin
                 )
             try:
-                # Add Update to the database
-                #league = League.query.get(league_name)
-                #league.updates_for_league.append(update)
-                db.session.add(update)
+                # Add Registration to the database
+                db.session.add(registration)
                 db.session.commit()
                 flash('You have successfully added a new user to this league')
             except:
@@ -110,33 +103,30 @@ def add_user(league_name):
 
 @home.route('/<league_name>/users/edit/<username>', methods=['GET', 'POST'])
 @login_required
-@fresh_login_required
 
 def edit_user(username, league_name):
     """
     Edit a user
     """
     user_add = False
-    update_entry = Update.query.filter_by(league_name=league_name, username=username).first()
-    form = UpdateForm(obj=update_entry)
+    registration = Registration.query.filter_by(league_name=league_name, username=username).first()
+    form = RegistrationForm(obj=registration)
     if form.validate_on_submit():
-        update_entry.username = form.username.data
+        registration.username = form.username.data
         user_entry = User.query.filter_by(username=form.username.data).first()
-        update_entry.first_name = user_entry.first_name
-        update_entry.last_name = user_entry.last_name
         if form.is_admin.data == 'True':
-            update_entry.is_admin = '1'
+            registration.is_admin = '1'
         elif form.is_admin.data == 'False':
-            update_entry.is_admin = '0'
+            registration.is_admin = '0'
         db.session.commit()
         flash('You have successfully edited the user.')
         # redirect to the events page
         return redirect(url_for('home.list_users', league_name=league_name))
 
-    form.username.data = update_entry.username
-    if update_entry.is_admin == '1':
+    form.username.data = registration.username
+    if registration.is_admin == '1':
         form.is_admin.data = '1'
-    elif update_entry.is_admin == '0':
+    elif registration.is_admin == '0':
         form.is_admin.data = '0'
 
 

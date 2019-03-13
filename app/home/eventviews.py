@@ -7,8 +7,7 @@ from . import home
 from .. import db
 from .forms import EventForm
 from ..models import Team, Event
-from .helper import check_admin_user, admin_and_user_leagues, get_count, enough_teams, ranking_table
-#from .helperrankigns
+from .helper import check_admin_user, admin_and_user_leagues, get_count, enough_teams
 from .helperrankings import ranking_table
 
 @home.route('/<league_name>/events')
