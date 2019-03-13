@@ -2,8 +2,8 @@ from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
 from .. import db
-from .forms import TeamForm, EventForm, LeagueForm, UserForm, UpdateForm
-from ..models import Team, Event, League, User, Update
+from .forms import TeamForm, EventForm, LeagueForm, UserForm, RegistrationForm
+from ..models import Team, Event, League, User, Registration
 from sqlalchemy import func, distinct
 
 def check_admin():
@@ -15,7 +15,7 @@ def check_admin():
 
 def check_admin_user(league_name):
     current_username = current_user.username
-    status_updates = Update.query.filter_by(league_name=league_name, username=current_username).all()
+    status_updates = Registration.query.filter_by(league_name=league_name, username=current_username).all()
 
     for status in status_updates:
         if ((status.username == current_username) and (status.is_admin == '1')):
@@ -47,13 +47,13 @@ def round_to_three(wins, losses):
     return(format(pct, '0.3f'))
 
 def admin_and_user_leagues(username):
-    updates = Update.query.filter_by(username=username).all()
+    registrations = Registration.query.filter_by(username=username).all()
     user_leagues = []
     admin_leagues = []
-    for update in updates:
-        admin_status = update.is_admin
+    for registration in registrations:
+        admin_status = registration.is_admin
         if admin_status == '1':
-            admin_leagues.append(update.league_name)
+            admin_leagues.append(registration.league_name)
         else:
-            user_leagues.append(update.league_name)
+            user_leagues.append(registration.league_name)
     return(admin_leagues, user_leagues)

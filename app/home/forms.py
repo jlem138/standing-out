@@ -73,7 +73,7 @@ class UserForm(FlaskForm):
     is_admin = RadioField('Admin?', choices = [("True","True"),("False", "False")])
     submit = SubmitField('Submit')
 
-class UpdateForm(FlaskForm):
+class RegistrationForm(FlaskForm):
     """
     Form for admin to add user details
     """

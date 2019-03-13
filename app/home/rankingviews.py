@@ -7,7 +7,7 @@ from flask_login import login_required, current_user
 from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
 from . import home
-from ..models import Team, Event, League, Update
+from ..models import Team, Event, League, Registration
 from .helper import get_count, check_admin_user, round_to_three, admin_and_user_leagues
 
 @home.route('/<league_name>/rankings', methods=['GET', 'POST'])
@@ -213,7 +213,7 @@ def rankings_text(league_name, rankings_message):
     """ This function takes in a league and its message, sending designated league users the message. """
 
     # get league users
-    league_users = Update.query.filter_by(league_name=league_name).all()
+    league_users = Registration.query.filter_by(league_name=league_name).all()
 
     #proxy_client = TwilioHttpClient()
     #proxy_client.session.proxies = {'https': os.environ['https_proxy']}

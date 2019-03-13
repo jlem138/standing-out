@@ -6,7 +6,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from . import auth
 from .forms import LoginForm, RegistrationForm
 from .. import db
-from ..models import User, Update
+from ..models import User, Registration
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -26,8 +26,6 @@ def register():
         # add user to the database
         db.session.add(user)
         db.session.commit()
-        #db.session.add(update)
-        #db.session.commit()
         flash('You have successfully registered! You may now login.')
 
         # redirect to the login page
