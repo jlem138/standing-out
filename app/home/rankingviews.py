@@ -115,7 +115,7 @@ def list_rankings(league_name):
 
     return render_template('home/rankings/rankings.html', rankings=rankings, data=True,
                            information=information, percents=percents,
-                           user_leagues=user_leagues, admin_leagues=admin_leagues, tiebreakers=True,
+                           user_leagues=user_leagues, admin_leagues=admin_leagues,
                            league_name=league_name, admin_status=admin_status,
                            rankings_message=message, title=title)
 

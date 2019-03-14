@@ -6,7 +6,7 @@
     {% if add_league %}
         Add League
     {% else %}
-        Edit League
+        Edit {{league_name}}
     {% endif %}
 {% endblock %}
 {% block body %}
@@ -14,7 +14,7 @@
   {% if add_league %}
       <h1>Add League</h1>
   {% else %}
-      <h1>Edit League</h1>
+      <h1>Edit {{league_name}} </h1>
   {% endif %}
   <br/>
   {{ wtf.quick_form(form) }}

@@ -56,5 +56,10 @@ def admin_and_user_leagues(username):
             admin_leagues.append(registration.league_name)
         else:
             user_leagues.append(registration.league_name)
+
+    # Alphabetize leagues for consistency        
+    if admin_leagues is not None:
+        admin_leagues.sort()
+    if user_leagues is not None:
+        user_leagues.sort()
     return(admin_leagues, user_leagues)
-    

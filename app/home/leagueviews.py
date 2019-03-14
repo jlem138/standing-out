@@ -8,6 +8,7 @@ from .. import db
 from .forms import LeagueForm
 from ..models import League, Registration
 from .helper import check_admin_user, admin_and_user_leagues
+from .helperrankings import ranking_table
 
 # League Views
 
@@ -78,6 +79,8 @@ def list_leagues():
 
     leagues = League.query.filter(League.league_name.in_(user_league_list)).all()
 
+    # Alphabetize leagues for consistency
+    leagues.sort()
 
     return render_template('home/leagues/leagues.html', title="Leagues",
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
