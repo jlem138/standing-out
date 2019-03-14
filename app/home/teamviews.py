@@ -22,7 +22,7 @@ def list_teams(league_name):
     teams = Team.query.filter_by(league_name=league_name).all()
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
-
+    
     ranking_table(league_name)
 
     return render_template('home/teams/teams.html', league_name=league_name,

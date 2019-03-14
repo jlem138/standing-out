@@ -57,7 +57,7 @@ class User(UserMixin, db.Model):
     phone_number = db.Column(db.String(10), nullable=True)
     password_hash = db.Column(db.String(128))
 
-    # One user to many updates
+    # One user to many registrations
     registrations = db.relationship('Registration', backref='registration_user', lazy=True)
 
 

@@ -22,13 +22,8 @@ def list_events(league_name):
     admin_status = check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
 
-    #number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
-
     ranking_table(league_name)
-
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     return render_template('home/events/events.html', league_name = league_name,
                            admin_status=admin_status, user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -43,9 +38,8 @@ def add_event(league_name):
     Add a event to the database
     """
 
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+
 
     add_event = True
 
@@ -152,9 +146,7 @@ def edit_event(league_name, id):
     form.losing_score.data = event.losing_score
 
     # Leagues for which current user is an admin or standard user
-    league_lists = admin_and_user_leagues(current_user.username)
-    admin_leagues = league_lists[0]
-    user_leagues = league_lists[1]
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     ranking_table(league_name)
 

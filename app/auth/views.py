@@ -28,7 +28,6 @@ def register():
         # add user to the database
         db.session.add(user)
         db.session.commit()
-        #db.session.commit()
         flash('You have successfully registered! You may now login.')
 
         # redirect to the login page

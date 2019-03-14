@@ -107,6 +107,8 @@ def list_rankings(league_name):
     number_of_teams = get_count(Team.query.filter_by(league_name=league_name))
     number_of_qualifiers = League.query.filter_by(league_name=league_name).first().number_of_qualifiers
     season_games = League.query.filter_by(league_name=league_name).first().number_of_games
+    admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+
 
     information = validate_playoff_information(number_of_qualifiers, season_games, number_of_teams,
                                           total_teams)

@@ -14,7 +14,7 @@ def list_users(league_name):
     List all users for the given league
     """
 
-    # All update entries for the particular league
+    # All registration entries for the particular league
     registrations = Registration.query.filter_by(league_name=league_name).all()
     current_username = current_user.username
 
@@ -67,12 +67,13 @@ def add_user(league_name):
             current_is_admin = '0'
 
         user_entry = User.query.filter_by(username=form.username.data).first()
-        updated_entries = Registration.query.filter_by(username=form.username.data,
+
+        registration_entries = Registration.query.filter_by(username=form.username.data,
                                                  league_name=league_name).first()
 
         if user_entry is None:
             flash('The entered username must belong to a registered user.')
-        elif updated_entries is not None:
+        elif registration_entries is not None:
             flash('This user has already been entered for this league.')
         else:
             user_first_name = user_entry.first_name
@@ -109,24 +110,26 @@ def edit_user(username, league_name):
     Edit a user
     """
     user_add = False
-    registration = Registration.query.filter_by(league_name=league_name, username=username).first()
-    form = RegistrationForm(obj=registration)
+    registration_entry = Registration.query.filter_by(league_name=league_name, username=username).first()
+    form = RegistrationForm(obj=registration_entry)
     if form.validate_on_submit():
-        registration.username = form.username.data
+        registration_entry.username = form.username.data
         user_entry = User.query.filter_by(username=form.username.data).first()
+        registration_entry.first_name = user_entry.first_name
+        registration_entry.last_name = user_entry.last_name
         if form.is_admin.data == 'True':
-            registration.is_admin = '1'
+            registration_entry.is_admin = '1'
         elif form.is_admin.data == 'False':
-            registration.is_admin = '0'
+            registration_entry.is_admin = '0'
         db.session.commit()
         flash('You have successfully edited the user.')
         # redirect to the events page
         return redirect(url_for('home.list_users', league_name=league_name))
 
-    form.username.data = registration.username
-    if registration.is_admin == '1':
+    form.username.data = registration_entry.username
+    if registration_entry.is_admin == '1':
         form.is_admin.data = '1'
-    elif registration.is_admin == '0':
+    elif registration_entry.is_admin == '0':
         form.is_admin.data = '0'
 
 
@@ -136,4 +139,4 @@ def edit_user(username, league_name):
 
     return render_template('home/users/user.html', action="Edit", user_leagues=user_leagues,
                            admin_leagues=admin_leagues, user_add=user_add, form=form,
-                           league_name=league_name, users_updated=update_entry, title="Edit User")
+                           league_name=league_name, users_updated=registration_entry, title="Edit User")
