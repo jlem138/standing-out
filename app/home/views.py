@@ -16,6 +16,13 @@ def homepage():
     # Display user's admin leagues and user leagues
     if current_user.is_authenticated:
         admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+        
+        # Display rankings
+        for league in admin_leagues:
+             ranking_table(league)
+        
+        for league in user_leagues:
+            ranking_table(league)
 
     # Set admin and user leagues to None if no user is logged in
     else:

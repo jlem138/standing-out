@@ -1,5 +1,5 @@
 from flask import flash, redirect, render_template, url_for
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from . import home
 from .. import db
@@ -9,7 +9,6 @@ from .helper import check_admin_user, admin_and_user_leagues
 
 
 @home.route('/<league_name>/users')
-@login_required
 def list_users(league_name):
     """
     List all users for the given league
@@ -28,7 +27,7 @@ def list_users(league_name):
 
     return render_template('home/users/users.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
-                           admin_status=admin_status, updates=registrations,
+                           admin_status=admin_status, registrations=registrations,
                            current_username=current_username, title='Users')
 
 
@@ -68,6 +67,7 @@ def add_user(league_name):
             current_is_admin = '0'
 
         user_entry = User.query.filter_by(username=form.username.data).first()
+
         registration_entries = Registration.query.filter_by(username=form.username.data,
                                                  league_name=league_name).first()
 
@@ -81,13 +81,12 @@ def add_user(league_name):
             user_phone_number = user_entry.phone_number
             registration = Registration(
                 username=form.username.data,
-                first_name=user_first_name,
-                last_name=user_last_name,
                 league_name=league_name,
                 phone_number=user_phone_number,
                 is_admin=current_is_admin
                 )
             try:
+                # Add Registration to the database
                 db.session.add(registration)
                 db.session.commit()
                 flash('You have successfully added a new user to this league')
@@ -105,6 +104,7 @@ def add_user(league_name):
 
 @home.route('/<league_name>/users/edit/<username>', methods=['GET', 'POST'])
 @login_required
+
 def edit_user(username, league_name):
     """
     Edit a user

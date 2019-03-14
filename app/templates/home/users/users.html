@@ -7,7 +7,7 @@
 <div>
   <div>
     <div>
-      <div>
+      <div style="text-align: center">
         <br/>
         {{ utils.flashed_messages() }}
         <br/>
@@ -58,9 +58,9 @@
             </tbody>
           </table>
         </div>
-        <div style="text-align: center">
         {% else %}
-          <h3> No users have been added. </h3>
+          <div>
+            <h3> No users have been added. </h3>
         {% endif %}
         {% if admin_status == '1' %}
         <br/>

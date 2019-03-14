@@ -1,12 +1,14 @@
 # app/auth/views.py
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, login_user, logout_user, current_user, fresh_login_required
 
 from . import auth
 from .forms import LoginForm, RegistrationForm
 from .. import db
 from ..models import User, Registration
+from ..home.helper import check_admin_user, admin_and_user_leagues
+from ..home.helperrankings import ranking_table
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -42,10 +44,19 @@ def login():
         # check whether user exists in the database and whether
         # the password entered matches the password in the database
         user = User.query.filter_by(email=form.email.data).first()
-        if user is not None and user.verify_password(
-                form.password.data):
+        if user is not None and user.verify_password(form.password.data):
             # log user in
             login_user(user)
+
+            if current_user.is_authenticated:
+                admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+
+                # # Display rankings
+                # for league in admin_leagues:
+                #     ranking_table(league)
+                #
+                # for league in user_leagues:
+                #     ranking_table(league)
 
             # redirect to the appropriate dashboard page
             # if user.is_admin:

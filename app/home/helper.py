@@ -57,3 +57,4 @@ def admin_and_user_leagues(username):
         else:
             user_leagues.append(registration.league_name)
     return(admin_leagues, user_leagues)
+    

@@ -6,8 +6,9 @@ from flask_login import current_user, login_required
 from . import home
 from .. import db
 from . forms import TeamForm, TeamNoNameForm
-from ..models import Team
+from ..models import Team, Ranking
 from .helper import check_admin_user, admin_and_user_leagues
+from .helperrankings import ranking_table
 
 
 @home.route('/<league_name>/teams', methods=['GET', 'POST'])
@@ -21,6 +22,8 @@ def list_teams(league_name):
     teams = Team.query.filter_by(league_name=league_name).all()
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+    
+    ranking_table(league_name)
 
     return render_template('home/teams/teams.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -40,7 +43,10 @@ def add_team(league_name):
     form = TeamForm()
     #entered_teams = Team.query.filter_by(league)
     if form.validate_on_submit():
-        team = Team(name=form.name.data,
+        team = Team(select="false",
+                    tie_rank="null",
+                    tie_rank_reason = "null",
+                    name=form.name.data,
                     division_name=form.division_name.data,
                     conference_name=form.conference_name.data,
                     wins=0,
@@ -59,10 +65,12 @@ def add_team(league_name):
         # redirect to teams page
         return redirect(url_for('home.list_teams', league_name=league_name))
 
-    # load team template
+    print("ADDTEST1")
+
+    # load the Add team template when there is no data to be validated
     return render_template('home/teams/team.html', action="Add", admin_leagues=admin_leagues,
                            user_leagues=user_leagues, add_team=team_add, form=form,
-                           league_name=league_name, title="Add Team")
+                           league_name=league_name, title=title)
 
 @home.route('/<league_name>/teams/edit/<teamname>', methods=['GET', 'POST'])
 @login_required
@@ -84,6 +92,9 @@ def edit_team(teamname, league_name):
     if form.validate_on_submit():
         if game_count == 0:
             team.name = form.name.data
+        team.select="false"
+        team.tie_rank="null"
+        team.tie_rank_reason = "null"
         team.name = form.name.data
         team.division_name = form.division_name.data
         team.conference_name = form.conference_name.data
@@ -92,7 +103,7 @@ def edit_team(teamname, league_name):
         flash('You have successfully edited the team.')
 
         # redirect to the teams page
-        return redirect(url_for('home.list_teams', league_name=league_name))
+        #return redirect(url_for('home.list_teams', league_name=league_name))
 
     if game_count == 0:
         team.name = form.name.data
@@ -100,10 +111,8 @@ def edit_team(teamname, league_name):
     form.conference_name.data = team.conference_name
     form.name.data = team.name
 
-
     # Leagues for which current user is an admin or standard user
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
-
 
     return render_template('home/teams/team.html', action="Edit", user_leagues=user_leagues,
                            admin_leagues=admin_leagues, league_name=league_name, team_add=team_add,
@@ -118,6 +127,11 @@ def delete_team(teamname, league_name):
     Delete a team from the database
     """
     team = Team.query.filter_by(name=teamname).first()
+    ranking = Ranking.query.filter_by(team=teamname).first()
+
+    if ranking is not None:
+        db.session.delete(ranking)
+        db.session.commit()
 
     db.session.delete(team)
     db.session.commit()

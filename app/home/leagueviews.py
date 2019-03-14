@@ -117,6 +117,8 @@ def edit_league(league_name):
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
+    ranking_table(league_name)
+
     return render_template('home/leagues/league.html', action="Edit",
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
                            add_league=add_league, form=form, league_name=league_name,

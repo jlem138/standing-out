@@ -1,16 +1,19 @@
 # Event Views
 
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, fresh_login_required
 
 from . import home
 from .. import db
 from .forms import EventForm
 from ..models import Team, Event
-from .helper import check_admin_user, admin_and_user_leagues
+from .helper import check_admin_user, admin_and_user_leagues, get_count, enough_teams
+from .helperrankings import ranking_table
 
 @home.route('/<league_name>/events')
 @login_required
+@fresh_login_required
+
 def list_events(league_name):
     """
     List all events
@@ -19,6 +22,7 @@ def list_events(league_name):
     admin_status = check_admin_user(league_name)
     events = Event.query.filter_by(league_name=league_name).all()
 
+    ranking_table(league_name)
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
     return render_template('home/events/events.html', league_name = league_name,
@@ -27,12 +31,15 @@ def list_events(league_name):
 
 @home.route('/<league_name>/events/add', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def add_event(league_name):
     """
     Add a event to the database
     """
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
+
 
     add_event = True
 
@@ -69,11 +76,13 @@ def add_event(league_name):
                 db.session.add(event)
                 db.session.commit()
                 flash('You have successfully added a new event.')
+
             except:
                 # in case event name already exists
                 flash('The data you have entered is incorrect.')
 
         # redirect to the events page
+        ranking_table(league_name)
         return redirect(url_for('home.list_events', league_name=league_name))
 
     # load event template
@@ -82,6 +91,8 @@ def add_event(league_name):
 
 @home.route('/<league_name>/events/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def edit_event(league_name, id):
     """
     Edit a event
@@ -121,6 +132,8 @@ def edit_event(league_name, id):
                 db.session.commit()
                 flash('You have successfully edited the event.')
 
+                ranking_table(league_name)
+
             except:
                 flash('The information you have entered is not correct')
 
@@ -135,6 +148,7 @@ def edit_event(league_name, id):
     # Leagues for which current user is an admin or standard user
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
 
+    ranking_table(league_name)
 
     return render_template('home/events/event.html', action="Edit", user_leagues=user_leagues,
                            admin_leagues=admin_leagues, add_event=add_event,
@@ -144,6 +158,8 @@ def edit_event(league_name, id):
 
 @home.route('/<league_name>/events/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
+
 def delete_event(league_name, id):
     """
     Delete a event from the database
@@ -161,6 +177,8 @@ def delete_event(league_name, id):
     db.session.delete(event)
     db.session.commit()
     flash('You have successfully deleted the event.')
+
+    ranking_table(league_name)
 
     # redirect to the events page
     return redirect(url_for('home.list_events', league_name=league_name))
