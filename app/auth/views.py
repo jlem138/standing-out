@@ -30,8 +30,6 @@ def register():
         db.session.commit()
         flash('You have successfully registered! You may now login.')
 
-        print("BLUE1", current_user, current_user.is_authenticated)
-
         # redirect to the login page
         return redirect(url_for('auth.login'))
 
