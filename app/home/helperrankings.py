@@ -212,7 +212,7 @@ def determine_ranking_statistics(number_of_qualifiers, differentials,
         # Determine Magic & Status
         if information is True:
             final_team['status'], final_team['magic'] = determine_magic_status(team_wins, first_out_max_wins, team_losses,
-                                                        last_in_max_losses, magic_number_with_losses, number_of_qualifiers, rank+1)
+                                                        last_in_max_losses, magic_number_with_losses, number_of_qualifiers, current_ranking)
         else:
             final_team['magic'] = False
             final_team['status'] = False
