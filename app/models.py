@@ -9,7 +9,6 @@ from app import db, login_manager
 # ups_leagues = db.Table('update_leagues',
 #     db.Column('league_type', db.String(200), db.ForeignKey('leagues.league_name')),
 #     db.Column('update_type', db.String(60), db.ForeignKey('updates.username'))
-#     )
 
 class League(db.Model):
     """
