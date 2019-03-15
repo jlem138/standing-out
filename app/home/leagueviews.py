@@ -79,8 +79,6 @@ def list_leagues():
 
     leagues = League.query.filter(League.league_name.in_(user_league_list)).all()
 
-    # Alphabetize leagues for consistency
-    leagues.sort()
 
     return render_template('home/leagues/leagues.html', title="Leagues",
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -108,6 +106,8 @@ def edit_league(league_name):
         db.session.commit()
         flash('You have successfully edited the league.')
 
+        ranking_table(league_name)
+
         # redirect to the leagues page
         return redirect(url_for('home.list_leagues'))
 
@@ -119,8 +119,6 @@ def edit_league(league_name):
     form.is_byes.data = league.is_byes
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
-
-    ranking_table(league_name)
 
     return render_template('home/leagues/league.html', action="Edit",
                            user_leagues=user_leagues, admin_leagues=admin_leagues,

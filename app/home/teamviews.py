@@ -22,8 +22,6 @@ def list_teams(league_name):
     teams = Team.query.filter_by(league_name=league_name).all()
 
     admin_leagues, user_leagues = admin_and_user_leagues(current_user.username)
-    
-    ranking_table(league_name)
 
     return render_template('home/teams/teams.html', league_name=league_name,
                            user_leagues=user_leagues, admin_leagues=admin_leagues,
@@ -56,7 +54,11 @@ def add_team(league_name):
             # add team to the database
             db.session.add(team)
             db.session.commit()
+
+            ranking_table(league_name)
+
             flash('You have successfully added a new team.')
+
         except:
             # in case team name already exists
             flash('Team has already been registered for this league.')
@@ -64,8 +66,6 @@ def add_team(league_name):
 
         # redirect to teams page
         return redirect(url_for('home.list_teams', league_name=league_name))
-
-    print("ADDTEST1")
 
     # load the Add team template when there is no data to be validated
     return render_template('home/teams/team.html', action="Add", admin_leagues=admin_leagues,
@@ -100,6 +100,9 @@ def edit_team(teamname, league_name):
         team.conference_name = form.conference_name.data
         team.league_name = league_name
         db.session.commit()
+
+        ranking_table(league_name)
+
         flash('You have successfully edited the team.')
 
         # redirect to the teams page
@@ -135,6 +138,9 @@ def delete_team(teamname, league_name):
 
     db.session.delete(team)
     db.session.commit()
+
+    ranking_table(league_name)
+
     flash('You have successfully deleted the team.')
 
     # Redirect to the Teams page

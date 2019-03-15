@@ -15,7 +15,7 @@
         <br>
           <div>
             <table align="center" class="user-table">
-        {% if updates %}
+        {% if registrations %}
             <thead>
               <tr>
                 <th width="22%"> Username </th>
@@ -27,7 +27,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for user in updates %}
+              {% for user in registrations %}
                 <tr>
                   <td> {{ user.username }} </td>
                   {% if user.is_admin == '1' %}

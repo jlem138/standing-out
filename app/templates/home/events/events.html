@@ -11,7 +11,7 @@
         <br/>
         {{ utils.flashed_messages() }}
         <br>
-        <h1 style="text-align:center;"> << {{league_name}} Game Results >></h1>
+        <h1 style="text-align:center;"> << {{league_name}} Results >></h1>
         <br>
         {% if events %}
           <div>
@@ -63,7 +63,7 @@
         <br/>
           <a href="{{ url_for('home.add_event', league_name=league_name) }}" class="btn btn-default btn-lg">
             <i class="fa fa-plus"></i>
-            Add Game Result
+            Add Result
           </a>
         {% endif %}
         </div>
